@@ -6,6 +6,6 @@
   </nav>
 </template>
 
-<script setup>
-import HeaderList from "@components/globaal/lists/HeaderList.vue";
+<script setup lang="ts">
+import HeaderList from "@/components/global/lists/HeaderList.vue";
 </script>

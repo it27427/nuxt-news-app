@@ -12,39 +12,39 @@
   />
 </template>
 
-<script setup>
-  defineProps({
-    src: {
-      type: String,
-      required: true,
-    },
-    alt: {
-      type: String,
-      default: 'JONOPATH-IMAGE',
-    },
-    width: {
-      type: [String, Number],
-      default: null,
-    },
-    height: {
-      type: [String, Number],
-      default: null,
-    },
-    format: {
-      type: String,
-      default: 'webp',
-    },
-    quality: {
-      type: [String, Number],
-      default: '',
-    },
-    sizes: {
-      type: String,
-      default: '',
-    },
-    imgClass: {
-      type: [String, Array, Object],
-      default: '',
-    },
-  });
+<script setup lang="ts">
+defineProps({
+  src: {
+    type: String,
+    required: true,
+  },
+  alt: {
+    type: String,
+    default: 'JONOPATH-IMAGE',
+  },
+  width: {
+    type: [String, Number],
+    default: null,
+  },
+  height: {
+    type: [String, Number],
+    default: null,
+  },
+  format: {
+    type: String,
+    default: 'webp',
+  },
+  quality: {
+    type: [String, Number],
+    default: '',
+  },
+  sizes: {
+    type: String,
+    default: '',
+  },
+  imgClass: {
+    type: [String, Array, Object],
+    default: '',
+  },
+});
 </script>

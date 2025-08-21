@@ -1,26 +1,27 @@
 <template>
   <ul>
     <li v-for="item in navItems" :key="item.id">
-      <NuxtLink to="item.href">{{ item.text }}</NuxtLink>
+      <BaseLink to="item.href">{{ item.label }}</BaseLink>
     </li>
   </ul>
 </template>
 
-<script setup>
-  import { ref } from 'vue';
-  import { v4 as uuidv4 } from 'uuid';
+<script setup lang="ts">
+import { ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
+import BaseLink from '@/components/base/BaseLink.vue';
 
-  const nav = [
-    { id: uuidv4(), label: 'মূলপাতা', to: '/' },
-    { id: uuidv4(), label: 'রাজনীতি', to: '/topics/politics' },
-    { id: uuidv4(), label: 'সর্বাধিক পঠিত', to: '/popular/read' },
-    { id: uuidv4(), label: 'বিশ্ব', to: '/topics/world' },
-    { id: uuidv4(), label: 'অর্থনীতি', to: '/topics/economy' },
-    { id: uuidv4(), label: 'স্বাস্থ্য', to: '/topics/health' },
-    { id: uuidv4(), label: 'খেলা', to: '/topics/game' },
-    { id: uuidv4(), label: 'প্রযুক্তি', to: '/topics/technology' },
-    { id: uuidv4(), label: 'ভিডিও', to: '/topics/videe' },
-  ];
+const nav = [
+  { id: uuidv4(), label: 'মূলপাতা', to: '/' },
+  { id: uuidv4(), label: 'রাজনীতি', to: '/topics/politics' },
+  { id: uuidv4(), label: 'সর্বাধিক পঠিত', to: '/popular/read' },
+  { id: uuidv4(), label: 'বিশ্ব', to: '/topics/world' },
+  { id: uuidv4(), label: 'অর্থনীতি', to: '/topics/economy' },
+  { id: uuidv4(), label: 'স্বাস্থ্য', to: '/topics/health' },
+  { id: uuidv4(), label: 'খেলা', to: '/topics/game' },
+  { id: uuidv4(), label: 'প্রযুক্তি', to: '/topics/technology' },
+  { id: uuidv4(), label: 'ভিডিও', to: '/topics/videe' },
+];
 
-  const navItems = ref(nav);
+const navItems = ref(nav);
 </script>

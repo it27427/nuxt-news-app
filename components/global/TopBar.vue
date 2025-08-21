@@ -6,6 +6,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BrandLogo from "@/components/global/BrandLogo.vue";
 </script>

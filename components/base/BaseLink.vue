@@ -4,7 +4,7 @@
   </NuxtLink>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineProps({
   to: {
     type: String,

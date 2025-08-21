@@ -1,6 +1,10 @@
 @use 'sass:math';
 @use 'sass:map';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /*=======================================================
                       VARIABLES
 =========================================================*/
@@ -60,9 +64,8 @@ $border-color-primary: rgb(230, 232, 234);
 @mixin font-face($family, $file, $weight, $style: normal) {
   @font-face {
     font-family: $family;
-    src:
-      url('#{$font-path}/#{$file}.woff2') format('woff2'),
-      url('#{$font-path}/#{$file}.woff') format('woff');
+    src: url('#{$font-path}/#{$file}.woff2') format('woff2'),
+    url('#{$font-path}/#{$file}.woff') format('woff');
     font-display: swap;
     font-style: $style;
     font-weight: $weight;
@@ -76,7 +79,9 @@ $border-color-primary: rgb(230, 232, 234);
 
   @if map.has-key($font-weights, $weight) {
     font-weight: map.get($font-weights, $weight);
-  } @else {
+  }
+
+  @else {
     font-weight: $weight;
   }
 
@@ -87,7 +92,7 @@ $border-color-primary: rgb(230, 232, 234);
 @mixin bgColor($bg, $color: null) {
   background-color: $bg;
 
-  @if $color != null {
+  @if $color !=null {
     color: $color;
   }
 }
@@ -106,12 +111,10 @@ $border-color-primary: rgb(230, 232, 234);
   }
 }
 
-@mixin transition(
-  $properties: all,
+@mixin transition($properties: all,
   $duration: 0.4s,
   $timing: ease,
-  $delay: 0s
-) {
+  $delay: 0s) {
   transition: $properties $duration $timing $delay;
 }
 
@@ -136,7 +139,9 @@ $breakpoints: (
     @media (min-width: map.get($breakpoints, $breakpoint)) {
       @content;
     }
-  } @else {
+  }
+
+  @else {
     @error "Breakpoint '#{$breakpoint}' not found in $breakpoints map.";
   }
 }
