@@ -1,4 +1,4 @@
-# Johopath - Bengali News Portal App
+# Johopath - News Portal App
 
 ## Setup
 

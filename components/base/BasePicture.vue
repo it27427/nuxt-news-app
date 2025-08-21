@@ -4,11 +4,11 @@
   </picture>
 </template>
 
-<script setup>
-  defineProps({
-    pictureClass: {
-      type: [String, Array, Object],
-      default: '',
-    },
-  });
+<script setup lang="ts">
+defineProps({
+  pictureClass: {
+    type: [String, Array, Object],
+    default: '',
+  },
+});
 </script>
