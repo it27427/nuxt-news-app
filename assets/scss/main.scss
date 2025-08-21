@@ -1,0 +1,332 @@
+@use 'sass:math';
+@use 'sass:map';
+
+/*=======================================================
+                      VARIABLES
+=========================================================*/
+$sizing: border-box;
+$margin: 0;
+$padding: 0;
+$full: 100%;
+$vw: 100vw;
+$vh: 100vh;
+
+$family: 'Noto Serif Bengali', serif, Helvetica, Arial, sans-serif;
+$font-path: '../fonts/NotoSerifBengali';
+
+$font-weights: (
+  normal: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+);
+
+/* COLORS */
+$transparent: transparent;
+$themeColor: rgb(184, 0, 0);
+$body-bg-light: rgb(253, 253, 253);
+$body-bg-dark: rgb(20, 20, 20);
+$white: rgb(255, 255, 255);
+$black: rgb(0, 0, 0);
+$dark-color: rgb(34, 34, 34);
+$dark-link-active-color: rgb(138, 140, 142);
+$border-color-primary: rgb(230, 232, 234);
+
+/*=======================================================
+                  REUSABLE-FUNCTIONS
+=========================================================*/
+/* Convert px → rem */
+@function size($px, $base: 16) {
+  @return math.div($px, $base) * 1rem;
+}
+
+/* Convert px → unitless line-height */
+@function lh($px, $base: 16) {
+  @return math.div($px, $base) * 1;
+}
+
+/*=======================================================
+                    REUSABLE-MIXINS
+=========================================================*/
+
+/* Reset mixin: (box-sizing, margin, padding) */
+@mixin reset {
+  box-sizing: $sizing;
+  margin: $margin;
+  padding: $padding;
+}
+
+/* Font-face mixin (for @font-face rules) */
+@mixin font-face($family, $file, $weight, $style: normal) {
+  @font-face {
+    font-family: $family;
+    src:
+      url('#{$font-path}/#{$file}.woff2') format('woff2'),
+      url('#{$font-path}/#{$file}.woff') format('woff');
+    font-display: swap;
+    font-style: $style;
+    font-weight: $weight;
+  }
+}
+
+/* Font-Apply Mixin (family, size, weight, line-height) */
+@mixin font($family, $size, $weight, $line-height: normal) {
+  font-family: $family;
+  font-size: $size;
+
+  @if map.has-key($font-weights, $weight) {
+    font-weight: map.get($font-weights, $weight);
+  } @else {
+    font-weight: $weight;
+  }
+
+  line-height: $line-height;
+}
+
+/* Background + Text Color Mixin (background-color, color) */
+@mixin bgColor($bg, $color: null) {
+  background-color: $bg;
+
+  @if $color != null {
+    color: $color;
+  }
+}
+
+@mixin border-bottom($width: size(1), $style: solid, $color: $white) {
+  border-bottom: $width $style $color;
+}
+
+@mixin radius($radius) {
+  border-radius: $radius;
+}
+
+@mixin hover {
+  &:hover {
+    @content;
+  }
+}
+
+@mixin transition(
+  $properties: all,
+  $duration: 0.4s,
+  $timing: ease,
+  $delay: 0s
+) {
+  transition: $properties $duration $timing $delay;
+}
+
+@mixin full-screen {
+  width: $vw;
+  height: $vh;
+}
+
+/* Define breakpoints */
+$breakpoints: (
+  mobile: size(240),
+  mob: size(400),
+  small: size(576),
+  medium: size(768),
+  large: size(992),
+  xlarge: size(1200),
+);
+
+/* Media mixin → min-width */
+@mixin media($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @error "Breakpoint '#{$breakpoint}' not found in $breakpoints map.";
+  }
+}
+
+/* FLEX-MIXINS */
+@mixin flex {
+  display: flex;
+}
+
+@mixin align-items-start {
+  @include flex;
+  align-items: flex-start;
+}
+
+@mixin align-items-center {
+  @include flex;
+  align-items: center;
+}
+
+@mixin align-items-end {
+  @include flex;
+  align-items: flex-end;
+}
+
+@mixin justify-content-start {
+  @include flex;
+  justify-content: flex-start;
+}
+
+@mixin justify-content-center {
+  @include flex;
+  justify-content: center;
+}
+
+@mixin justify-content-end {
+  @include flex;
+  justify-content: flex-end;
+}
+
+@mixin justify-content-between {
+  @include flex;
+  justify-content: space-between;
+}
+
+@mixin flex-center {
+  @include align-items-center;
+  justify-content: center;
+}
+
+/*=======================================================
+                        RESET
+=========================================================*/
+* {
+  @include reset;
+
+  &::before,
+  &::after {
+    @include reset;
+  }
+}
+
+::selection {
+  @include bgColor($themeColor, $body-bg-light);
+}
+
+html {
+  box-sizing: $sizing;
+  font-size: $full;
+}
+
+body {
+  background-color: $body-bg-light;
+  @include font($family, size(16), normal, lh(18.4));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: $full;
+  height: auto;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+#vue-tracer-overlay,
+#__nuxt_loading__,
+#__nuxt-progress,
+[data-nuxt-loading],
+.nuxt-loading-indicator,
+body.visual-effects {
+  display: none !important;
+}
+
+/*=======================================================
+                        UTILITIES
+=========================================================*/
+
+.jonopath-container {
+  max-width: size(1008);
+  width: $full;
+  height: $full;
+  margin-inline: auto;
+}
+
+.justify-start {
+  @include justify-content-start;
+}
+
+/*=======================================================
+                        PRELOADER
+=========================================================*/
+.preloader {
+  background-color: $body-bg-dark;
+  position: fixed;
+  inset: 0;
+  z-index: 9999999;
+
+  &-content {
+    @include flex-center;
+    @include full-screen;
+  }
+
+  &-percent {
+    color: $white;
+    font-size: size(80);
+    letter-spacing: size(1.6);
+  }
+}
+
+/*=======================================================
+                        TOPBAR
+=========================================================*/
+.topbar {
+  background-color: $themeColor;
+  @include align-items-center;
+  width: $full;
+  height: size(44);
+  padding-inline: size(8);
+
+  @include media(mobile) {
+    height: size(60);
+  }
+
+  @include media(mob) {
+    padding-inline: size(16);
+  }
+
+  @include media(small) {
+    height: size(64);
+  }
+
+  &-link {
+    width: size(160);
+    height: $full;
+    padding-block: size(2);
+    @include flex-center;
+    @include border-bottom(size(4), solid, $transparent);
+    margin-block-end: size(-4);
+
+    @include media(medium) {
+      padding-inline-end: 0;
+    }
+
+    @include hover {
+      border-bottom-color: $border-color-primary;
+    }
+  }
+}
+
+.logo {
+  height: $full;
+  @include flex-center;
+  overflow: hidden;
+
+  @include media(small) {
+    height: size(28);
+  }
+
+  @include media(medium) {
+    height: size(30);
+  }
+
+  @include media(large) {
+    height: size(32);
+  }
+
+  img {
+    object-fit: contain;
+  }
+}

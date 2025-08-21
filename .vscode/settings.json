@@ -1,0 +1,53 @@
+{
+  "workbench.sideBar.location": "right",
+  "workbench.colorTheme": "Vue Theme",
+  "workbench.iconTheme": "helium-icon-theme",
+  "terminal.integrated.fontFamily": "CaskaydiaCove Nerd Font",
+  "terminal.integrated.fontSize": 17,
+  "terminal.integrated.fontWeight": "600",
+  "terminal.integrated.cursorBlinking": true,
+  "editor.fontFamily": "Consolas, 'Courier New', monospace",
+  "editor.fontSize": 18,
+  "editor.formatOnSave": true,
+  "files.autoSave": "onFocusChange",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "explorer.confirmDelete": false,
+  "git.autofetch": true,
+  "nuxt-intellisense.showWelcomeMessage": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "html.format.contentUnformatted": "pre,code,textarea",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "prettier.singleQuote": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "vue",
+    "typescript",
+    "typescriptreact"
+  ],
+  "html.format.enable": false,
+  "html.autoClosingTags": false,
+  "editor.codeActions.triggerOnFocusChange": true,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "vue.inlayHints.destructuredProps": true,
+  "vue.inlayHints.inlineHandlerLeading": true,
+  "vue.inlayHints.missingProps": true,
+  "vue.inlayHints.vBindShorthand": true,
+  "vue.suggest.componentNameCasing": "alwaysPascalCase",
+  "vue.suggest.propNameCasing": "alwaysKebabCase",
+  "vue.trace.server": "messages",
+  "vue.autoInsert.dotValue": true,
+  "RainbowBrackets.forceIterationColorCycle": true,
+  "RainbowBrackets.highlightActiveScope": true,
+  "iis.configDir": "",
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
+}
