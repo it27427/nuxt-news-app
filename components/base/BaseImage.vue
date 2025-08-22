@@ -13,38 +13,25 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  src: {
-    type: String,
-    required: true,
-  },
-  alt: {
-    type: String,
-    default: 'JONOPATH-IMAGE',
-  },
-  width: {
-    type: [String, Number],
-    default: null,
-  },
-  height: {
-    type: [String, Number],
-    default: null,
-  },
-  format: {
-    type: String,
-    default: 'webp',
-  },
-  quality: {
-    type: [String, Number],
-    default: '',
-  },
-  sizes: {
-    type: String,
-    default: '',
-  },
-  imgClass: {
-    type: [String, Array, Object],
-    default: '',
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    src: string
+    alt?: string
+    width?: string | number
+    height?: string | number
+    format?: string
+    quality?: string | number
+    sizes?: string
+    imgClass?: string | string[] | Record<string, boolean>
+  }>(),
+  {
+    alt: 'JONOPATH-IMAGE',
+    width: 150,
+    height: 32,
+    format: 'webp',
+    quality: '',
+    sizes: '',
+    imgClass: '',
+  }
+)
 </script>

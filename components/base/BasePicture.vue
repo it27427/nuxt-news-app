@@ -5,10 +5,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  pictureClass: {
-    type: [String, Array, Object],
-    default: '',
-  },
-});
+const props = defineProps<{
+  pictureClass?: string | string[] | Record<string, boolean>
+  srcset?: string
+  caption?: string
+}>();
 </script>

@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="item in navItems" :key="item.id">
-      <BaseLink to="item.href">{{ item.label }}</BaseLink>
+      <NuxtLink to="item.href">{{ item.label }}</NuxtLink>
     </li>
   </ul>
 </template>
@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
-import BaseLink from '@/components/base/BaseLink.vue';
 
 const nav = [
   { id: uuidv4(), label: 'মূলপাতা', to: '/' },

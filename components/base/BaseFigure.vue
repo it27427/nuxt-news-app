@@ -9,18 +9,16 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  pictureClass: {
-    type: [String, Array, Object],
-    default: '',
-  },
-  figureClass: {
-    type: [String, Array, Object],
-    default: '',
-  },
-  caption: {
-    type: String,
-    default: '',
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    pictureClass?: string | string[] | Record<string, boolean>
+    figureClass?: string | string[] | Record<string, boolean>
+    caption?: string
+  }>(),
+  {
+    pictureClass: '',
+    figureClass: '',
+    caption: '',
+  }
+)
 </script>
