@@ -1,18 +1,18 @@
 <template>
   <div>
     <Topbar />
-    <HeaderComponent />
+    <Header />
 
     <main>
       <slot />
     </main>
 
-    <FooterComponent />
+    <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
 import Topbar from '@/components/global/TopBar.vue';
-import HeaderComponent from '@/components/global/layouts/HeaderComponent.vue';
-import FooterComponent from '@/components/global/layouts/FooterComponent.vue';
+import Header from '@/components/global/layouts/Header.vue';
+import Footer from '@/components/global/layouts/Footer.vue';
 </script>
