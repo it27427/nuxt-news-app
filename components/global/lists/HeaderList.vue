@@ -1,7 +1,7 @@
 <template>
   <ul>
-    <li v-for="item in navItems" :key="item.id">
-      <NuxtLink to="item.href">{{ item.label }}</NuxtLink>
+    <li v-for="navItem in navItems" :key="navItem.id">
+      <NuxtLink :to="navItem.to">{{ navItem.label }}</NuxtLink>
     </li>
   </ul>
 </template>
@@ -19,7 +19,7 @@ const nav = [
   { id: uuidv4(), label: 'স্বাস্থ্য', to: '/topics/health' },
   { id: uuidv4(), label: 'খেলা', to: '/topics/game' },
   { id: uuidv4(), label: 'প্রযুক্তি', to: '/topics/technology' },
-  { id: uuidv4(), label: 'ভিডিও', to: '/topics/videe' },
+  { id: uuidv4(), label: 'ভিডিও', to: '/topics/video' },
 ];
 
 const navItems = ref(nav);

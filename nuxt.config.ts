@@ -1,6 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
-import { resolve } from 'path';
+import { fileURLToPath } from 'node:url';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -24,8 +22,18 @@ export default defineNuxtConfig({
     },
   },
 
-  alias: {
-    '@': resolve(__dirname, './'),
+  vite: {
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./', import.meta.url)),
+        assets: fileURLToPath(new URL('./assets', import.meta.url)),
+        components: fileURLToPath(new URL('./components', import.meta.url)),
+        content: fileURLToPath(new URL('./content', import.meta.url)),
+        layouts: fileURLToPath(new URL('./layouts', import.meta.url)),
+        pages: fileURLToPath(new URL('./pages', import.meta.url)),
+        plugins: fileURLToPath(new URL('./plugins', import.meta.url)),
+      },
+    },
   },
 
   css: ['@/assets/scss/main.scss'],

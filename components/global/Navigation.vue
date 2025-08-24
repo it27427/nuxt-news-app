@@ -1,8 +1,6 @@
 <template>
   <nav>
-    <div class="jonopath-container">
-      <HeaderList />
-    </div>
+    <HeaderList />
   </nav>
 </template>
 

@@ -46,8 +46,8 @@
   "vue.autoInsert.dotValue": true,
   "RainbowBrackets.forceIterationColorCycle": true,
   "RainbowBrackets.highlightActiveScope": true,
-  "iis.configDir": "",
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "iis.configDir": ""
 }

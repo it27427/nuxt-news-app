@@ -1,7 +1,9 @@
 <template>
   <header>
-    <h1>Header Component</h1>
+    <Navigation />
   </header>
 </template>
 
-<script setup></script>
+<script setup lang="ts">
+import Navigation from "@/components/global/Navigation.vue";
+</script>
