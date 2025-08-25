@@ -111,6 +111,12 @@ $border-color-primary: rgb(230, 232, 234);
   }
 }
 
+@mixin hover-not-active {
+  &:hover:not(.active) {
+    @content;
+  }
+}
+
 @mixin transition($properties: all,
   $duration: 0.4s,
   $timing: ease,
@@ -191,6 +197,12 @@ $breakpoints: (
   justify-content: center;
 }
 
+@mixin inline-flex-center {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /*=======================================================
                         RESET
 =========================================================*/
@@ -247,11 +259,13 @@ body.visual-effects {
   width: $full;
   height: $full;
   margin-inline: auto;
+  padding-inline: size(8);
+
+  @include media(mob) {
+    padding-inline: size(16);
+  }
 }
 
-.justify-start {
-  @include justify-content-start;
-}
 
 /*=======================================================
                         PRELOADER
@@ -282,14 +296,9 @@ body.visual-effects {
   @include align-items-center;
   width: $full;
   height: size(44);
-  padding-inline: size(8);
 
   @include media(mobile) {
     height: size(60);
-  }
-
-  @include media(mob) {
-    padding-inline: size(16);
   }
 
   @include media(small) {
@@ -334,4 +343,20 @@ body.visual-effects {
   img {
     object-fit: contain;
   }
+}
+
+/*=======================================================
+                        HEADER
+=========================================================*/
+.header-link {
+  @include font($family, size(15), normal, lh(23));
+
+  &:hover:not(.router-link-active):not(.router-link-exact-active) {
+    border-bottom-color: $themeColor;
+  }
+}
+
+.router-link-active,
+.router-link-exact-active {
+  border-bottom-color: $themeColor;
 }

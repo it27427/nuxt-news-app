@@ -8,7 +8,17 @@ module.exports = {
     './error.vue',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: 'rgb(184, 0, 0)',
+        },
+        light: {
+          DEFAULT: 'rgb(253, 253, 253)',
+          50: 'rgb(230, 232, 234)',
+        },
+      },
+    },
   },
   plugins: [],
 };
