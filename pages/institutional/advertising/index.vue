@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="jonopath-container">
     <h1>Advertising Page</h1>
   </div>
 </template>

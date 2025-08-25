@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="jonopath-container">
     <h1>Article Details {{ id }} Page</h1>
   </div>
 </template>

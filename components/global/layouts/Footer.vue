@@ -1,8 +1,10 @@
 <template>
   <footer>
-    <h1>Footer Component</h1>
+    <div class="jonopath-container">
+      <h1>Footer Component</h1>
 
-    <Copyright />
+      <Copyright />
+    </div>
   </footer>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="jonopath-container">
     <h1>Politics Page</h1>
   </div>
 </template>

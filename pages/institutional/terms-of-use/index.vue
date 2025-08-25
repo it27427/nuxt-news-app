@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="jonopath-container">
     <h1>Terms of use Page</h1>
   </div>
 </template>
