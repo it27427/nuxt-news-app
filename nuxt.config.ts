@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/image'],
+  modules: ['@nuxt/image', '@nuxt/content'],
 
   app: {
     head: {

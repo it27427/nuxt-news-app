@@ -1,15 +1,16 @@
+import withNuxt from '@nuxt/eslint-config';
 // @ts-check
-import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withNuxt({
   rules: {
+    /* 🌐 JavaScript Rules */
     'no-unused-vars': 'warn',
     'no-console': 'warn',
     eqeqeq: ['warn', 'always'],
     semi: ['warn', 'always'],
     quotes: ['warn', 'single'],
 
-    /* 🎨 Vue Specific Rules */
+    /* 🎨 Vue Rules */
     'vue/multi-word-component-names': 'off',
     'vue/html-indent': ['warn', 2],
     'vue/max-attributes-per-line': [
@@ -21,11 +22,27 @@ export default withNuxt({
     ],
     'vue/no-v-html': 'off',
 
-    /* ✅ Best Practice Rules */
+    /* ✅ Best Practices */
     curly: ['warn', 'all'],
     'no-debugger': 'warn',
     'no-trailing-spaces': 'warn',
     'space-before-blocks': ['warn', 'always'],
     'keyword-spacing': ['warn', { before: true, after: true }],
+
+    /* 🧹 Extra cleanups */
+    'unused-imports/no-unused-imports': 'warn',
+    'import/order': [
+      'warn',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling'],
+          'index',
+        ],
+        'newlines-between': 'always',
+      },
+    ],
   },
 });

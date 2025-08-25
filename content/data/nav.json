@@ -1,0 +1,47 @@
+[
+  {
+    "name": "মূলপাতা",
+    "avatar": "/icons/home.png",
+    "url": "/"
+  },
+  {
+    "name": "রাজনীতি",
+    "avatar": "/icons/politics.png",
+    "url": "/topics/politics"
+  },
+  {
+    "name": "সর্বাধিক পঠিত",
+    "avatar": "/icons/popular.png",
+    "url": "/popular/read"
+  },
+  {
+    "name": "বিশ্ব",
+    "avatar": "/icons/world.png",
+    "url": "/topics/world"
+  },
+  {
+    "name": "অর্থনীতি",
+    "avatar": "/icons/economy.png",
+    "url": "/topics/economy"
+  },
+  {
+    "name": "স্বাস্থ্য",
+    "avatar": "/icons/health.png",
+    "url": "/topics/health"
+  },
+  {
+    "name": "খেলা",
+    "avatar": "/icons/game.png",
+    "url": "/topics/game"
+  },
+  {
+    "name": "প্রযুক্তি",
+    "avatar": "/icons/tech.png",
+    "url": "/topics/technology"
+  },
+  {
+    "name": "ভিডিও",
+    "avatar": "/icons/video.png",
+    "url": "/topics/video"
+  }
+]

@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "strict": true,
     "types": [
-      "@types/node"
+      "@nuxt/content"
     ],
     "paths": {
       "@/*": [
@@ -15,7 +15,14 @@
       ],
       "@assets/*": [
         "./assets/*"
+      ],
+      "#content": [
+        "./.nuxt/content/index.d.ts"
       ]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    ".nuxt"
+  ]
 }

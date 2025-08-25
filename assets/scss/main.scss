@@ -337,7 +337,7 @@ body.visual-effects {
   }
 
   img {
-    object-fit: cover;
+    object-fit: contain;
     width: $full;
     height: $full;
   }
