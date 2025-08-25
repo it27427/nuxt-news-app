@@ -17,6 +17,11 @@ module.exports = {
           DEFAULT: 'rgb(253, 253, 253)',
           50: 'rgb(230, 232, 234)',
         },
+        dark: {
+          DEFAULT: 'rgb(34, 34, 34)',
+          bg: 'rgb(20, 20, 20)',
+          border: 'rgb(63, 63, 66)',
+        },
       },
     },
   },

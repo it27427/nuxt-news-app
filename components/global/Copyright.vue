@@ -1,9 +1,7 @@
 <template>
-  <div class="flex items-center justify-center border-t border-light-50 py-3">
-    <p class="font-semibold">
-      কপিরাইট &copy; {{ currentYear }} জনপথ.কম &ndash; সর্বস্বত্ব সংরক্ষিত।
-    </p>
-  </div>
+  <p class="font-semibold">
+    কপিরাইট &copy; {{ currentYear }} জনপথ.কম &ndash; সর্বস্বত্ব সংরক্ষিত।
+  </p>
 </template>
 
 <script setup lang="ts">
