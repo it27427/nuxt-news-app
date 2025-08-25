@@ -358,3 +358,12 @@ body.visual-effects {
 .router-link-exact-active {
   border-bottom-color: $themeColor;
 }
+
+@media (max-width: 37.4375rem) {
+  .scrollable-nav {
+    white-space: nowrap;
+    overflow-x: scroll;
+    scroll-behavior: auto;
+    scrollbar-width: none;
+  }
+}
