@@ -311,19 +311,15 @@ body.visual-effects {
     padding-block: size(2);
     @include flex-center;
     @include border-bottom(size(4), solid, $transparent);
-    margin-block-end: size(-4);
-
-    @include media(medium) {
-      padding-inline-end: 0;
-    }
 
     @include hover {
-      border-bottom-color: $border-color-primary;
+      border-bottom-color: $white;
     }
   }
 }
 
 .logo {
+  width: $full;
   height: $full;
   @include flex-center;
   overflow: hidden;
@@ -341,7 +337,9 @@ body.visual-effects {
   }
 
   img {
-    object-fit: contain;
+    object-fit: cover;
+    width: $full;
+    height: $full;
   }
 }
 
