@@ -1,109 +1,19 @@
 <template>
-  <div>
-    <!-- Hamburger button -->
-    <button
-      class="text-dark w-12 h-12 flex items-center justify-center focus:outline-none"
-      @click="isOpen = true"
-    >
-      <!-- Hamburger Icon -->
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 6h16M4 12h16M4 18h16"
-        />
-      </svg>
-    </button>
-
-    <!-- Overlay -->
-    <div
-      v-show="isOpen"
-      class="fixed inset-0 top-15 bottom-15 bg-black/50 z-40"
-      @click="isOpen = false"
-    />
-
-    <!-- Offcanvas Sidebar -->
-    <transition name="slide">
-      <aside
-        v-show="isOpen"
-        class="fixed top-15 left-0 w-full bg-white shadow-lg z-50 px-1 offcanvas"
-      >
-        <!-- Close Button -->
-        <div class="flex items-center justify-start w-full h-12 sticky top-0 bg-white">
-          <button
-            class="text-dark w-12 h-12 flex items-center justify-center focus:outline-none"
-            @click="isOpen = false"
-          >
-            <i class="fa-solid fa-xmark"/>
-          </button>
-        </div>
-
-        <!-- ✅ Use your nav list here -->
-        <ul class="flex flex-col">
-          <li v-for="navItem in navItems" :key="navItem.label" class="py-3 border-b border-light-50">
-            <NuxtLink
-              :to="navItem.to"
-              class="text-dark mobile-link h-12 flex items-center"
-              @click="isOpen = false">
-            
-              <span class="mobile-link-text">{{ navItem.label }}</span>
-            </NuxtLink>
-          </li>
-        </ul>
-      </aside>
-    </transition>
-  </div>
+  <button
+    class="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+    @click="emitToggle"
+  >
+    <span :class="['block w-6 h-0.5 bg-black mb-1 transition-transform duration-300', offcanvasIsOpen ? 'rotate-45 translate-y-2' : '']"/>
+    <span :class="['block w-6 h-0.5 bg-black mb-1 transition-opacity duration-300', offcanvasIsOpen ? 'opacity-0' : 'opacity-100']"/>
+    <span :class="['block w-6 h-0.5 bg-black transition-transform duration-300', offcanvasIsOpen ? '-rotate-45 -translate-y-2' : '']"/>
+  </button>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+const { offcanvasIsOpen } = defineProps<{ offcanvasIsOpen: boolean }>();
+const emit = defineEmits<{ (e: 'toggle-offcanvas'): void }>();
 
-const isOpen = ref(false);
-
-// Your nav list
-const nav = [
-  { label: "মূলপাতা", to: "/" },
-  { label: "রাজনীতি", to: "/topics/politics" },
-  { label: "সর্বাধিক পঠিত", to: "/popular/read" },
-  { label: "বিশ্ব", to: "/topics/world" },
-  { label: "অর্থনীতি", to: "/topics/economy" },
-  { label: "স্বাস্থ্য", to: "/topics/health" },
-  { label: "খেলা", to: "/topics/game" },
-  { label: "প্রযুক্তি", to: "/topics/technology" },
-  { label: "ভিডিও", to: "/topics/video" },
-];
-
-type NavItem = { label: string; to: string; };
-const navItems = ref<NavItem[]>(nav);
+function emitToggle() {
+  emit('toggle-offcanvas');
+}
 </script>
-
-<style>
-/* Slide transition */
-.slide-enter-from {
-  transform: translateX(-100%);
-}
-
-.slide-enter-to {
-  transform: translateX(0);
-}
-
-.slide-leave-from {
-  transform: translateX(0);
-}
-
-.slide-leave-to {
-  transform: translateX(-100%);
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-</style>
