@@ -351,13 +351,18 @@ body.visual-effects {
   color: $body-bg-dark;
   @include font($family, size(15), normal, lh(23));
 
+  @include media(medium) {
+    font-size: size(17);
+    line-height: lh(25.5);
+  }
+
   &:hover:not(.router-link-active):not(.router-link-exact-active) {
     border-bottom-color: $themeColor;
   }
 }
 
-.header-link.router-link-active,
-.header-link.router-link-exact-active {
+.router-link-active,
+.router-link-exact-active {
   border-bottom-color: $themeColor;
 }
 
