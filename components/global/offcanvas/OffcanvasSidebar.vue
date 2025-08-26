@@ -1,5 +1,5 @@
 <template>
-  <aside v-show="isOpen" class="fixed top-15 left-0 w-full bg-white shadow-lg z-50 px-1 offcanvas">
+  <aside v-show="isOpen" class="fixed top-15 left-0 w-full bg-white shadow-lg z-40 px-1 offcanvas">
     <!-- Close Button -->
     <div class="flex items-center justify-start w-full h-12 sticky top-0 bg-white">
       <OffcanvasCloseButton :on-click="close"/>
