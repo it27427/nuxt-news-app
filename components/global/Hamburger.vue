@@ -25,7 +25,7 @@
     <!-- Overlay -->
     <div
       v-show="isOpen"
-      class="fixed inset-0 bg-black/50 z-40"
+      class="fixed inset-0 top-15 bg-black/50 z-40"
       @click="isOpen = false"
     />
 
@@ -33,28 +33,27 @@
     <transition name="slide">
       <aside
         v-show="isOpen"
-        class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 p-4"
+        class="fixed top-15 left-0 h-full w-full bg-white shadow-lg z-50 px-1"
       >
         <!-- Close Button -->
-        <button
-          class="mb-4 p-2 text-red-600 focus:outline-none"
-          @click="isOpen = false"
-        >
-          ✕
-        </button>
+        <div class="flex items-center justify-start w-full h-12">
+          <button
+            class="text-dark w-12 h-12 flex items-center justify-center focus:outline-none"
+            @click="isOpen = false"
+          >
+            <i class="fa-solid fa-xmark"/>
+          </button>
+        </div>
 
         <!-- ✅ Use your nav list here -->
-        <ul class="flex flex-col gap-4">
-          <li v-for="navItem in navItems" :key="navItem.label">
+        <ul class="flex flex-col">
+          <li v-for="navItem in navItems" :key="navItem.label" class="py-3 border-b border-light-50">
             <NuxtLink
               :to="navItem.to"
-              class="block text-lg text-dark border-l-4 border-transparent transition"
-              :class="navItem.active
-                ? 'border-primary'
-                : 'hover:border-primary'"
+              class="text-dark mobile-link h-12 flex items-center"
               @click="isOpen = false">
             
-              <span class="flex-inline ml-2">{{ navItem.label }}</span>
+              <span class="mobile-link-text">{{ navItem.label }}</span>
             </NuxtLink>
           </li>
         </ul>

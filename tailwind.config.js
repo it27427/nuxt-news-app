@@ -24,6 +24,10 @@ module.exports = {
           border: 'rgb(63, 63, 66)',
         },
       },
+      spacing: {
+        15: '60px',
+        25: '108px',
+      },
     },
   },
   plugins: [],

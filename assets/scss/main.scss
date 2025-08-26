@@ -226,6 +226,7 @@ html {
 
 body {
   background-color: $body-bg-light;
+  color: $body-bg-dark;
   @include font($family, size(16), normal, lh(18.4));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -347,6 +348,7 @@ body.visual-effects {
                         HEADER
 =========================================================*/
 .header-link {
+  color: $body-bg-dark;
   @include font($family, size(15), normal, lh(23));
 
   &:hover:not(.router-link-active):not(.router-link-exact-active) {
@@ -354,9 +356,33 @@ body.visual-effects {
   }
 }
 
-.router-link-active,
-.router-link-exact-active {
+.header-link.router-link-active,
+.header-link.router-link-exact-active {
   border-bottom-color: $themeColor;
+}
+
+.mobile-link {
+  vertical-align: middle;
+
+  &-text {
+    color: $body-bg-dark;
+    @include font($family, size(15), normal, lh(25.5));
+    display: inline-flex;
+    padding-inline-start: size(4);
+    border-left: solid size(4) $transparent;
+    vertical-align: middle;
+  }
+
+  &:hover:not(.router-link-active):not(.router-link-exact-active) {
+    border-left-color: $themeColor;
+  }
+}
+
+.mobile-link.router-link-active,
+.mobile-link.router-link-exact-active {
+  .mobile-link-text {
+    border-left-color: $themeColor;
+  }
 }
 
 @media (max-width: 37.4375rem) {
