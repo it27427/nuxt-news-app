@@ -65,7 +65,7 @@
   "highlight-matching-tag.styles": {
     "opening": {
       "name": {
-        "underline": "green"
+        "underline": "yellow"
       }
     }
   },
