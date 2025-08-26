@@ -1,6 +1,6 @@
 {
   "workbench.sideBar.location": "right",
-  "workbench.colorTheme": "Jellyfish",
+  "workbench.colorTheme": "JellyFish",
   "workbench.iconTheme": "helium-icon-theme",
   "terminal.integrated.fontFamily": "CaskaydiaCove Nerd Font",
   "terminal.integrated.fontSize": 17,
@@ -49,5 +49,24 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  "iis.configDir": ""
+  "vue-tag-highlight.color.script": "rgba(255, 255, 255, 0.2)",
+  "vue-tag-highlight.color.template": "rgba(0, 0, 255, 0.2)",
+  "vue-tag-highlight.color.style": "rgba(255, 0, 0, 0.2)",
+  "vue-tag-highlight.isShowOnTextEditor": true,
+  "vue-tag-highlight.isShowOnScrollbar": true,
+  "highlight-matching-tag.enabled": true,
+  "highlight-matching-tag.showPath": true,
+  "highlight-matching-tag.showRuler": true,
+  "highlight-matching-tag.highlightSelfClosing": true,
+  "highlight-matching-tag.highlightFromContent": true,
+  "highlight-matching-tag.highlightFromName": true,
+  "highlight-matching-tag.highlightFromAttributes": true,
+  "highlight-matching-tag.noDefaultEmptyElements": true,
+  "highlight-matching-tag.styles": {
+    "opening": {
+      "name": {
+        "underline": "green"
+      }
+    }
+  },
 }

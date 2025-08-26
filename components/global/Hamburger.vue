@@ -63,43 +63,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { ref } from "vue";
 
 const isOpen = ref(false);
 
 // Your nav list
 const nav = [
-  { label: "মূলপাতা", to: "/", active: false },
-  { label: "রাজনীতি", to: "/topics/politics", active: false },
-  { label: "সর্বাধিক পঠিত", to: "/popular/read", active: false },
-  { label: "বিশ্ব", to: "/topics/world", active: false },
-  { label: "অর্থনীতি", to: "/topics/economy", active: false },
-  { label: "স্বাস্থ্য", to: "/topics/health", active: false },
-  { label: "খেলা", to: "/topics/game", active: false },
-  { label: "প্রযুক্তি", to: "/topics/technology", active: false },
-  { label: "ভিডিও", to: "/topics/video", active: false },
+  { label: "মূলপাতা", to: "/" },
+  { label: "রাজনীতি", to: "/topics/politics" },
+  { label: "সর্বাধিক পঠিত", to: "/popular/read" },
+  { label: "বিশ্ব", to: "/topics/world" },
+  { label: "অর্থনীতি", to: "/topics/economy" },
+  { label: "স্বাস্থ্য", to: "/topics/health" },
+  { label: "খেলা", to: "/topics/game" },
+  { label: "প্রযুক্তি", to: "/topics/technology" },
+  { label: "ভিডিও", to: "/topics/video" },
 ];
 
-type NavItem = { label: string; to: string; active: boolean };
+type NavItem = { label: string; to: string; };
 const navItems = ref<NavItem[]>(nav);
-
-const route = useRoute();
-
-// Active link detection
-watch(
-  () => route.path,
-  (newPath) => {
-    navItems.value.forEach((item) => {
-      if (item.to === "/") {
-        item.active = newPath === "/";
-      } else {
-        item.active = newPath.startsWith(item.to);
-      }
-    });
-  },
-  { immediate: true }
-);
 </script>
 
 <style>

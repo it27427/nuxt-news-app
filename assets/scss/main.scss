@@ -28,7 +28,8 @@ $font-weights: (
 /* COLORS */
 $transparent: transparent;
 $themeColor: rgb(184, 0, 0);
-$body-bg-light: rgb(253, 253, 253);
+$light: rgb(245, 245, 245);
+$body-bg-light: rgb(252, 252, 252);
 $body-bg-dark: rgb(20, 20, 20);
 $white: rgb(255, 255, 255);
 $black: rgb(0, 0, 0);
@@ -225,7 +226,7 @@ html {
 }
 
 body {
-  background-color: $body-bg-light;
+  background-color: $light;
   color: $body-bg-dark;
   @include font($family, size(16), normal, lh(18.4));
   -webkit-font-smoothing: antialiased;
