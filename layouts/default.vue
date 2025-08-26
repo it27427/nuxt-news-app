@@ -10,7 +10,7 @@
       ]"
     >
       <Header>
-        <Navigation
+        <NavBar
           :nav-items="navItems"
           :offcanvas-is-open="offcanvasIsOpen"
           @toggle-offcanvas="toggleOffcanvas"
@@ -25,7 +25,7 @@
         showSecondHeader ? 'translate-y-0' : 'translate-y-full'
       ]"
     >
-      <Navigation
+      <NavBar
         :nav-items="navItems"
         :offcanvas-is-open="offcanvasIsOpen"
         @toggle-offcanvas="toggleOffcanvas"
@@ -39,7 +39,7 @@
       :close="() => (offcanvasIsOpen = false)"
     />
 
-    <main class="min-h-screen mb-96">
+    <main class="min-h-screen">
       <slot />
     </main>
 
@@ -51,7 +51,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import Topbar from '@/components/global/layouts/TopBar.vue';
 import Header from '@/components/global/layouts/Header.vue';
-import Navigation from '@/components/global/Navigation.vue';
+import NavBar from '@/components/global/NavBar.vue';
 import Footer from '@/components/global/layouts/Footer.vue';
 
 /**

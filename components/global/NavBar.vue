@@ -2,7 +2,7 @@
   <nav class="bg-white border-b border-light-50 h-12">
     <div class="jonopath-container flex items-center mobcontainer">
       <!-- Hamburger for mobile -->
-      <Hamburger
+      <OffcanvasButton
         :offcanvas-is-open="offcanvasIsOpen"
         class="md:hidden"
         @toggle-offcanvas="toggleOffcanvas"
@@ -19,7 +19,7 @@
   </nav>
 </template>
 <script setup lang="ts">
-import Hamburger from "@/components/global/Hamburger.vue";
+import OffcanvasButton from "@/components/global/offcanvas/OffcanvasButton.vue";
 import DesktopMenu from "@/components/global/menus/DesktopMenu.vue";
 
 // Props
