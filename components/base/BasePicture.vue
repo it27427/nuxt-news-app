@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   pictureClass?: string | string[] | Record<string, boolean>
   srcset?: string
   caption?: string

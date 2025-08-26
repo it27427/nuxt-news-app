@@ -23,7 +23,7 @@ logs
 .env.*
 !.env.example
 live.env
-preview1.env
-preview2.env
 local.env
 test.env
+preview1.env
+preview2.env
