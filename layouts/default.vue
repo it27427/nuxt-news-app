@@ -1,48 +1,41 @@
 <template>
+  <!-- Root-Layout => (DEFAULT) -->
   <div class="relative">
+    <!-- Topbar -->
     <Topbar />
 
-    <!-- First Header -->
-    <div
-      :class="[
-        showFirstHeader === null ? '' : 'w-full transition-transform duration-500 ease-in-out',
-        showFirstHeader === true ? 'translate-y-0 fixed top-0 left-0' : showFirstHeader === false ? '-translate-y-full' : ''
-      ]"
-    >
-      <Header>
-        <NavBar
-          :nav-items="navItems"
-          :offcanvas-is-open="offcanvasIsOpen"
-          @toggle-offcanvas="toggleOffcanvas"
-        />
-      </Header>
-    </div>
+    <!-- Header Top (collapsible menu control) -->
+    <HeaderTop
+      :nav-items="navItems"
+      :collapse-menu-is-open="collapseMenuIsOpen"
+      :offcanvas-is-open="offcanvasIsOpen"
+      :toggle-collapse-menu="toggleCollapseMenu"
+      :show="showFirstHeader"
+    />
 
-    <!-- Second Header -->
-    <Header
-      :class="[
-        'fixed bottom-0 left-0 w-full z-50 bg-white shadow-lg transition-transform duration-500 ease-in-out',
-        showSecondHeader ? 'translate-y-0' : 'translate-y-full'
-      ]"
-    >
-      <NavBar
-        :nav-items="navItems"
-        :offcanvas-is-open="offcanvasIsOpen"
-        @toggle-offcanvas="toggleOffcanvas"
-      />
-    </Header>
+    <!-- HeaderBottom -->
+    <HeaderBottom
+      :nav-items="navItems"
+      :collapse-menu-is-open="collapseMenuIsOpen"
+      :offcanvas-is-open="offcanvasIsOpen"
+      :toggle-collapse-menu="toggleCollapseMenu"
+      :toggle-offcanvas="toggleOffcanvas"
+      :show="showSecondHeader"
+    />
 
-    <!-- OFFCANVAS MENU -->
+    <!-- OFFCANVAS (rendered at layout level so it overlays entire page) -->
     <Offcanvas
       :is-open="offcanvasIsOpen"
       :nav-items="navItems"
       :close="() => (offcanvasIsOpen = false)"
     />
 
+    <!-- Main-Section => Page Content -->
     <main class="min-h-screen">
       <slot />
     </main>
 
+    <!-- Footer -->
     <Footer />
   </div>
 </template>
@@ -50,17 +43,25 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import Topbar from '@/components/global/layouts/TopBar.vue';
-import Header from '@/components/global/layouts/Header.vue';
-import NavBar from '@/components/global/NavBar.vue';
+import HeaderTop from '@/components/global/layouts/HeaderTop.vue';
+import HeaderBottom from '@/components/global/layouts/HeaderBottom.vue';
 import Footer from '@/components/global/layouts/Footer.vue';
 
-/**
- * OFFCANVAS MENU
- * NAV ITEMS
- * 
-*/
+/* COLLAPSE and OFFCANVAS STATE */
+const collapseMenuIsOpen = ref<boolean>(false);
 const offcanvasIsOpen = ref<boolean>(false);
 
+/* TOGGLE-COLLAPSE */
+function toggleCollapseMenu() {
+  collapseMenuIsOpen.value = !collapseMenuIsOpen.value;
+}
+
+/* TOGGLE-OFFCANVAS */
+function toggleOffcanvas() {
+  offcanvasIsOpen.value = !offcanvasIsOpen.value;
+}
+
+/* NAV ITEMS (single source of truth) */
 const navItems = ref([
   { label: 'মূলপাতা', to: '/' },
   { label: 'রাজনীতি', to: '/topics/politics' },
@@ -73,15 +74,8 @@ const navItems = ref([
   { label: 'ভিডিও', to: '/topics/video' },
 ]);
 
-function toggleOffcanvas() {
-  offcanvasIsOpen.value = !offcanvasIsOpen.value;
-}
-
-/**
- * HEADER SCROOLING BEHAVIOR
- * BOTH SIDE SCROLLING
-*/
-const showFirstHeader = ref<boolean | null>(null);
+/* HEADER SCROLL BEHAVIOR (kept here and passed down as show flags) */
+const showFirstHeader = ref<boolean | null>(null); // null => default (no translate classes)
 const showSecondHeader = ref<boolean>(false);
 
 let lastScrollY = 0;
