@@ -1,13 +1,10 @@
 {
   "extends": "./.nuxt/tsconfig.json",
-  "module": "esnext",
-  "target": "esnext",
-  "moduleResolution": "node",
   "compilerOptions": {
-    "baseUrl": ".",
     "strict": true,
+    "baseUrl": ".",
     "types": [
-      "@types/node",
+      "@types/node"
     ],
     "paths": {
       "@/*": [
@@ -22,7 +19,6 @@
     }
   },
   "exclude": [
-    "node_modules",
-    ".nuxt"
+    "node_modules"
   ]
 }

@@ -1,9 +1,9 @@
 <template>
   <ul class="flex items-center gap-3 h-12">
-    <li v-for="navItem in navItems" :key="navItem.label">
+    <li v-for="navItem in navItems" :key="navItem.label" class="h-12">
       <NuxtLink
         :to="navItem.to"
-        class="header-link h-12 border-b-4 border-transparent transition-border"
+        class="header-link h-12 flex items-center justify-center px-1 border-b-4 border-transparent transition-border"
         :class="navItem.active
           ? 'border-primary'
           : 'hover:border-primary'"
