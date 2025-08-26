@@ -414,3 +414,91 @@ body.visual-effects {
     padding-inline: 0;
   }
 }
+
+/*=======================================================
+                  ANIMATION-CLASSES
+=========================================================*/
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUpFade 0.3s forwards;
+}
+
+.animate-slide-down {
+  animation: slideDownFade 0.3s forwards;
+}
+
+.animate-slide-up-bottom {
+  animation: slideUpFadeBottom 0.3s forwards;
+}
+
+.animate-slide-down-bottom {
+  animation: slideDownFadeBottom 0.3s forwards;
+}
+
+/*=======================================================
+                  ANIMATION-KEYFRAMES
+=========================================================*/
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+/* First Header slides up and down */
+@keyframes slideUpFade {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideDownFade {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+/* Second Header slides up and down from bottom */
+@keyframes slideUpFadeBottom {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDownFadeBottom {
+  0% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
