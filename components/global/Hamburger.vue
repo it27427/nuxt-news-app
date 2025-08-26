@@ -25,7 +25,7 @@
     <!-- Overlay -->
     <div
       v-show="isOpen"
-      class="fixed inset-0 top-15 bg-black/50 z-40"
+      class="fixed inset-0 top-15 bottom-15 bg-black/50 z-40"
       @click="isOpen = false"
     />
 
@@ -33,10 +33,10 @@
     <transition name="slide">
       <aside
         v-show="isOpen"
-        class="fixed top-15 left-0 h-full w-full bg-white shadow-lg z-50 px-1"
+        class="fixed top-15 left-0 w-full bg-white shadow-lg z-50 px-1 offcanvas"
       >
         <!-- Close Button -->
-        <div class="flex items-center justify-start w-full h-12">
+        <div class="flex items-center justify-start w-full h-12 sticky top-0 bg-white">
           <button
             class="text-dark w-12 h-12 flex items-center justify-center focus:outline-none"
             @click="isOpen = false"

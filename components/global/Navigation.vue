@@ -1,7 +1,9 @@
 <template>
   <nav class="bg-white border-b border-light-50 h-12">
     <div class="jonopath-container flex items-center mobcontainer">
-      <Hamburger />
+      <div class="flex md:none">
+        <Hamburger />
+      </div>
 
       <div class="scrollable-nav">
         <HeaderList />

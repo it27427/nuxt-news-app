@@ -254,7 +254,6 @@ body.visual-effects {
 /*=======================================================
                         UTILITIES
 =========================================================*/
-
 .jonopath-container {
   max-width: size(1008);
   width: $full;
@@ -379,7 +378,9 @@ body.visual-effects {
   }
 
   &:hover:not(.router-link-active):not(.router-link-exact-active) {
-    border-left-color: $themeColor;
+    .mobile-link-text {
+      border-left-color: $themeColor;
+    }
   }
 }
 
@@ -388,6 +389,16 @@ body.visual-effects {
   .mobile-link-text {
     border-left-color: $themeColor;
   }
+}
+
+.offcanvas {
+  max-height: calc($vh - size(120));
+  overflow-x: hidden;
+  overflow-y: scroll;
+  white-space: nowrap;
+  scroll-behavior: auto;
+  scrollbar-width: none;
+  padding-block-end: size(20);
 }
 
 @media (max-width: 37.4375rem) {
