@@ -4,9 +4,6 @@
       <NuxtLink
         :to="navItem.to"
         class="header-link h-12 flex items-center justify-center py-3 px-2 md:px-1 border-b-4 border-transparent transition-border"
-        :class="navItem.active
-          ? 'border-primary'
-          : 'hover:border-primary'"
       >
         {{ navItem.label }}
       </NuxtLink>
@@ -32,20 +29,4 @@ const nav = [
 
 type NavItem = { label: string; to: string; active: boolean };
 const navItems = ref<NavItem[]>(nav);
-
-const route = useRoute();
-
-watch(
-  () => route.path,
-  (newPath) => {
-    navItems.value.forEach(item => {
-      if (item.to === '/') {
-        item.active = newPath === '/'
-      } else {
-        item.active = newPath.startsWith(item.to)
-      }
-    })
-  },
-  { immediate: true }
-);
 </script>

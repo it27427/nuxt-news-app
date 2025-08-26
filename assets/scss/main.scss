@@ -361,8 +361,8 @@ body.visual-effects {
   }
 }
 
-.router-link-active,
-.router-link-exact-active {
+.router-link-active:not(.router-link-exact-active.mobile-link),
+.router-link-exact-active:not(.router-link-exact-active.mobile-link) {
   border-bottom-color: $themeColor;
 }
 
