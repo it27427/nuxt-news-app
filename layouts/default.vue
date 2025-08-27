@@ -27,7 +27,7 @@
     />
 
     <!-- Main Content -->
-    <main class="min-h-screen">
+    <main class="min-h-screen mb-96">
       <slot />
     </main>
 

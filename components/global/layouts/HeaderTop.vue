@@ -1,26 +1,29 @@
 <template>
-  <Header v-if="clientShow">
+  <Header
+    :class="[
+      'w-full transition-transform duration-300',
+      props.show ? 'sticky top-0 left-0 z-40 translate-y-0' : 'relative -translate-y-full'
+    ]"
+  >
     <nav class="bg-white border-b border-light-50 h-12">
       <div class="jonopath-container flex items-center mobcontainer">
         <!-- Hamburger (Mobile) -->
         <div class="md:hidden">
-          <Hamburger :is-open="collapseMenuIsOpen" @toggle="toggleCollapseMenu" />
+          <Hamburger :is-open="props.collapseMenuIsOpen" @toggle="props.toggleCollapseMenu" />
         </div>
 
         <!-- Mobile Menu -->
         <HamburgerMenu
-          v-if="collapseMenuIsOpen"
-          :is-open="collapseMenuIsOpen"
-          :nav-items="navItems"
-          :close="toggleCollapseMenu"
+          v-if="props.collapseMenuIsOpen"
+          :is-open="props.collapseMenuIsOpen"
+          :nav-items="props.navItems"
+          :close="props.toggleCollapseMenu"
           class="md:hidden"
         />
 
         <!-- Desktop Menu -->
         <div class="scrollable-nav">
-          <DesktopMenu
-            :nav-items="navItems"
-          />
+          <DesktopMenu :nav-items="navItems" />
         </div>
       </div>
     </nav>
@@ -28,28 +31,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Header from "@/components/global/layouts/Header.vue";
 import Hamburger from "@/components/global/hamburger/Hamburger.vue";
 import HamburgerMenu from "@/components/global/hamburger/HamburgerMenu.vue";
 import DesktopMenu from "@/components/global/menus/DesktopMenu.vue";
 
-// Props from parent
-const {
-  navItems,
-  collapseMenuIsOpen,
-  toggleCollapseMenu,
-  show
-} = defineProps<{
-  navItems: Array<{ label: string; to: string }>;
+type NavItem = { label: string; to: string };
+
+// Props
+const props = defineProps<{
+  navItems: NavItem[];
   collapseMenuIsOpen: boolean;
   toggleCollapseMenu: () => void;
-  show?: boolean;
+  show: boolean;
 }>();
 
-// SSR-safe client rendering
-const clientShow = ref(false);
+// Scroll tracking (if you want to use it for something else)
+const scrolledBeyondVH100 = ref(false);
+
+function getScrollY(): number {
+  const el = (document.scrollingElement as HTMLElement | null) || document.documentElement;
+  return (el && el.scrollTop) || window.scrollY || 0;
+}
+
+function handleScroll() {
+  const threshold = window.innerHeight || 0;
+  scrolledBeyondVH100.value = getScrollY() > threshold;
+}
+
 onMounted(() => {
-  clientShow.value = show ?? false;
+  handleScroll();
+  window.addEventListener("scroll", handleScroll, { passive: true });
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>

@@ -394,13 +394,13 @@ body.visual-effects {
 }
 
 .hamburger {
-  max-height: calc($vh - size(108));
+  // max-height: calc($vh - size(108));
   overflow-x: hidden;
   overflow-y: scroll;
   white-space: nowrap;
   scroll-behavior: auto;
   scrollbar-width: none;
-  padding-block-end: size(20);
+  // padding-block-end: size(20);
 }
 
 .offcanvas {
