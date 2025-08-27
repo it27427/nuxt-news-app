@@ -12,15 +12,6 @@
           <Hamburger :is-open="props.collapseMenuIsOpen" @toggle="props.toggleCollapseMenu" />
         </div>
 
-        <!-- Mobile Menu -->
-        <HamburgerMenu
-          v-if="props.collapseMenuIsOpen"
-          :is-open="props.collapseMenuIsOpen"
-          :nav-items="props.navItems"
-          :close="props.toggleCollapseMenu"
-          class="md:hidden"
-        />
-
         <!-- Desktop Menu -->
         <div class="scrollable-nav">
           <DesktopMenu :nav-items="navItems" />
@@ -34,7 +25,6 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import Header from "@/components/global/layouts/Header.vue";
 import Hamburger from "@/components/global/hamburger/Hamburger.vue";
-import HamburgerMenu from "@/components/global/hamburger/HamburgerMenu.vue";
 import DesktopMenu from "@/components/global/menus/DesktopMenu.vue";
 
 type NavItem = { label: string; to: string };

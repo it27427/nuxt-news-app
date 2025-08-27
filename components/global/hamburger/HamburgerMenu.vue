@@ -1,8 +1,10 @@
 <template>
-  <aside v-show="isOpen" class="fixed top-25 left-0 w-full bg-white shadow-lg z-40 px-1 hamburger">
-    <!-- Mobile Menu -->
-    <MobileMenu :nav-items="navItems" :close="close"/>
-  </aside>
+  <transition name="slide-down">
+    <aside v-show="isOpen" class="w-full bg-white px-1 hamburger">
+      <!-- Mobile Menu -->
+      <MobileMenu :nav-items="navItems" :close="close"/>
+    </aside>
+  </transition>
 </template>
 
 <script setup lang="ts">
@@ -14,3 +16,22 @@ const { isOpen, navItems, close } = defineProps<{
   close: () => void;
 }>();
 </script>
+
+<style scoped>
+/* Slide Down Animation */
+.collapse-enter-from,
+.collapse-leave-to {
+  max-height: 0;
+}
+
+.collapse-enter-to,
+.collapse-leave-from {
+  max-height: 36.5rem;
+}
+
+.collapse-enter-active,
+.collapse-leave-active {
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+}
+</style>

@@ -26,8 +26,21 @@
       :close="() => (offcanvasIsOpen = false)"
     />
 
+    <!-- Mobile Menu -->
+    <HamburgerMenu
+      v-if="collapseMenuIsOpen"
+      :is-open="collapseMenuIsOpen"
+      :nav-items="navItems"
+      :close="toggleCollapseMenu"
+      class="md:hidden"
+    />
+
     <!-- Main Content -->
-    <main class="min-h-screen mb-96">
+    <main
+      :class="[
+        'transition-all duration-300 min-h-screen',
+        collapseMenuIsOpen ? 'mt-5' : 'mt-0'
+      ]">
       <slot />
     </main>
 
@@ -43,6 +56,7 @@ import HeaderTop from '@/components/global/layouts/HeaderTop.vue';
 import HeaderBottom from '@/components/global/layouts/HeaderBottom.vue';
 import Footer from '@/components/global/layouts/Footer.vue';
 import Offcanvas from '@/components/global/offcanvas/Offcanvas.vue';
+import HamburgerMenu from "@/components/global/hamburger/HamburgerMenu.vue";
 
 /* COLLAPSE & OFFCANVAS STATE */
 const collapseMenuIsOpen = ref(false);
