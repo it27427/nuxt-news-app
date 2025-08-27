@@ -234,6 +234,7 @@ body {
 }
 
 img {
+  cursor: pointer;
   max-width: $full;
   height: auto;
 }
@@ -392,7 +393,7 @@ body.visual-effects {
   }
 }
 
-.offcanvas {
+.hamburger {
   max-height: calc($vh - size(108));
   overflow-x: hidden;
   overflow-y: scroll;
@@ -402,12 +403,22 @@ body.visual-effects {
   padding-block-end: size(20);
 }
 
+.offcanvas {
+  height: $vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  white-space: nowrap;
+  scroll-behavior: auto;
+  scrollbar-width: none;
+}
+
 @media (max-width: 37.4375rem) {
   .scrollable-nav {
     white-space: nowrap;
     overflow-x: scroll;
     scroll-behavior: auto;
     scrollbar-width: none;
+    width: calc($full - size(48));
   }
 
   .jonopath-container.mobcontainer {

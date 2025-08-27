@@ -1,5 +1,5 @@
 <template>
-  <aside v-show="isOpen" class="fixed top-15 left-0 w-full bg-white shadow-lg z-40 px-1 hamburger">
+  <aside v-show="isOpen" class="fixed top-25 left-0 w-full bg-white shadow-lg z-40 px-1 hamburger">
     <!-- Mobile Menu -->
     <MobileMenu :nav-items="navItems" :close="close"/>
   </aside>

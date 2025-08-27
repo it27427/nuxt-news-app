@@ -1,12 +1,14 @@
 <template>
-  <aside v-show="isOpen" class="fixed top-15 left-0 w-full bg-white shadow-lg z-40 px-1 offcanvas">
+  <aside v-show="isOpen" class="fixed top-0 left-0 w-full bg-white shadow-lg z-40 offcanvas">
     <!-- Close Button -->
-    <div class="flex items-center justify-start w-full h-12 sticky top-0 bg-white">
-      <OffcanvasCloseButton :on-click="close"/>
+    <div class="flex items-center justify-start w-full h-12 sticky top-0 bg-white px-1">
+      <OffcanvasCloseButton :is-open="isOpen" :on-click="close"/>
     </div>
 
     <!-- Mobile Menu -->
-    <MobileMenu :nav-items="navItems" :close="close"/>
+    <div class=" px-1">
+      <MobileMenu :nav-items="navItems" :close="close"/>
+    </div>
   </aside>
 </template>
 

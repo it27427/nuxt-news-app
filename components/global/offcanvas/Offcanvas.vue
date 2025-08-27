@@ -1,18 +1,12 @@
 <template>
-  <div>
-    <!-- Overlay -->
-    <OffcanvasOverlay :is-open="isOpen" :on-click="close"/>
-
-    <!-- Offcanvas Sidebar -->
-    <transition name="slide">
-      <OffcanvasSidebar v-show="isOpen" :is-open="isOpen" :nav-items="navItems" :close="close"/>
-    </transition>
-  </div>
+  <!-- Offcanvas Sidebar -->
+  <transition name="slide">
+    <OffcanvasSidebar v-show="isOpen" :is-open="isOpen" :nav-items="navItems" :close="close"/>
+  </transition>
 </template>
 
 <script setup lang="ts">
 import OffcanvasSidebar from '@/components/global/offcanvas/OffcanvasSidebar.vue';
-import OffcanvasOverlay from '@/components/global/offcanvas/OffcanvasOverlay.vue';
 
 type NavItem = { label: string; to: string; };
 

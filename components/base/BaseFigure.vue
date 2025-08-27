@@ -9,16 +9,13 @@
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    pictureClass?: string | string[] | Record<string, boolean>
-    figureClass?: string | string[] | Record<string, boolean>
-    caption?: string
-  }>(),
-  {
-    pictureClass: '',
-    figureClass: '',
-    caption: '',
-  }
-)
+const {
+  pictureClass = '',
+  figureClass = '',
+  caption = ''
+} = defineProps<{
+  pictureClass?: string | string[] | Record<string, boolean>
+  figureClass?: string | string[] | Record<string, boolean>
+  caption?: string
+}>()
 </script>

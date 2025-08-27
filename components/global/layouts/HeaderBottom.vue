@@ -7,27 +7,21 @@
   >
     <NavBar
       :nav-items="navItems"
-      :collapse-menu-is-open="collapseMenuIsOpen"
       :offcanvas-is-open="offcanvasIsOpen"
-      :toggle-collapse-menu="toggleCollapseMenu"
-      :toggle-offcanvas="handleToggleOffcanvas"
-      :show="show"
+      @toggle-offcanvas="toggleOffcanvas"
     />
   </Header>
 </template>
 
 <script setup lang="ts">
-import NavBar from '@/components/global/NavBar.vue';
+import Header from "@/components/global/layouts/Header.vue";
+import NavBar from "@/components/global/NavBar.vue";
 
-const { navItems, collapseMenuIsOpen, offcanvasIsOpen, toggleCollapseMenu, show } = defineProps<{
-  navItems: { label: string; to: string }[];
-  collapseMenuIsOpen: boolean;
+// Props
+const { navItems, offcanvasIsOpen, toggleOffcanvas, show } = defineProps<{
+  navItems: Array<{ label: string; to: string }>;
   offcanvasIsOpen: boolean;
-  toggleCollapseMenu: () => void;
-  show: boolean | null;
-}>()
-
-const emit = defineEmits<{ (e: 'toggle-offcanvas'): void }>();
-
-const handleToggleOffcanvas = () => emit('toggle-offcanvas');
+  toggleOffcanvas: () => void;
+  show: boolean;
+}>();
 </script>

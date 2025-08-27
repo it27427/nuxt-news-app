@@ -1,9 +1,11 @@
 <template>
-  <BaseLink to="/" class="topbar-link">
-    <BasePicture class="logo">
-      <BaseImage v-bind="brand" />
-    </BasePicture>
-  </BaseLink>
+  <client-only>
+    <BaseLink to="/" class="topbar-link">
+      <BasePicture class="logo">
+        <BaseImage v-bind="brand" />
+      </BasePicture>
+    </BaseLink>
+  </client-only>
 </template>
 
 <script setup lang="ts">

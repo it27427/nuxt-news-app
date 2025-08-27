@@ -1,48 +1,55 @@
 <template>
-  <Header :class="[show ? 'translate-y-0 fixed top-0 left-0 w-full z-50' : '-translate-y-full']">
-    <NavBar
-      :nav-items="navItems"
-      :collapse-menu-is-open="collapseMenuIsOpen"
-      :offcanvas-is-open="offcanvasIsOpen"
-      :toggle-collapse-menu="toggleCollapseMenu"
-      :show="show"
-    />
+  <Header v-if="clientShow">
+    <nav class="bg-white border-b border-light-50 h-12">
+      <div class="jonopath-container flex items-center mobcontainer">
+        <!-- Hamburger (Mobile) -->
+        <div class="md:hidden">
+          <Hamburger :is-open="collapseMenuIsOpen" @toggle="toggleCollapseMenu" />
+        </div>
+
+        <!-- Mobile Menu -->
+        <HamburgerMenu
+          v-if="collapseMenuIsOpen"
+          :is-open="collapseMenuIsOpen"
+          :nav-items="navItems"
+          :close="toggleCollapseMenu"
+          class="md:hidden"
+        />
+
+        <!-- Desktop Menu -->
+        <div class="scrollable-nav">
+          <DesktopMenu
+            :nav-items="navItems"
+          />
+        </div>
+      </div>
+    </nav>
   </Header>
 </template>
 
 <script setup lang="ts">
-import NavBar from '@/components/global/NavBar.vue';
+import { ref, onMounted } from "vue";
+import Header from "@/components/global/layouts/Header.vue";
+import Hamburger from "@/components/global/hamburger/Hamburger.vue";
+import HamburgerMenu from "@/components/global/hamburger/HamburgerMenu.vue";
+import DesktopMenu from "@/components/global/menus/DesktopMenu.vue";
 
-import type { PropType } from 'vue';
+// Props from parent
+const {
+  navItems,
+  collapseMenuIsOpen,
+  toggleCollapseMenu,
+  show
+} = defineProps<{
+  navItems: Array<{ label: string; to: string }>;
+  collapseMenuIsOpen: boolean;
+  toggleCollapseMenu: () => void;
+  show?: boolean;
+}>();
 
-interface NavItem {
-  label: string;
-  to: string;
-}
-
-const { navItems, collapseMenuIsOpen, offcanvasIsOpen, toggleCollapseMenu, show } = defineProps(
-  {
-    navItems: {
-      type: Array as PropType<NavItem[]>,
-      required: true
-    },
-    collapseMenuIsOpen: {
-      type: Boolean,
-      required: true
-    },
-    offcanvasIsOpen: {
-      type: Boolean,
-      required: true
-    },
-    toggleCollapseMenu: {
-      type: Function as PropType<() => void>,
-      required: true
-    },
-    show: {
-      type: Boolean as PropType<boolean | null>,
-      required: true
-    }
-  }
-)
+// SSR-safe client rendering
+const clientShow = ref(false);
+onMounted(() => {
+  clientShow.value = show ?? false;
+});
 </script>
-

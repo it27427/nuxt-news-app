@@ -1,36 +1,32 @@
 <template>
-  <!-- Root-Layout => (DEFAULT) -->
   <div class="relative">
     <!-- Topbar -->
     <Topbar />
 
-    <!-- Header Top (collapsible menu control) -->
+    <!-- Header Top -->
     <HeaderTop
       :nav-items="navItems"
       :collapse-menu-is-open="collapseMenuIsOpen"
-      :offcanvas-is-open="offcanvasIsOpen"
       :toggle-collapse-menu="toggleCollapseMenu"
       :show="showFirstHeader"
     />
 
-    <!-- HeaderBottom -->
+    <!-- Header Bottom -->
     <HeaderBottom
       :nav-items="navItems"
-      :collapse-menu-is-open="collapseMenuIsOpen"
       :offcanvas-is-open="offcanvasIsOpen"
-      :toggle-collapse-menu="toggleCollapseMenu"
       :toggle-offcanvas="toggleOffcanvas"
       :show="showSecondHeader"
     />
 
-    <!-- OFFCANVAS (rendered at layout level so it overlays entire page) -->
+    <!-- Offcanvas Menu -->
     <Offcanvas
       :is-open="offcanvasIsOpen"
       :nav-items="navItems"
       :close="() => (offcanvasIsOpen = false)"
     />
 
-    <!-- Main-Section => Page Content -->
+    <!-- Main Content -->
     <main class="min-h-screen">
       <slot />
     </main>
@@ -46,22 +42,21 @@ import Topbar from '@/components/global/layouts/TopBar.vue';
 import HeaderTop from '@/components/global/layouts/HeaderTop.vue';
 import HeaderBottom from '@/components/global/layouts/HeaderBottom.vue';
 import Footer from '@/components/global/layouts/Footer.vue';
+import Offcanvas from '@/components/global/offcanvas/Offcanvas.vue';
 
-/* COLLAPSE and OFFCANVAS STATE */
-const collapseMenuIsOpen = ref<boolean>(false);
-const offcanvasIsOpen = ref<boolean>(false);
+/* COLLAPSE & OFFCANVAS STATE */
+const collapseMenuIsOpen = ref(false);
+const offcanvasIsOpen = ref(false);
 
-/* TOGGLE-COLLAPSE */
-function toggleCollapseMenu() {
+/* TOGGLE FUNCTIONS */
+const toggleCollapseMenu = () => {
   collapseMenuIsOpen.value = !collapseMenuIsOpen.value;
-}
-
-/* TOGGLE-OFFCANVAS */
-function toggleOffcanvas() {
+};
+const toggleOffcanvas = () => {
   offcanvasIsOpen.value = !offcanvasIsOpen.value;
-}
+};
 
-/* NAV ITEMS (single source of truth) */
+/* NAV ITEMS */
 const navItems = ref([
   { label: 'মূলপাতা', to: '/' },
   { label: 'রাজনীতি', to: '/topics/politics' },
@@ -74,10 +69,9 @@ const navItems = ref([
   { label: 'ভিডিও', to: '/topics/video' },
 ]);
 
-/* HEADER SCROLL BEHAVIOR (kept here and passed down as show flags) */
-const showFirstHeader = ref<boolean | null>(null); // null => default (no translate classes)
-const showSecondHeader = ref<boolean>(false);
-
+/* HEADER SCROLL BEHAVIOR */
+const showFirstHeader = ref(true);
+const showSecondHeader = ref(false);
 let lastScrollY = 0;
 
 const handleScroll = (): void => {
@@ -93,18 +87,20 @@ const handleScroll = (): void => {
     showFirstHeader.value = true;
   }
 
-  // IF (SCREEN === 100VH)
-  if (currentScrollY === 0) showFirstHeader.value = null;
+  if (currentScrollY === 0) {
+    showFirstHeader.value = true;
+    showSecondHeader.value = false;
+  }
 
   lastScrollY = currentScrollY;
 };
 
-onMounted((): void => {
+onMounted(() => {
   lastScrollY = window.scrollY;
   window.addEventListener('scroll', handleScroll, { passive: true });
 });
 
-onUnmounted((): void => {
+onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 </script>

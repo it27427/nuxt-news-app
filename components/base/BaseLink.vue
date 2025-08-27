@@ -5,8 +5,11 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+const {
+  to,
+  linkClass = ''
+} = defineProps<{
   to: string
   linkClass?: string | string[] | Record<string, boolean>
-}>();
+}>()
 </script>
