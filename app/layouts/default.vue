@@ -45,30 +45,18 @@
     </main>
 
     <!-- Footer -->
-    <Footer />
+    <Footer :nav-items="footerNavItems" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import Topbar from '@/components/global/layouts/TopBar.vue';
-import HeaderTop from '@/components/global/layouts/HeaderTop.vue';
-import HeaderBottom from '@/components/global/layouts/HeaderBottom.vue';
-import Footer from '@/components/global/layouts/Footer.vue';
-import Offcanvas from '@/components/global/offcanvas/Offcanvas.vue';
 import HamburgerMenu from "@/components/global/hamburger/HamburgerMenu.vue";
-
-/* COLLAPSE & OFFCANVAS STATE */
-const collapseMenuIsOpen = ref(false);
-const offcanvasIsOpen = ref(false);
-
-/* TOGGLE FUNCTIONS */
-const toggleCollapseMenu = () => {
-  collapseMenuIsOpen.value = !collapseMenuIsOpen.value;
-};
-const toggleOffcanvas = () => {
-  offcanvasIsOpen.value = !offcanvasIsOpen.value;
-};
+import Footer from '@/components/global/layouts/Footer.vue';
+import HeaderBottom from '@/components/global/layouts/HeaderBottom.vue';
+import HeaderTop from '@/components/global/layouts/HeaderTop.vue';
+import Topbar from '@/components/global/layouts/TopBar.vue';
+import Offcanvas from '@/components/global/offcanvas/Offcanvas.vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 /* NAV ITEMS */
 const navItems = ref([
@@ -82,6 +70,29 @@ const navItems = ref([
   { label: 'প্রযুক্তি', to: '/topics/technology' },
   { label: 'ভিডিও', to: '/topics/video' },
 ]);
+
+/* FOOTER-NAV-ITEMS */
+const footerNavItems = ref([
+  { label: 'জনপথের ওপর কেন আপনি আস্থা রাখতে পারেন', to: '/institutional/trust-and-transparency' },
+  { label: 'ব্যবহারের শর্তাবলী', to: '/institutional/terms-of-use' },
+  { label: 'জনপথ সম্পর্কে', to: '/institutional/about' },
+  { label: 'প্রিভেসি নীতি', to: '/institutional/privacy-policy' },
+  { label: 'কুকিজ', to: '/institutional/' },
+  { label: 'জনপথের সাথে যোগাযোগ করুন', to: '/institutional/contact' },
+  { label: 'অন্যান্য ভাষায় জনপথের সংবাদ', to: '#' }
+]);
+
+/* COLLAPSE & OFFCANVAS STATE */
+const collapseMenuIsOpen = ref(false);
+const offcanvasIsOpen = ref(false);
+
+/* TOGGLE FUNCTIONS */
+const toggleCollapseMenu = () => {
+  collapseMenuIsOpen.value = !collapseMenuIsOpen.value;
+};
+const toggleOffcanvas = () => {
+  offcanvasIsOpen.value = !offcanvasIsOpen.value;
+};
 
 /* HEADER SCROLL BEHAVIOR */
 const showFirstHeader = ref(true);

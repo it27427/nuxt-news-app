@@ -2,8 +2,8 @@
   <footer class="bg-dark text-white">
     <FooterTopBar />
 
-    <div class="jonopath-container">
-      <h1>Footer Component</h1>
+    <div class="jonopath-container pt-2">
+      <FooterMenu :nav-items="navItems" />
 
       <!-- COPYRIGHT -->
       <div class="flex items-center justify-center border-t border-dark-border h-12">
@@ -16,4 +16,12 @@
 <script setup lang="ts">
 import Copyright from "@/components/global/Copyright.vue";
 import FooterTopBar from "@/components/global/FooterTopBar.vue";
+import FooterMenu from "@/components/global/menus/FooterMenu.vue";
+
+type NavItem = { label: string; to: string };
+
+// Define Props
+const { navItems } = defineProps<{
+  navItems: NavItem[];
+}>();
 </script>
