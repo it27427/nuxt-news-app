@@ -16,6 +16,8 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
   ],
+  
+  srcDir: 'app/',
 
   app: {
     head: {

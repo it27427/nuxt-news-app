@@ -228,7 +228,7 @@ html {
 body {
   background-color: $light;
   color: $body-bg-dark;
-  @include font($family, size(16), normal, lh(18.4));
+  @include font($family, size(16), normal, lh(22));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
