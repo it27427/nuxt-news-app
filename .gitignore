@@ -27,3 +27,5 @@ local.env
 test.env
 preview1.env
 preview2.env
+.env.development
+.env.production

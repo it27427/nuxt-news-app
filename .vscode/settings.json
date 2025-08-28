@@ -2,46 +2,42 @@
   "workbench.sideBar.location": "right",
   "workbench.colorTheme": "JellyFish",
   "workbench.iconTheme": "helium-icon-theme",
+  // --- Terminal UI ---
   "terminal.integrated.fontFamily": "CaskaydiaCove Nerd Font",
   "terminal.integrated.fontSize": 17,
   "terminal.integrated.fontWeight": "600",
   "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.tabs.defaultIcon": "vm",
+  // --- Editor Fonts ---
   "editor.fontFamily": "Consolas, 'Courier New', monospace",
   "editor.fontSize": 18,
+  // --- Files ---
   "files.autoSave": "onFocusChange",
+  // --- Formatter Setup ---
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": false,
+  // --- Tab / Indent ---
   "editor.tabSize": 2,
+  // --- Auto Fix on Save ---
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.codeActions.triggerOnFocusChange": true,
+  // --- Explorer / Git ---
   "explorer.confirmDelete": false,
   "git.autofetch": true,
+  // --- Nuxt / Vue ---
   "nuxt-intellisense.showWelcomeMessage": false,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "prettier.htmlWhitespaceSensitivity": "ignore",
-  "html.format.contentUnformatted": "pre,code,textarea",
-  "editor.formatOnSave": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "always",
-    "source.fixAll.eslint": "always",
-    "source.fixAll.stylelint": "always",
-    "source.fixAll.tslint": "always",
-    "source.organizeImports": "always"
-  },
-  "eslint.format.enable": true,
-  "eslint.run": "onSave",
-  "editor.formatOnType": false,
-  "prettier.singleQuote": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "vue",
-    "typescript",
-    "typescriptreact"
-  ],
-  "html.format.enable": false,
-  "html.autoClosingTags": false,
-  "editor.codeActions.triggerOnFocusChange": true,
-  "editor.formatOnPaste": false,
+  "vue.inlayHints.optionsWrapper": true,
+  "vue.format.script.initialIndent": true,
+  "vue.format.style.initialIndent": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.gotoLocation.multipleDefinitions": "goto",
+  // --- Vue inlay hints ---
   "vue.inlayHints.destructuredProps": true,
   "vue.inlayHints.inlineHandlerLeading": true,
   "vue.inlayHints.missingProps": true,
@@ -50,16 +46,45 @@
   "vue.suggest.propNameCasing": "alwaysKebabCase",
   "vue.trace.server": "messages",
   "vue.autoInsert.dotValue": true,
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+  "emmet.includeLanguages": {
+    "vue-html": "html",
+    "vue": "html"
+  },
+  // --- Rainbow Brackets ---
+  "RainbowBrackets.forceUniqueOpeningColor": true,
   "RainbowBrackets.forceIterationColorCycle": true,
   "RainbowBrackets.highlightActiveScope": true,
+  "RainbowBrackets.consecutivePairColors": [
+    "()",
+    "[]",
+    "{}",
+    [
+      "green",
+      "yellow",
+      "teal"
+    ],
+    "Revioletd"
+  ],
+  "editor.guides.bracketPairs": "active",
+  // --- JSONC ---
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
+  // --- Vue Tag Highlight ---
   "vue-tag-highlight.color.script": "rgba(255, 255, 255, 0.2)",
   "vue-tag-highlight.color.template": "rgba(0, 0, 255, 0.2)",
   "vue-tag-highlight.color.style": "rgba(255, 0, 0, 0.2)",
   "vue-tag-highlight.isShowOnTextEditor": true,
   "vue-tag-highlight.isShowOnScrollbar": true,
+  // --- Highlight Matching Tags ---
   "highlight-matching-tag.enabled": true,
   "highlight-matching-tag.showPath": true,
   "highlight-matching-tag.showRuler": true,
@@ -75,14 +100,19 @@
       }
     }
   },
+  // --- CSS / SCSS ---
   "css.lint.unknownAtRules": "ignore",
   "css.lint.unknownProperties": "ignore",
   "scss.lint.unknownAtRules": "ignore",
   "scss.lint.unknownProperties": "ignore",
-  "terminal.integrated.tabs.defaultIcon": "vm",
+  // --- Tailwind ---
   "tailwindCSS.lint.invalidVariant": "ignore",
   "tailwindCSS.lint.invalidTailwindDirective": "ignore",
   "tailwindCSS.lint.invalidScreen": "ignore",
   "tailwindCSS.lint.invalidConfigPath": "ignore",
-  "iis.configDir": "",
+  "iis.configDir": "./",
+  "iisexpress.openInBrowser": "chrome",
+  "iisexpress.iisExpressPath": "C:\\Program Files\\IIS Express\\iisexpress.exe",
+  "iisexpress.appcmdPath": "C:\\Program Files\\IIS Express\\appcmd.exe",
+  "iisexpress.autoLaunchBrowser": true,
 }

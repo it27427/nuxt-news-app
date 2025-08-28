@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  extends: 'vue',
   env: { browser: true, node: true, es2021: true },
   parser: 'vue-eslint-parser',
   parserOptions: {
@@ -12,18 +13,15 @@ module.exports = {
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
+    'plugin:prettier/recommended', // ensures Prettier + ESLint work together
+    'prettier',
   ],
   plugins: ['vue', '@typescript-eslint'],
   rules: {
     'vue/html-self-closing': [
       'error',
       {
-        html: {
-          void: 'never',
-          normal: 'never',
-          component: 'always',
-        },
+        html: { void: 'never', normal: 'never', component: 'always' },
         svg: 'always',
         math: 'always',
       },

@@ -9,6 +9,6 @@
     },
     {
       "path": "./.nuxt/tsconfig.shared.json"
-    },
+    }
   ]
 }

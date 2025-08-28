@@ -3,7 +3,7 @@
     <div class="jonopath-container">
       <div class="w-full h-full flex items-center justify-between">
         <BrandLogo />
-        <DarkModeToggle />
+        <DarkMode />
       </div>
     </div>
   </div>
@@ -11,5 +11,5 @@
 
 <script setup lang="ts">
 import BrandLogo from "@/components/global/BrandLogo.vue";
-import DarkModeToggle from "@/components/global/DarkModeToggle.vue";
+import DarkMode from "@/components/global/DarkMode.vue";
 </script>
