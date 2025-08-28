@@ -1,8 +1,11 @@
 <template>
   <footer class="bg-dark text-white">
+    <!-- FOOTER-TOPBAR -->
     <FooterTopBar />
 
+    <!-- FOOTER-CONTAINER -->
     <div class="jonopath-container pt-2">
+      <!-- FOOTER-MENU -->
       <FooterMenu :nav-items="navItems" />
 
       <!-- COPYRIGHT -->
