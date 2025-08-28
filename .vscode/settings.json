@@ -8,7 +8,6 @@
   "terminal.integrated.cursorBlinking": true,
   "editor.fontFamily": "Consolas, 'Courier New', monospace",
   "editor.fontSize": 18,
-  "editor.formatOnSave": true,
   "files.autoSave": "onFocusChange",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.tabSize": 2,
@@ -18,9 +17,17 @@
   "javascript.updateImportsOnFileMove.enabled": "always",
   "prettier.htmlWhitespaceSensitivity": "ignore",
   "html.format.contentUnformatted": "pre,code,textarea",
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always"
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always",
+    "source.fixAll.stylelint": "always",
+    "source.fixAll.tslint": "always",
+    "source.organizeImports": "always"
   },
+  "eslint.format.enable": true,
+  "eslint.run": "onSave",
+  "editor.formatOnType": false,
   "prettier.singleQuote": true,
   "eslint.validate": [
     "javascript",
@@ -33,7 +40,6 @@
   "html.autoClosingTags": false,
   "editor.codeActions.triggerOnFocusChange": true,
   "editor.formatOnPaste": false,
-  "editor.formatOnType": false,
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.gotoLocation.multipleDefinitions": "goto",
   "vue.inlayHints.destructuredProps": true,
@@ -69,5 +75,14 @@
       }
     }
   },
+  "css.lint.unknownAtRules": "ignore",
+  "css.lint.unknownProperties": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownProperties": "ignore",
+  "terminal.integrated.tabs.defaultIcon": "vm",
+  "tailwindCSS.lint.invalidVariant": "ignore",
+  "tailwindCSS.lint.invalidTailwindDirective": "ignore",
+  "tailwindCSS.lint.invalidScreen": "ignore",
+  "tailwindCSS.lint.invalidConfigPath": "ignore",
   "iis.configDir": "",
 }

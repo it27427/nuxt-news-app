@@ -4,11 +4,17 @@ import { defineNuxtConfig } from 'nuxt/config';
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+
+  ssr: false,
+
   modules: [
-    '@nuxt/eslint',
+    '@nuxt/content',
     '@nuxt/image',
+    '@nuxt/test-utils',
     '@nuxt/scripts',
-    '@nuxt/test-utils'
+    '@nuxt/icon',
+    '@nuxtjs/mdc',
+    '@nuxtjs/tailwindcss',
   ],
 
   app: {
@@ -37,18 +43,24 @@ export default defineNuxtConfig({
   vite: {
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./', import.meta.url)),
-        assets: fileURLToPath(new URL('./assets', import.meta.url)),
-        components: fileURLToPath(new URL('./components', import.meta.url)),
-        content: fileURLToPath(new URL('./content', import.meta.url)),
-        layouts: fileURLToPath(new URL('./layouts', import.meta.url)),
-        pages: fileURLToPath(new URL('./pages', import.meta.url)),
-        plugins: fileURLToPath(new URL('./plugins', import.meta.url)),
+        '@': fileURLToPath(new URL('./app/', import.meta.url)),
+        assets: fileURLToPath(new URL('./app/assets/', import.meta.url)),
+        layouts: fileURLToPath(new URL('./app/layouts/', import.meta.url)),
+        components: fileURLToPath(new URL('./app/components/', import.meta.url)),
+        pages: fileURLToPath(new URL('./app/pages/', import.meta.url)),
+        plugins: fileURLToPath(new URL('./app/plugins/', import.meta.url)),
+        server: fileURLToPath(new URL('./server/', import.meta.url)),
+        content: fileURLToPath(new URL('./content/', import.meta.url)),
       },
     },
   },
 
   css: ['@/assets/scss/main.scss'],
+  
+  tailwindcss: {
+    exposeConfig: true,
+    viewer: true,
+  },
 
   postcss: {
     plugins: {
