@@ -259,6 +259,15 @@ button {
   }
 }
 
+.redirect {
+  &::after {
+    content: '';
+    display: inline-block;
+    width: size(16);
+    text-align: left;
+    animation: ellipsisSteps 1.5s infinite steps(3);
+  }
+}
 
 /*=======================================================
                         PRELOADER
