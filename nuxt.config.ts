@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
   ],
-  
+
   srcDir: 'app/',
 
   app: {
@@ -59,10 +59,10 @@ export default defineNuxtConfig({
 
   css: ['@/assets/scss/main.scss'],
   
-  tailwindcss: {
-    exposeConfig: true,
-    viewer: true,
-  },
+  // tailwindcss: {
+  //   exposeConfig: true,
+  //   viewer: true,
+  // },
 
   postcss: {
     plugins: {

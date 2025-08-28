@@ -1,7 +1,7 @@
 <template>
   <p class="font-normal">
-    কপিরাইট &copy; {{ currentYear }} <span class="font-bold">জনপথ.কম</span> &mdash; 
-    সর্বস্বত্ব সংরক্ষিত।
+    কপিরাইট &copy; <span class="font-sans">{{ currentYear }}</span>
+    <span class="font-bold"> জনপথ.কম</span> &mdash; সর্বস্বত্ব সংরক্ষিত।
   </p>
 </template>
 

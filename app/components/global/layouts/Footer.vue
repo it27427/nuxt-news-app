@@ -4,7 +4,7 @@
     <FooterTopBar />
 
     <!-- FOOTER-CONTAINER -->
-    <div class="jonopath-container pt-2">
+    <div class="jonopath-container pt-5 pb-1">
       <!-- FOOTER-MENU -->
       <FooterMenu :nav-items="navItems" />
 

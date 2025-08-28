@@ -36,6 +36,7 @@ $black: rgb(0, 0, 0);
 $dark-color: rgb(34, 34, 34);
 $dark-link-active-color: rgb(138, 140, 142);
 $border-color-primary: rgb(230, 232, 234);
+$border-color-secondary: rgb(63, 63, 66);
 
 /*=======================================================
                   REUSABLE-FUNCTIONS
@@ -132,12 +133,13 @@ $border-color-primary: rgb(230, 232, 234);
 
 /* Define breakpoints */
 $breakpoints: (
-  mobile: size(240),
-  mob: size(400),
-  small: size(576),
-  medium: size(768),
-  large: size(992),
-  xlarge: size(1200),
+  xs: size(240),
+  ss: size(400),
+  sm: size(576),
+  md: size(768),
+  lg: size(992),
+  xl: size(1200),
+  xxl: size(1280),
 );
 
 /* Media mixin → min-width */
@@ -254,7 +256,7 @@ button {
   margin-inline: auto;
   padding-inline: size(8);
 
-  @include media(mob) {
+  @include media(ss) {
     padding-inline: size(16);
   }
 }
@@ -299,11 +301,11 @@ button {
   width: $full;
   height: size(44);
 
-  @include media(mobile) {
+  @include media(xs) {
     height: size(60);
   }
 
-  @include media(small) {
+  @include media(sm) {
     height: size(64);
   }
 
@@ -326,15 +328,15 @@ button {
   @include flex-center;
   overflow: hidden;
 
-  @include media(small) {
+  @include media(sm) {
     height: size(28);
   }
 
-  @include media(medium) {
+  @include media(md) {
     height: size(30);
   }
 
-  @include media(large) {
+  @include media(lg) {
     height: size(32);
   }
 
@@ -352,7 +354,7 @@ button {
   color: $body-bg-dark;
   @include font($family, size(15), normal, lh(23));
 
-  @include media(medium) {
+  @include media(md) {
     font-size: size(17);
     line-height: lh(25.5);
   }
@@ -394,13 +396,11 @@ button {
 }
 
 .hamburger {
-  // max-height: calc($vh - size(108));
   overflow-x: hidden;
   overflow-y: scroll;
   white-space: nowrap;
   scroll-behavior: auto;
   scrollbar-width: none;
-  // padding-block-end: size(20);
 }
 
 .offcanvas {
@@ -412,6 +412,73 @@ button {
   scrollbar-width: none;
 }
 
+/*=======================================================
+                      FOOTER
+=========================================================*/
+.footer-list {
+  display: grid;
+  column-gap: size(8);
+  grid-template-rows: repeat(4, auto);
+  grid-template-columns: repeat(2, 1fr);
+  column-count: 2;
+  padding-block-end: size(8);
+  
+  @include media(md) {
+    column-gap: size(16);
+    grid-template-rows: repeat(3, auto);
+    grid-template-columns: repeat(3, 1fr);
+    column-count: 3;
+  }
+  
+  @include media(lg) {
+    grid-template-columns: repeat(4, 1fr);
+    column-count: 4;
+  }
+  
+  @include media(xxl) {
+    grid-template-columns: repeat(4, 1fr);
+    column-count: 5;
+  }
+
+  &-item {
+    padding-block: size(8);
+
+    &:first-of-type {
+      @include border-bottom(solid, size(1), $border-color-secondary);
+      grid-column: 1 / -1;
+      width: $full;
+      column-span: all;
+      margin-block-end: size(8);
+    }
+  }
+
+  &-link {
+    font-size: size(14.5);
+    font-weight: 700;
+    padding-block: size(12);
+    @include transition(all, 400ms, ease-in);
+    
+    @include media(md) {
+      font-size: size(16);
+    }
+
+    @include hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@supports (grid-template-columns: fit-content(size(200))) {
+  .footer-list {
+    display: grid;
+    grid-auto-flow: column;
+  }
+}
+
+/*=======================================================
+                MEDIA-QUERIES => (xs)
+=========================================================*/
+
 @media (max-width: 37.4375rem) {
   .scrollable-nav {
     white-space: nowrap;
@@ -421,7 +488,7 @@ button {
     width: calc($full - size(48));
   }
 
-  .jonopath-container.mobcontainer {
+  .jonopath-container.sscontainer {
     padding-inline: 0;
   }
 }
