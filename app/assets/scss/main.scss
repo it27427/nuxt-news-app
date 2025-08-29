@@ -30,11 +30,13 @@ $transparent: transparent;
 $themeColor: hsl(0, 100%, 36%); // rgb(184, 0, 0)
 $light: hsl(0, 0%, 96%); // rgb(245, 245, 245)
 $light-color: hsl(0, 0%, 99%); //rgb(253, 253, 253)
+$light-surface: hsl(0, 0%, 98%); //rgb(250,250,250)
 $body-bg-light: hsl(0, 0%, 99%); // rgb(252, 252, 252)
 $body-bg-dark: hsl(0, 0%, 8%); // rgb(20, 20, 20)
 $white: hsl(0, 0%, 100%); // rgb(255, 255, 255)
 $black: hsl(0, 0%, 0%); // rgb(0, 0, 0)
 $dark-color: hsl(0, 0%, 13%); // rgb(34, 34, 34)
+$dark-knight: hsl(236, 88%, 7%); //rgb(2, 4, 32)
 $dark-link-active-color: hsl(210, 2%, 55%); // rgb(138, 140, 142)
 $border-color-primary: hsl(210, 9%, 91%); // rgb(230, 232, 234)
 $border-color-secondary: hsl(240, 2%, 25%); // rgb(63, 63, 66)
@@ -472,6 +474,16 @@ button {
   .footer-list {
     display: grid;
     grid-auto-flow: column;
+  }
+}
+
+/*=======================================================
+                  DARK-MODE
+=========================================================*/
+
+@layer base {
+  body {
+    @apply dark:bg-dark-surface text-white;
   }
 }
 
