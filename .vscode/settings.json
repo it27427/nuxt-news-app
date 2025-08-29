@@ -110,7 +110,7 @@
   "tailwindCSS.lint.invalidTailwindDirective": "ignore",
   "tailwindCSS.lint.invalidScreen": "ignore",
   "tailwindCSS.lint.invalidConfigPath": "ignore",
-  "iis.configDir": "./",
+  "iis.configDir": ".\\",
   "iisexpress.openInBrowser": "chrome",
   "iisexpress.iisExpressPath": "C:\\Program Files\\IIS Express\\iisexpress.exe",
   "iisexpress.appcmdPath": "C:\\Program Files\\IIS Express\\appcmd.exe",

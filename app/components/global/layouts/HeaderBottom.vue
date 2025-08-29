@@ -1,7 +1,7 @@
 <template>
   <Header
     :class="[
-      'fixed bottom-0 left-0 w-full z-50 bg-white dark:bg-dark-bg shadow-lg transition-transform duration-500 ease-in-out',
+      'fixed bottom-0 left-0 w-full z-50 bg-white dark:bg-dark-surface shadow-lg transition-transform duration-500 ease-in-out',
       show ? 'translate-y-0' : 'translate-y-full',
     ]"
   >

@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   ssr: false,
+  // spaLoadingTemplate: false,
 
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 
@@ -24,7 +25,7 @@ export default defineNuxtConfig({
     fallback: 'light',
     classSuffix: '',
     storageKey: 'theme',
-  },
+  } as any,
 
   tailwindcss: {
     cssPath: '@/assets/scss/main.scss',

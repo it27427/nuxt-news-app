@@ -2,14 +2,21 @@
   <Header
     :class="[
       'w-full transition-transform duration-300',
-      props.show ? 'sticky top-0 left-0 z-40 translate-y-0' : 'relative -translate-y-full'
+      props.show
+        ? 'sticky top-0 left-0 z-40 translate-y-0'
+        : 'relative -translate-y-full',
     ]"
   >
-    <nav class="bg-white border-b border-light-50 h-12">
+    <nav
+      class="bg-white border-b border-light-50 dark:bg-dark dark:border-dark-divider h-12"
+    >
       <div class="jonopath-container flex items-center mobcontainer">
         <!-- Hamburger (Mobile) -->
         <div class="md:hidden">
-          <Hamburger :is-open="props.collapseMenuIsOpen" @toggle="props.toggleCollapseMenu" />
+          <Hamburger
+            :is-open="props.collapseMenuIsOpen"
+            @toggle="props.toggleCollapseMenu"
+          />
         </div>
 
         <!-- Desktop Menu -->
@@ -22,40 +29,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import Header from "@/components/global/layouts/Header.vue";
-import Hamburger from "@/components/global/hamburger/Hamburger.vue";
-import DesktopMenu from "@/components/global/menus/DesktopMenu.vue";
+  import Hamburger from '@/components/global/hamburger/Hamburger.vue';
+  import Header from '@/components/global/layouts/Header.vue';
+  import DesktopMenu from '@/components/global/menus/DesktopMenu.vue';
+  import { onMounted, onUnmounted, ref } from 'vue';
 
-type NavItem = { label: string; to: string };
+  type NavItem = { label: string; to: string };
 
-// Props
-const props = defineProps<{
-  navItems: NavItem[];
-  collapseMenuIsOpen: boolean;
-  toggleCollapseMenu: () => void;
-  show: boolean;
-}>();
+  // Props
+  const props = defineProps<{
+    navItems: NavItem[];
+    collapseMenuIsOpen: boolean;
+    toggleCollapseMenu: () => void;
+    show: boolean;
+  }>();
 
-// Scroll tracking (if you want to use it for something else)
-const scrolledBeyondVH100 = ref(false);
+  // Scroll tracking (if you want to use it for something else)
+  const scrolledBeyondVH100 = ref(false);
 
-function getScrollY(): number {
-  const el = (document.scrollingElement as HTMLElement | null) || document.documentElement;
-  return (el && el.scrollTop) || window.scrollY || 0;
-}
+  function getScrollY(): number {
+    const el =
+      (document.scrollingElement as HTMLElement | null) ||
+      document.documentElement;
+    return (el && el.scrollTop) || window.scrollY || 0;
+  }
 
-function handleScroll() {
-  const threshold = window.innerHeight || 0;
-  scrolledBeyondVH100.value = getScrollY() > threshold;
-}
+  function handleScroll() {
+    const threshold = window.innerHeight || 0;
+    scrolledBeyondVH100.value = getScrollY() > threshold;
+  }
 
-onMounted(() => {
-  handleScroll();
-  window.addEventListener("scroll", handleScroll, { passive: true });
-});
+  onMounted(() => {
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  });
 
-onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
-});
+  onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+  });
 </script>

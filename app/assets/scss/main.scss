@@ -6,18 +6,10 @@
 @tailwind utilities;
 
 /*=======================================================
-                      VARIABLES
+                🎨 Custom Fonts
 =========================================================*/
-$sizing: border-box;
-$margin: 0;
-$padding: 0;
-$full: 100%;
-$vw: 100vw;
-$vh: 100vh;
-
 $family: 'Noto Serif Bengali', serif, Helvetica, Arial, sans-serif;
 $font-path: '../fonts/NotoSerifBengali';
-
 $font-weights: (
   normal: 400,
   medium: 500,
@@ -25,48 +17,21 @@ $font-weights: (
   bold: 700,
 );
 
-/* COLORS */
-$transparent: transparent;
-$themeColor: hsl(0, 100%, 36%); // rgb(184, 0, 0)
-$light: hsl(0, 0%, 96%); // rgb(245, 245, 245)
-$light-color: hsl(0, 0%, 99%); //rgb(253, 253, 253)
-$light-surface: hsl(0, 0%, 98%); //rgb(250,250,250)
-$body-bg-light: hsl(0, 0%, 99%); // rgb(252, 252, 252)
-$body-bg-dark: hsl(0, 0%, 8%); // rgb(20, 20, 20)
-$white: hsl(0, 0%, 100%); // rgb(255, 255, 255)
-$black: hsl(0, 0%, 0%); // rgb(0, 0, 0)
-$dark-color: hsl(0, 0%, 13%); // rgb(34, 34, 34)
-$dark-knight: hsl(236, 88%, 7%); //rgb(2, 4, 32)
-$dark-link-active-color: hsl(210, 2%, 55%); // rgb(138, 140, 142)
-$border-color-primary: hsl(210, 9%, 91%); // rgb(230, 232, 234)
-$border-color-secondary: hsl(240, 2%, 25%); // rgb(63, 63, 66)
+@mixin font-face($family, $weight, $style: normal) {
+  $file: 'NotoSerifBengali-';
 
-/*=======================================================
-                  REUSABLE-FUNCTIONS
-=========================================================*/
-/* Convert px → rem */
-@function size($px, $base: 16) {
-  @return math.div($px, $base) * 1rem;
-}
+  @if $weight == 400 {
+    $file: $file + 'Regular';
+  } @else if $weight == 500 {
+    $file: $file + 'Medium';
+  } @else if $weight == 600 {
+    $file: $file + 'SemiBold';
+  } @else if $weight == 700 {
+    $file: $file + 'Bold';
+  } @else {
+    $file: $file + 'Regular';
+  }
 
-/* Convert px → unitless line-height */
-@function lh($px, $base: 16) {
-  @return math.div($px, $base) * 1;
-}
-
-/*=======================================================
-                    REUSABLE-MIXINS
-=========================================================*/
-
-/* Reset mixin: (box-sizing, margin, padding) */
-@mixin reset {
-  box-sizing: $sizing;
-  margin: $margin;
-  padding: $padding;
-}
-
-/* Font-face mixin (for @font-face rules) */
-@mixin font-face($family, $file, $weight, $style: normal) {
   @font-face {
     font-family: $family;
     src:
@@ -78,526 +43,276 @@ $border-color-secondary: hsl(240, 2%, 25%); // rgb(63, 63, 66)
   }
 }
 
-/* Font-Apply Mixin (family, size, weight, line-height) */
-@mixin font($family, $size, $weight, $line-height: normal) {
-  font-family: $family;
-  font-size: $size;
+@mixin customfont($family, $weight) {
+  $numeric-weight: if(
+    map.has-key($font-weights, $weight),
+    map.get($font-weights, $weight),
+    $weight
+  );
 
-  @if map.has-key($font-weights, $weight) {
-    font-weight: map.get($font-weights, $weight);
-  } @else {
-    font-weight: $weight;
-  }
-
-  line-height: $line-height;
+  @include font-face($family, $numeric-weight);
 }
 
-/* Background + Text Color Mixin (background-color, color) */
-@mixin bgColor($bg, $color: null) {
-  background-color: $bg;
-
-  @if $color !=null {
-    color: $color;
-  }
-}
-
-@mixin border-bottom($width: size(1), $style: solid, $color: $white) {
-  border-bottom: $width $style $color;
-}
-
-@mixin radius($radius) {
-  border-radius: $radius;
-}
-
-@mixin hover {
-  &:hover {
-    @content;
-  }
-}
-
-@mixin hover-not-active {
-  &:hover:not(.active) {
-    @content;
-  }
-}
-
-@mixin transition(
-  $properties: all,
-  $duration: 0.4s,
-  $timing: ease,
-  $delay: 0s
-) {
-  transition: $properties $duration $timing $delay;
-}
-
-@mixin full-screen {
-  width: $vw;
-  height: $vh;
-}
-
-/* Define breakpoints */
-$breakpoints: (
-  xs: size(240),
-  ss: size(400),
-  sm: size(576),
-  md: size(768),
-  lg: size(992),
-  xl: size(1200),
-  xxl: size(1280),
-);
-
-/* Media mixin → min-width */
-@mixin media($breakpoint) {
-  @if map.has-key($breakpoints, $breakpoint) {
-    @media (min-width: map.get($breakpoints, $breakpoint)) {
-      @content;
-    }
-  } @else {
-    @error "Breakpoint '#{$breakpoint}' not found in $breakpoints map.";
-  }
-}
-
-/* FLEX-MIXINS */
-@mixin flex {
-  display: flex;
-}
-
-@mixin align-items-start {
-  @include flex;
-  align-items: flex-start;
-}
-
-@mixin align-items-center {
-  @include flex;
-  align-items: center;
-}
-
-@mixin align-items-end {
-  @include flex;
-  align-items: flex-end;
-}
-
-@mixin justify-content-start {
-  @include flex;
-  justify-content: flex-start;
-}
-
-@mixin justify-content-center {
-  @include flex;
-  justify-content: center;
-}
-
-@mixin justify-content-end {
-  @include flex;
-  justify-content: flex-end;
-}
-
-@mixin justify-content-between {
-  @include flex;
-  justify-content: space-between;
-}
-
-@mixin flex-center {
-  @include align-items-center;
-  justify-content: center;
-}
-
-@mixin inline-flex-center {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
+/* LOAD FONTS */
+@include customfont($family, normal);
+@include customfont($family, medium);
+@include customfont($family, semibold);
+@include customfont($family, bold);
 
 /*=======================================================
-                        RESET
+                        BASE LAYER
+   (Put global @apply here so Tailwind can expand it)
 =========================================================*/
-* {
-  @include reset;
-
-  &::before,
-  &::after {
-    @include reset;
-  }
-}
-
-::selection {
-  @include bgColor($themeColor, $body-bg-light);
-}
-
-html {
-  box-sizing: $sizing;
-  font-size: $full;
-}
-
-body {
-  @include font($family, size(16), normal, lh(22));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-img {
-  cursor: pointer;
-  max-width: $full;
-  height: auto;
-}
-
-a,
-button {
-  cursor: pointer;
-}
-
-/*=======================================================
-                        UTILITIES
-=========================================================*/
-.jonopath-container {
-  max-width: size(1008);
-  width: $full;
-  height: $full;
-  margin-inline: auto;
-  padding-inline: size(8);
-
-  @include media(ss) {
-    padding-inline: size(16);
-  }
-}
-
-.redirect {
-  &::after {
-    content: '';
-    display: inline-block;
-    width: size(16);
-    text-align: left;
-    animation: ellipsisSteps 1.5s infinite steps(3);
-  }
-}
-
-/*=======================================================
-                        PRELOADER
-=========================================================*/
-.preloader {
-  background-color: $body-bg-dark;
-  position: fixed;
-  inset: 0;
-  z-index: 9999999;
-
-  &-content {
-    @include flex-center;
-    @include full-screen;
+@layer base {
+  ::selection {
+    @apply bg-primary text-light;
   }
 
-  &-percent {
-    color: $white;
-    font-size: size(80);
-    letter-spacing: size(1.6);
-  }
-}
-
-/*=======================================================
-                        TOPBAR
-=========================================================*/
-.topbar {
-  background-color: $themeColor;
-  @include align-items-center;
-  width: $full;
-  height: size(44);
-
-  @include media(xs) {
-    height: size(60);
+  html {
+    scroll-behavior: smooth;
   }
 
-  @include media(sm) {
-    height: size(64);
-  }
-
-  &-link {
-    width: size(160);
-    height: $full;
-    padding-block: size(2);
-    @include flex-center;
-    @include border-bottom(size(4), solid, $transparent);
-
-    @include hover {
-      border-bottom-color: $white;
-    }
-  }
-}
-
-.logo {
-  width: $full;
-  height: $full;
-  @include flex-center;
-  overflow: hidden;
-
-  @include media(sm) {
-    height: size(28);
-  }
-
-  @include media(md) {
-    height: size(30);
-  }
-
-  @include media(lg) {
-    height: size(32);
+  body {
+    @apply bg-light text-dark dark:bg-dark-surface dark:text-white font-bengali text-sizeDefault font-normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   img {
-    object-fit: contain;
-    width: $full;
-    height: $full;
+    @apply cursor-pointer max-w-full h-auto;
+  }
+
+  a,
+  button {
+    @apply cursor-pointer;
   }
 }
 
 /*=======================================================
-                        HEADER
+                      UTILITIES LAYER
 =========================================================*/
-.header-link {
-  color: $body-bg-dark;
-  @include font($family, size(15), normal, lh(23));
-
-  @include media(md) {
-    font-size: size(17);
-    line-height: lh(25.5);
+@layer utilities {
+  .jonopath-container {
+    @apply max-w-63 w-full h-full mx-auto px-2 ss:px-4;
   }
 
-  &:hover:not(.router-link-active):not(.router-link-exact-active) {
-    border-bottom-color: $themeColor;
-  }
-}
-
-.router-link-active,
-.router-link-exact-active {
-  &:not(.router-link-exact-active.mobile-link) {
-    border-bottom-color: $themeColor;
-  }
-}
-
-.topbar-link {
-  &.router-link-active,
-  &.router-link-exact-active {
-    &:hover:not(.router-link-exact-active.mobile-link) {
-      border-bottom-color: $white;
-    }
-  }
-}
-
-.mobile-link {
-  vertical-align: middle;
-
-  &-text {
-    color: $body-bg-dark;
-    @include font($family, size(15), normal, lh(25.5));
-    display: inline-flex;
-    padding-inline-start: size(4);
-    border-left: solid size(4) $transparent;
-    vertical-align: middle;
+  .redirect {
+    @apply relative after:inline-block after:w-4 after:text-left after:animate-ellipsis;
   }
 
-  &:hover:not(.router-link-active):not(.router-link-exact-active) {
-    .mobile-link-text {
-      border-left-color: $themeColor;
-    }
-  }
-}
-
-.mobile-link {
-  &.router-link-active,
-  &.router-link-exact-active {
-    .mobile-link-text {
-      border-left-color: $themeColor;
-    }
-  }
-}
-
-.hamburger {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  white-space: nowrap;
-  scroll-behavior: auto;
-  scrollbar-width: none;
-}
-
-.offcanvas {
-  height: $vh;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  white-space: nowrap;
-  scroll-behavior: auto;
-  scrollbar-width: none;
-}
-
-/*=======================================================
-                      FOOTER
-=========================================================*/
-.footer-list {
-  display: grid;
-  column-gap: size(8);
-  grid-template-rows: repeat(4, auto);
-  grid-template-columns: repeat(2, 1fr);
-  column-count: 2;
-  padding-block-end: size(8);
-
-  @include media(md) {
-    column-gap: size(16);
-    grid-template-rows: repeat(3, auto);
-    grid-template-columns: repeat(3, 1fr);
-    column-count: 3;
-  }
-
-  @include media(lg) {
-    grid-template-columns: repeat(4, 1fr);
-    column-count: 4;
-  }
-
-  @include media(xxl) {
-    grid-template-columns: repeat(4, 1fr);
-    column-count: 5;
-  }
-
-  &-item {
-    padding-block: size(8);
-
-    &:first-of-type {
-      @include border-bottom(solid, size(1), $border-color-secondary);
-      grid-column: 1 / -1;
-      width: $full;
-      column-span: all;
-      margin-block-end: size(8);
-    }
-  }
-
-  &-link {
-    font-size: size(14.5);
-    font-weight: 700;
-    padding-block: size(12);
-    @include transition(all, 400ms, ease-in);
-
-    @include media(md) {
-      font-size: size(16);
-    }
-
-    @include hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-@supports (grid-template-columns: fit-content(size(200))) {
-  .footer-list {
-    display: grid;
-    grid-auto-flow: column;
-  }
-}
-
-/*=======================================================
-                  DARK-MODE
-=========================================================*/
-
-@layer base {
-  body {
-    @apply bg-light text-dark dark:bg-dark-surface dark:text-white;
-  }
-}
-
-/*=======================================================
-                MEDIA-QUERIES => (xs)
-=========================================================*/
-
-@media (max-width: 37.4375rem) {
-  .scrollable-nav {
-    white-space: nowrap;
-    overflow-x: scroll;
-    scroll-behavior: auto;
+  .scrollbar-none::-webkit-scrollbar,
+  .scrollbar-none {
     scrollbar-width: none;
-    width: calc($full - size(48));
   }
 
-  .jonopath-container.sscontainer {
-    padding-inline: 0;
+  .scrollable-nav {
+    @apply max-md:whitespace-nowrap max-md:overflow-x-scroll max-md:scroll-auto max-md:scrollbar-none max-md:max-w-[calc(100%-theme(spacing.3))];
+  }
+
+  /* Animation helpers as utilities */
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+  .animate-slide-up-fade {
+    animation: slideUpFade 0.3s forwards;
+  }
+  .animate-slide-down {
+    animation: slideDownFade 0.3s forwards;
+  }
+  .animate-slide-up-bottom {
+    animation: slideUpFadeBottom 0.3s forwards;
+  }
+  .animate-slide-down-bottom {
+    animation: slideDownFadeBottom 0.3s forwards;
+  }
+
+  /* HAMBURGER-MENU-ANIMATION */
+  /* Slide Down Animation */
+  .collapse-enter-from,
+  .collapse-leave-to {
+    @apply max-h-0;
+  }
+
+  .collapse-enter-to,
+  .collapse-leave-from {
+    @apply max-h-36.5;
+  }
+
+  .collapse-enter-active,
+  .collapse-leave-active {
+    // transition: max-height 0.3s ease;
+    @apply overflow-hidden transition-max-height duration-300 ease-max;
   }
 }
 
 /*=======================================================
-                  ANIMATION-CLASSES
+                    COMPONENTS LAYER
 =========================================================*/
-.animate-slide-up {
-  animation: slideUp 0.4s ease-out forwards;
-}
+@layer {
+  /* TOPBAR */
+  .topbar {
+    @apply bg-primary flex items-center w-full h-11 xs:h-15 sm:h-16;
 
-.animate-slide-up {
-  animation: slideUpFade 0.3s forwards;
-}
+    &-link {
+      @apply w-40 h-full border-b-4 border-transparent hover:border-b-white dark:hover:border-gray-300 flex items-center justify-center px-0.125;
 
-.animate-slide-down {
-  animation: slideDownFade 0.3s forwards;
-}
+      &.router-link-active,
+      &.router-link-exact-active {
+        &:hover {
+          &:not(.router-link-exact-active.mobile-link) {
+            @apply border-white dark:border-gray-300;
+          }
+        }
+      }
 
-.animate-slide-up-bottom {
-  animation: slideUpFadeBottom 0.3s forwards;
-}
+      &.router-link-active,
+      &.router-link-exact-active {
+        &:hover {
+          @apply border-white dark:border-gray-300;
+        }
+      }
+    }
+  }
 
-.animate-slide-down-bottom {
-  animation: slideDownFadeBottom 0.3s forwards;
+  /* BRAND-LOGO */
+  .logo {
+    @apply w-full h-full flex items-center justify-center overflow-hidden sm:h-7 md:h-7.5 lg:h-8;
+
+    img {
+      @apply w-full h-full object-contain;
+    }
+  }
+
+  /* HEADER */
+  .header-link {
+    @apply border-b-4 border-transparent text-dark-surface dark:text-white font-bengali text-sizeMedium font-normal md:text-sizeBig;
+
+    &:hover {
+      &:not(.router-link-active),
+      &:not(.router-link-exact-active) {
+        @apply border-b-primary;
+      }
+    }
+
+    &.router-link-active,
+    &.router-link-exact-active {
+      @apply border-b-primary;
+    }
+  }
+
+  .router-link-active,
+  .router-link-exact-active {
+    &:not(.router-link-exact-active.mobile-link) {
+      @apply border-b-primary;
+    }
+  }
+
+  /* MOBILE LINK (kept nested, combined duplicates) */
+  .mobile-link {
+    @apply text-dark-surface dark:text-white align-middle;
+
+    &-text {
+      @apply inline-flex pl-1 border-l-4 border-transparent align-middle font-bengali text-sizeMedium font-normal;
+    }
+
+    &:hover:not(.router-link-active):not(.router-link-exact-active) {
+      .mobile-link-text {
+        @apply border-l-primary;
+      }
+    }
+
+    &.router-link-active,
+    &.router-link-exact-active {
+      .mobile-link-text {
+        @apply border-l-primary;
+      }
+    }
+  }
+
+  .hamburger {
+    @apply overflow-x-hidden overflow-y-auto whitespace-nowrap scroll-auto scrollbar-none;
+  }
+
+  .offcanvas {
+    @apply h-screen overflow-x-hidden overflow-y-auto whitespace-nowrap scroll-auto scrollbar-none;
+  }
+
+  /* FOOTER */
+  @supports (grid-template-columns: fit-content(var(--footer-col))) {
+    .footer-list {
+      @apply grid auto-cols-[fit-content(var(--footer-col))] grid-flow-col;
+    }
+  }
+
+  .footer-list {
+    @apply grid gap-x-2 [grid-template-rows:repeat(4,auto)] [grid-template-columns:repeat(2,1fr)] [column-count:2] pb-2 md:gap-x-4 md:[grid-template-rows:repeat(3,auto)] md:[grid-template-columns:repeat(3,1fr)] md:[column-count:3] lg:[grid-template-columns:repeat(4,1fr)] lg:[column-count:4] xxl:[grid-template-columns:repeat(4,1fr)] xxl:[column-count:4];
+
+    &-list-item {
+      @apply py-2;
+
+      &:first-of-type {
+        @apply col-span-full border-b border-dark-divider w-full mb-2;
+      }
+    }
+
+    &-list-link {
+      @apply text-sizeSmall font-bold py-3 md:text-sizeDefault transition-all hover:underline;
+    }
+  }
 }
 
 /*=======================================================
-                  ANIMATION-KEYFRAMES
+                  FEATURE QUERIES / SUPPORT
+=========================================================*/
+
+/*=======================================================
+                  KEYFRAMES
 =========================================================*/
 @keyframes slideUp {
   0% {
     transform: translateY(100%);
     opacity: 0;
   }
-
   100% {
     transform: translateY(0%);
     opacity: 1;
   }
 }
-
-/* First Header slides up and down */
 @keyframes slideUpFade {
   0% {
     transform: translateY(0%);
     opacity: 1;
   }
-
   100% {
     transform: translateY(-100%);
     opacity: 0;
   }
 }
-
 @keyframes slideDownFade {
   0% {
     transform: translateY(-100%);
     opacity: 0;
   }
-
   100% {
     transform: translateY(0%);
     opacity: 1;
   }
 }
-
-/* Second Header slides up and down from bottom */
 @keyframes slideUpFadeBottom {
   0% {
     transform: translateY(100%);
     opacity: 0;
   }
-
   100% {
     transform: translateY(0%);
     opacity: 1;
   }
 }
-
 @keyframes slideDownFadeBottom {
   0% {
     transform: translateY(0%);
     opacity: 1;
   }
-
   100% {
     transform: translateY(100%);
     opacity: 0;

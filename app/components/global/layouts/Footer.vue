@@ -10,7 +10,7 @@
 
       <!-- COPYRIGHT -->
       <div
-        class="flex items-center justify-center border-t border-dark-border h-12"
+        class="flex items-center justify-center border-t border-dark-divider h-12"
       >
         <Copyright />
       </div>
