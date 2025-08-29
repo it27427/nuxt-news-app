@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
 
+  // @ts-ignore => to skip unsupported options.
   colorMode: {
     preference: 'system',
     fallback: 'light',
@@ -37,6 +38,7 @@ export default defineNuxtConfig({
 
   app: {
     baseURL: process.env.NUXT_APP_BASE_URL || '/',
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       title: 'Jonopath',
       titleTemplate: '%s | Sotter Pothe Nirvik',
