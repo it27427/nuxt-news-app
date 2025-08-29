@@ -1,12 +1,15 @@
 @use 'sass:math';
 @use 'sass:map';
 
+/*=======================================================
+                REGISTER-TAILWIND
+=========================================================*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /*=======================================================
-                🎨 Custom Fonts
+              🎨 Custom Application Fonts
 =========================================================*/
 $family: 'Noto Serif Bengali', serif, Helvetica, Arial, sans-serif;
 $font-path: '../fonts/NotoSerifBengali';
@@ -92,6 +95,18 @@ $font-weights: (
                       UTILITIES LAYER
 =========================================================*/
 @layer utilities {
+  /* APP-PAGE-TRANSITIONS */
+  .page-enter-active,
+  .page-leave-active {
+    @apply transition-all duration-400;
+  }
+
+  .page-enter-from,
+  .page-leave-to {
+    @apply opacity-0 blur-4;
+  }
+
+  /* APP-CONTAINER */
   .jonopath-container {
     @apply max-w-63 w-full h-full mx-auto px-2 ss:px-4;
   }
@@ -105,8 +120,31 @@ $font-weights: (
     scrollbar-width: none;
   }
 
+  /* MAX-WIDTH */
   .scrollable-nav {
     @apply max-md:whitespace-nowrap max-md:overflow-x-scroll max-md:scroll-auto max-md:scrollbar-none max-md:max-w-[calc(100%-theme(spacing.3))];
+  }
+
+  /* SLIDE-LEAVE-ANIMATION(OFFCANVAS) */
+  .slide-enter-from {
+    transform: translateX(-100%);
+  }
+
+  .slide-enter-to {
+    transform: translateX(0);
+  }
+
+  .slide-leave-from {
+    transform: translateX(0);
+  }
+
+  .slide-leave-to {
+    transform: translateX(-100%);
+  }
+
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: transform 0.3s ease;
   }
 
   /* Animation helpers as utilities */
@@ -148,7 +186,7 @@ $font-weights: (
 /*=======================================================
                     COMPONENTS LAYER
 =========================================================*/
-@layer {
+@layer components {
   /* TOPBAR */
   .topbar {
     @apply bg-primary flex items-center w-full h-11 xs:h-15 sm:h-16;
@@ -164,13 +202,14 @@ $font-weights: (
           }
         }
       }
+    }
+  }
 
-      &.router-link-active,
-      &.router-link-exact-active {
-        &:hover {
-          @apply border-white dark:border-gray-300;
-        }
-      }
+  /* ROUTER-LINKS-ACTIVE */
+  .router-link-active,
+  .router-link-exact-active {
+    &:hover {
+      @apply border-white dark:border-gray-300;
     }
   }
 
@@ -215,9 +254,12 @@ $font-weights: (
       @apply inline-flex pl-1 border-l-4 border-transparent align-middle font-bengali text-sizeMedium font-normal;
     }
 
-    &:hover:not(.router-link-active):not(.router-link-exact-active) {
-      .mobile-link-text {
-        @apply border-l-primary;
+    &:hover {
+      &:not(.router-link-active),
+      &:not(.router-link-exact-active) {
+        .mobile-link-text {
+          @apply border-l-primary;
+        }
       }
     }
 
@@ -237,17 +279,10 @@ $font-weights: (
     @apply h-screen overflow-x-hidden overflow-y-auto whitespace-nowrap scroll-auto scrollbar-none;
   }
 
-  /* FOOTER */
-  @supports (grid-template-columns: fit-content(var(--footer-col))) {
-    .footer-list {
-      @apply grid auto-cols-[fit-content(var(--footer-col))] grid-flow-col;
-    }
-  }
-
   .footer-list {
-    @apply grid gap-x-2 [grid-template-rows:repeat(4,auto)] [grid-template-columns:repeat(2,1fr)] [column-count:2] pb-2 md:gap-x-4 md:[grid-template-rows:repeat(3,auto)] md:[grid-template-columns:repeat(3,1fr)] md:[column-count:3] lg:[grid-template-columns:repeat(4,1fr)] lg:[column-count:4] xxl:[grid-template-columns:repeat(4,1fr)] xxl:[column-count:4];
+    @apply grid gap-x-2 [grid-template-rows:repeat(4,auto)] [grid-template-columns:repeat(2,1fr)] [column-count:2] pb-2 md:gap-x-4 md:[grid-template-rows:repeat(3,auto)] md:[grid-template-columns:repeat(3,1fr)] md:[column-count:3] lg:[grid-template-columns:repeat(4,1fr)] lg:[column-count:4];
 
-    &-list-item {
+    &-item {
       @apply py-2;
 
       &:first-of-type {
@@ -255,8 +290,8 @@ $font-weights: (
       }
     }
 
-    &-list-link {
-      @apply text-sizeSmall font-bold py-3 md:text-sizeDefault transition-all hover:underline;
+    &-link {
+      @apply text-sm ss:text-sizeSmall font-bold py-3 md:text-sizeDefault transition-all hover:underline;
     }
   }
 }
@@ -264,6 +299,13 @@ $font-weights: (
 /*=======================================================
                   FEATURE QUERIES / SUPPORT
 =========================================================*/
+
+/* ✅ Put @supports */
+@supports (grid-template-columns: fit-content(var(--footer-col))) {
+  .footer-list {
+    @apply grid auto-cols-[fit-content(var(--footer-col))] grid-flow-col;
+  }
+}
 
 /*=======================================================
                   KEYFRAMES

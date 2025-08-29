@@ -13,6 +13,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      blur: {
+        '4': '1rem', // custom blur
+      },
       colors: {
         primary: {
           DEFAULT: 'hsl(0, 100%, 36%)', //rgb(184, 0, 0)
@@ -71,6 +74,9 @@ const config: Config = {
       },
       animation: {
         ellipsis: 'ellipsisSteps 1.5s steps(3, end) infinite',
+      },
+      transitionDuration: {
+        400: '400ms',
       },
     },
     screens: {
