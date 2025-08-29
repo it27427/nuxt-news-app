@@ -25,29 +25,27 @@
 
   const colorMode = useColorMode();
 
-  let colorModePreference = colorMode.preference;
-
   /* --- Restore theme from localStorage on mount --- */
   onMounted(() => {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
     if (savedTheme) {
-      colorModePreference = savedTheme;
+      colorMode.preference = savedTheme;
     } else {
       // save the default theme on first load
-      localStorage.setItem('theme', colorModePreference);
+      localStorage.setItem('theme', colorMode.preference);
     }
   });
 
   /* --- Set Theme & Save --- */
   const setColorTheme = (newTheme: Theme) => {
-    colorModePreference = newTheme;
-    localStorage.setItem('theme', newTheme);
+    colorMode.preference = newTheme;
+    localStorage.setItem('theme', newTheme); // save choice
   };
 
   /* --- Toggle Theme --- */
   const toggleTheme = () =>
-    setColorTheme(colorModePreference === 'dark' ? 'light' : 'dark');
+    setColorTheme(colorMode.preference === 'dark' ? 'light' : 'dark');
 
   /* --- Reactive Light Mode Check --- */
-  const lightMode = computed(() => colorModePreference === 'light');
+  const lightMode = computed(() => colorMode.preference === 'light');
 </script>

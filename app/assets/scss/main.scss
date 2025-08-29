@@ -230,8 +230,6 @@ html {
 }
 
 body {
-  background-color: $light;
-  color: $body-bg-dark;
   @include font($family, size(16), normal, lh(22));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -483,7 +481,7 @@ button {
 
 @layer base {
   body {
-    @apply dark:bg-dark-surface text-white;
+    @apply bg-light text-dark dark:bg-dark-surface dark:text-white;
   }
 }
 

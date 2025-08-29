@@ -19,16 +19,11 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
 
-  icon: {
-    serverBundle: {
-      collections: ['mdi', 'heroicons'],
-    },
-  },
-
   colorMode: {
     preference: 'system',
     fallback: 'light',
     classSuffix: '',
+    storageKey: 'theme',
   },
 
   tailwindcss: {
