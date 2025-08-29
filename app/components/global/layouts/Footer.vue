@@ -1,7 +1,7 @@
 <template>
   <footer class="bg-dark text-white">
-    <!-- FOOTER-TOPBAR -->
-    <FooterTopBar />
+    <!-- FOOTER-TOPBAR (without DarkMode) -->
+    <TopBar />
 
     <!-- FOOTER-CONTAINER -->
     <div class="jonopath-container pt-5 pb-1">
@@ -9,7 +9,9 @@
       <FooterMenu :nav-items="navItems" />
 
       <!-- COPYRIGHT -->
-      <div class="flex items-center justify-center border-t border-dark-border h-12">
+      <div
+        class="flex items-center justify-center border-t border-dark-border h-12"
+      >
         <Copyright />
       </div>
     </div>
@@ -17,14 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import Copyright from "@/components/global/Copyright.vue";
-import FooterTopBar from "@/components/global/FooterTopBar.vue";
-import FooterMenu from "@/components/global/menus/FooterMenu.vue";
+  import Copyright from '@/components/global/Copyright.vue';
+  import FooterMenu from '@/components/global/menus/FooterMenu.vue';
+  import TopBar from '@/components/global/TopBar.vue';
 
-type NavItem = { label: string; to: string };
+  type NavItem = { label: string; to: string };
 
-// Define Props
-const { navItems } = defineProps<{
-  navItems: NavItem[];
-}>();
+  // Define Props
+  const { navItems } = defineProps<{
+    navItems: NavItem[];
+  }>();
 </script>

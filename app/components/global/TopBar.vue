@@ -3,13 +3,13 @@
     <div class="jonopath-container">
       <div class="w-full h-full flex items-center justify-between">
         <BrandLogo />
-        <DarkMode />
+        <!-- Slot for the right side (DarkMode) -->
+        <slot name="right" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import BrandLogo from "@/components/global/BrandLogo.vue";
-import DarkMode from "@/components/global/DarkMode.vue";
+  import BrandLogo from '@/components/global/BrandLogo.vue';
 </script>

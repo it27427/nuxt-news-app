@@ -364,9 +364,20 @@ button {
   }
 }
 
-.router-link-active:not(.router-link-exact-active.mobile-link),
-.router-link-exact-active:not(.router-link-exact-active.mobile-link) {
-  border-bottom-color: $themeColor;
+.router-link-active,
+.router-link-exact-active {
+  &:not(.router-link-exact-active.mobile-link) {
+    border-bottom-color: $themeColor;
+  }
+}
+
+.topbar-link {
+  &.router-link-active,
+  &.router-link-exact-active {
+    &:hover:not(.router-link-exact-active.mobile-link) {
+      border-bottom-color: $white;
+    }
+  }
 }
 
 .mobile-link {
@@ -388,10 +399,12 @@ button {
   }
 }
 
-.mobile-link.router-link-active,
-.mobile-link.router-link-exact-active {
-  .mobile-link-text {
-    border-left-color: $themeColor;
+.mobile-link {
+  &.router-link-active,
+  &.router-link-exact-active {
+    .mobile-link-text {
+      border-left-color: $themeColor;
+    }
   }
 }
 
