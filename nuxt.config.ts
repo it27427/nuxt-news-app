@@ -1,12 +1,40 @@
+/** ======================================================================================
+ * 📄 File: nuxt.config.ts
+ *
+ * 🗺️ App Configuration: Defines core settings, modules, options, app behavior, aliases, and app styles.
+ *
+ * 🗂️ Config Structure:
+ *    🧩 Basic Settings
+ *    📦 Modules
+ *    🎛️ Module Options (icon, colorMode, tailwindcss)
+ *    🖥️ Runtime App Configs
+ *    🌩️ Vite & Aliases
+ *    🎨 Global Styles
+ *
+ * ✍️ Maintain logical order for readability.
+ * 💡 Use "@ts-ignore" for unsupported module options.
+ * ===========================================================================================*/
+
 import { fileURLToPath } from 'node:url';
 import { defineNuxtConfig } from 'nuxt/config';
 
 export default defineNuxtConfig({
+  /* ==============================
+   * 🧩 Basic Settings
+   * ==============================*/
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-
   ssr: false,
 
+  /* ========================================
+   * ✍️ Set srcDir first for custom layouts.
+   * ========================================*/
+  srcDir: process.env.NUXT_SRC_DIR || 'app/',
+
+  /* ===============================================
+   * 📦 Module Registering
+   * ✍️ Ensure module installed before registering.
+   * ===============================================*/
   modules: [
     '@nuxt/content',
     '@nuxt/image',
@@ -18,26 +46,53 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
 
+  /* ================================================
+   * 🗃️ Icon Module Setup
+   * ✍️ Use “@ts-ignore” to fix unsupported options.
+   * ================================================*/
+  // @ts-ignore
   icon: {
     collections: {
       mdi: () => import('@iconify-json/mdi/icons.json').then((i) => i.default),
       heroicons: () =>
         import('@iconify-json/heroicons/icons.json').then((i) => i.default),
     },
-  } as any,
+  },
 
+  /* ====================================================
+   * 🌙 ColorMode => Theme Switch Setup
+   * ✍️ Apply “@ts-ignore” to skip unsupported options.
+   * ===================================================*/
+  // @ts-ignore
   colorMode: {
     preference: 'system',
     fallback: 'light',
     classSuffix: '',
   },
 
-  srcDir: process.env.NUXT_SRC_DIR || 'app/',
+  /* =========================================
+   * 🌈 Tailwind Setup
+   * ✍️ Define TailwindCSS setup here.
+   * =========================================*/
+  // @ts-ignore => to skip unsupported options.
+  tailwindcss: {
+    cssPath: '@/assets/scss/main.scss',
+    configPath: 'tailwind.config.ts',
+    exposeConfig: false,
+    config: {},
+    viewer: true,
+  },
+
+  /* =================================================
+   * 📱 Runtime App Config & Head
+   * ✍️ Set <head> metadata, meta tags, and SEO here.
+   * =================================================*/
 
   app: {
     baseURL: process.env.NUXT_APP_BASE_URL || '/',
-
     head: {
+      title: 'Jonopath',
+      titleTemplate: '%s | Sotter Pothe Nirvik',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -48,8 +103,6 @@ export default defineNuxtConfig({
           content: 'Your page description for SEO',
         },
       ],
-      title: 'Jonopath',
-      titleTemplate: '%s | Sotter Pothe Nirvik',
       link: [
         {
           rel: 'stylesheet',
@@ -59,6 +112,10 @@ export default defineNuxtConfig({
     },
   },
 
+  /* ====================================
+   * ⚡ Vite & Aliases
+   * ✍️ Use aliases for cleaner imports.
+   * ====================================*/
   vite: {
     resolve: {
       alias: {
@@ -108,20 +165,9 @@ export default defineNuxtConfig({
     },
   },
 
+  /* ===========================================
+   * 🎨 Application Stylesheets
+   * ✍️ Global theme setup goes here.
+   * ===========================================*/
   css: ['@/assets/scss/main.scss'],
-
-  tailwindcss: {
-    cssPath: '@/assets/scss/main.scss',
-    configPath: 'tailwind.config.ts',
-    exposeConfig: false,
-    config: {},
-    viewer: true,
-  },
-
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
 });

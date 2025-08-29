@@ -27,16 +27,17 @@ $font-weights: (
 
 /* COLORS */
 $transparent: transparent;
-$themeColor: rgb(184, 0, 0);
-$light: rgb(245, 245, 245);
-$body-bg-light: rgb(252, 252, 252);
-$body-bg-dark: rgb(20, 20, 20);
-$white: rgb(255, 255, 255);
-$black: rgb(0, 0, 0);
-$dark-color: rgb(34, 34, 34);
-$dark-link-active-color: rgb(138, 140, 142);
-$border-color-primary: rgb(230, 232, 234);
-$border-color-secondary: rgb(63, 63, 66);
+$themeColor: hsl(0, 100%, 36%); // rgb(184, 0, 0)
+$light: hsl(0, 0%, 96%); // rgb(245, 245, 245)
+$light-color: hsl(0, 0%, 99%); //rgb(253, 253, 253)
+$body-bg-light: hsl(0, 0%, 99%); // rgb(252, 252, 252)
+$body-bg-dark: hsl(0, 0%, 8%); // rgb(20, 20, 20)
+$white: hsl(0, 0%, 100%); // rgb(255, 255, 255)
+$black: hsl(0, 0%, 0%); // rgb(0, 0, 0)
+$dark-color: hsl(0, 0%, 13%); // rgb(34, 34, 34)
+$dark-link-active-color: hsl(210, 2%, 55%); // rgb(138, 140, 142)
+$border-color-primary: hsl(210, 9%, 91%); // rgb(230, 232, 234)
+$border-color-secondary: hsl(240, 2%, 25%); // rgb(63, 63, 66)
 
 /*=======================================================
                   REUSABLE-FUNCTIONS
@@ -66,8 +67,9 @@ $border-color-secondary: rgb(63, 63, 66);
 @mixin font-face($family, $file, $weight, $style: normal) {
   @font-face {
     font-family: $family;
-    src: url('#{$font-path}/#{$file}.woff2') format('woff2'),
-    url('#{$font-path}/#{$file}.woff') format('woff');
+    src:
+      url('#{$font-path}/#{$file}.woff2') format('woff2'),
+      url('#{$font-path}/#{$file}.woff') format('woff');
     font-display: swap;
     font-style: $style;
     font-weight: $weight;
@@ -81,9 +83,7 @@ $border-color-secondary: rgb(63, 63, 66);
 
   @if map.has-key($font-weights, $weight) {
     font-weight: map.get($font-weights, $weight);
-  }
-
-  @else {
+  } @else {
     font-weight: $weight;
   }
 
@@ -119,10 +119,12 @@ $border-color-secondary: rgb(63, 63, 66);
   }
 }
 
-@mixin transition($properties: all,
+@mixin transition(
+  $properties: all,
   $duration: 0.4s,
   $timing: ease,
-  $delay: 0s) {
+  $delay: 0s
+) {
   transition: $properties $duration $timing $delay;
 }
 
@@ -148,9 +150,7 @@ $breakpoints: (
     @media (min-width: map.get($breakpoints, $breakpoint)) {
       @content;
     }
-  }
-
-  @else {
+  } @else {
     @error "Breakpoint '#{$breakpoint}' not found in $breakpoints map.";
   }
 }
@@ -422,19 +422,19 @@ button {
   grid-template-columns: repeat(2, 1fr);
   column-count: 2;
   padding-block-end: size(8);
-  
+
   @include media(md) {
     column-gap: size(16);
     grid-template-rows: repeat(3, auto);
     grid-template-columns: repeat(3, 1fr);
     column-count: 3;
   }
-  
+
   @include media(lg) {
     grid-template-columns: repeat(4, 1fr);
     column-count: 4;
   }
-  
+
   @include media(xxl) {
     grid-template-columns: repeat(4, 1fr);
     column-count: 5;
@@ -457,7 +457,7 @@ button {
     font-weight: 700;
     padding-block: size(12);
     @include transition(all, 400ms, ease-in);
-    
+
     @include media(md) {
       font-size: size(16);
     }
