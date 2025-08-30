@@ -26,6 +26,9 @@ export default defineNuxtConfig({
   ],
 
   // @ts-ignore => to skip unsupported options.
+  content: {},
+
+  // @ts-ignore => to skip unsupported options.
   colorMode: {
     preference: 'system',
     fallback: 'light',
@@ -47,6 +50,9 @@ export default defineNuxtConfig({
     head: {
       title: 'Jonopath',
       titleTemplate: '%s | Sotter Pothe Nirvik',
+      htmlAttrs: {
+        lang: 'bn',
+      },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

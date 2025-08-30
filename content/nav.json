@@ -1,5 +1,5 @@
 {
-  "items": [
+  "headerNavItems": [
     { "name": "মূলপাতা", "url": "/" },
     { "name": "রাজনীতি", "url": "/topics/politics" },
     { "name": "সর্বাধিক পঠিত", "url": "/popular/read" },
@@ -9,5 +9,11 @@
     { "name": "খেলা", "url": "/topics/game" },
     { "name": "প্রযুক্তি", "url": "/topics/technology" },
     { "name": "ভিডিও", "url": "/topics/video" }
+  ],
+  "footerNavItems": [
+    { "name": "ব্যবহারের শর্তাবলী", "url": "/institutional/terms-of-use" },
+    { "name": "প্রিভেসি নীতি", "url": "/institutional/privacy-policy" },
+    { "name": "জনপথ সম্পর্কে", "url": "/institutional/about" },
+    { "name": "জনপথের সাথে যোগাযোগ করুন", "url": "/institutional/contact" }
   ]
 }

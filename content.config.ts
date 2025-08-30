@@ -1,68 +1,89 @@
 import { defineCollection, defineContentConfig, z } from '@nuxt/content';
 
+const pageSchema = z.object({
+  path: z.string(),
+  title: z.string(),
+  description: z.string(),
+  seo: z
+    .intersection(
+      z.object({
+        title: z.string().optional(),
+        description: z.string().optional(),
+        meta: z.array(z.record(z.string(), z.any())).optional(),
+        link: z.array(z.record(z.string(), z.any())).optional(),
+      }),
+      z.record(z.string(), z.any())
+    )
+    .optional()
+    .default({}),
+  body: z.object({
+    type: z.string(),
+    children: z.any(),
+    toc: z.any(),
+  }),
+  navigation: z
+    .union([
+      z.boolean(),
+      z.object({
+        items: z.array(
+          z.object({
+            name: z.string(),
+            url: z.string().url(),
+          })
+        ),
+      }),
+    ])
+    .default(true),
+});
+
 export default defineContentConfig({
   collections: {
     nav: defineCollection({
       type: 'data',
+      source: 'nav/**.json',
       schema: z.object({
-        name: z.string(),
-        url: z.string().url()
-      })
+        items: z.array(
+          z.object({
+            name: z.string(),
+            url: z.string().url(),
+          })
+        ),
+      }),
     }),
 
-    docs: defineCollection({
-      source: '**/*.md',
-      type: 'page'
-    }),
-
-    blog: defineCollection({
+    /**HOME-PAGE */
+    home: defineCollection({
+      source: 'home/**.json',
       type: 'page',
-      source: 'blog/*.md',
-      schema: z.object({
-        tags: z.array(z.string()),
-        image: z.string(),
-        date: z.date()
-      })
+      schema: pageSchema,
     }),
 
-    data: defineCollection({
+    /**TOPICS-PAGE */
+    topics: defineCollection({
       type: 'page',
-      source: {
-        repository: 'https://github.com/bbc/simorgh/blob/latest/data/bengali/homePage/index.json',
-        include: '*.json',
-      },
+      source: 'topics/**.json',
+      schema: pageSchema,
     }),
 
-    articles: defineCollection({
+    /**INSTITUTIONAL-PAGE */
+    institutional: defineCollection({
       type: 'page',
-      source: {
-        repository: 'https://github.com/bbc/simorgh/blob/latest/data/bengali/articles/c6p3yp5zzmeo.json',
-        include: '*.json',
-      },
+      source: 'institutional/**.json',
+      schema: pageSchema,
     }),
 
-    live: defineCollection({
+    /**ARTICLE-DETAILS-PAGE */
+    article: defineCollection({
       type: 'page',
-      source: {
-        repository: 'https://github.com/bbc/simorgh/blob/latest/data/bengali/bbc_bangla_radio/liveradio.json',
-        include: '*.json',
-      },
+      source: 'article/**.json',
+      schema: pageSchema,
     }),
 
-    mostRead: defineCollection({
+    /**VIDEO-DETAILS-PAGE */
+    video: defineCollection({
       type: 'page',
-      source: {
-        repository: 'https://github.com/bbc/simorgh/blob/latest/data/bengali/mostRead/index.json',
-        include: '*.json',
-      },
+      source: 'video/**.json',
+      schema: pageSchema,
     }),
-
-    secondaryColumn: defineCollection({
-      type: 'page',
-      source: {
-        repository: 'https://github.com/bbc/simorgh/blob/latest/data/bengali/secondaryColumn/index.json',
-        include: '*.json',
-      },
-    }),
-  }
+  },
 });

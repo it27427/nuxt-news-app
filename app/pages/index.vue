@@ -4,4 +4,8 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const { data: homeData } = await useAsyncData('data', () => {
+    return queryCollection('data').order('name', 'DESC').all();
+  });
+</script>
