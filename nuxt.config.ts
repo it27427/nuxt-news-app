@@ -9,6 +9,10 @@ export default defineNuxtConfig({
 
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 
+  imports: {
+    autoImport: true,
+  },
+
   modules: [
     '@nuxt/content',
     '@nuxt/image',
@@ -18,6 +22,7 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
+    '@nuxtjs/i18n',
   ],
 
   // @ts-ignore => to skip unsupported options.
