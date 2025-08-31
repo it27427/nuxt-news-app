@@ -19,14 +19,22 @@
 
     <!-- AD-SECTION -->
     <AdSection />
+
+    <!-- SELECTED-NEWS -->
+    <section class="mb-10">
+      <div class="jonopath-container">
+        <OthersNews :othersNews="othersNews" />
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
   import AdSection from '@/components/sections/AdSection.vue';
   import MainNews from '@/components/sections/MainNews.vue';
+  import OthersNews from '@/components/sections/OthersNews.vue';
   import SelectedNews from '@/components/sections/SelectedNews.vue';
-  import type { NewsItem } from '@/types/news';
+  import type { NewsItem, OthersNewsItem } from '@/types/news';
 
   // FETCH-MAIN-NEWS
   const { data: mainNewsData } = await useFetch<{ data: NewsItem[] }>(
@@ -41,4 +49,11 @@
   );
 
   const selectedNews: NewsItem[] = selectedNewsData.value?.data ?? [];
+
+  // FETCH-OTHERS-NEWS
+  const { data: othersNewsData } = await useFetch<{ data: OthersNewsItem[] }>(
+    '/api/othersNews'
+  );
+
+  const othersNews: OthersNewsItem[] = othersNewsData.value?.data ?? [];
 </script>

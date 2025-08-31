@@ -51,6 +51,9 @@
 
     <!-- Footer -->
     <Footer :nav-items="footerNavItems" />
+
+    <!-- ScrollToTop -->
+    <ScrollToTop />
   </div>
 </template>
 
@@ -61,6 +64,7 @@
   import HeaderBottom from '@/components/global/layouts/HeaderBottom.vue';
   import HeaderTop from '@/components/global/layouts/HeaderTop.vue';
   import Offcanvas from '@/components/global/offcanvas/Offcanvas.vue';
+  import ScrollToTop from '@/components/global/ScrollToTop.vue';
   import TopBar from '@/components/global/TopBar.vue';
   import { onMounted, onUnmounted, ref } from 'vue';
 

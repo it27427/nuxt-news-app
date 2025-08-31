@@ -506,6 +506,37 @@ $font-weights: (
       }
     }
   }
+
+  .others-news-list {
+    @apply grid grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;
+
+    &-item {
+      @apply pt-2;
+
+      .others-news-article {
+        .others-news-details {
+          h2 {
+            @apply text-dark-surface hover:text-dark-hover dark:text-light dark:hover:text-white text-sizeBig font-bold sm:mb-2 md:text-sizeLg leading-6 max-xs:line-clamp-2;
+          }
+
+          time {
+            @apply text-xs text-dark-hover dark:text-light inline-block;
+          }
+        }
+      }
+    }
+
+    .others-news-link {
+      &:hover,
+      &:visited {
+        .others-news-article {
+          h2 {
+            @apply text-dark-hover dark:text-white underline;
+          }
+        }
+      }
+    }
+  }
 }
 
 /*=======================================================
