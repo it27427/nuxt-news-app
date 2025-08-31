@@ -34,6 +34,10 @@ const config: Config = {
           hover: 'hsl(210, 2%, 34%)', //rgb(84, 86, 88)
         },
       },
+      backgroundImage: {
+        adGradient:
+          'linear-gradient(-120deg, rgb(162, 2, 25) 0%, rgb(24, 1, 9) 54%, rgb(24, 1, 9) 90%)',
+      },
       fontFamily: {
         bengali: [
           '"Noto Serif Bengali"',

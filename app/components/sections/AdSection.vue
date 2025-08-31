@@ -1,0 +1,17 @@
+<template>
+  <section class="py-8">
+    <div class="jonopath-container">
+      <div
+        class="bg-adGradient w-full h-64 md:h-40 flex items-center justify-center"
+      >
+        <h2>{{ title }}</h2>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+  import { ref } from 'vue';
+
+  const title = ref('জনপথের বিজ্ঞাপন');
+</script>
