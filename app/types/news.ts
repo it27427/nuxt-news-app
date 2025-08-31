@@ -12,3 +12,9 @@ export interface OthersNewsItem {
   image_url: string;
   datetime: string;
 }
+
+export interface SocialItem {
+  label: string;
+  to: string;
+  icon: string;
+}

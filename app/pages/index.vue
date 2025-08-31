@@ -20,10 +20,17 @@
     <!-- AD-SECTION -->
     <AdSection />
 
-    <!-- SELECTED-NEWS -->
+    <!-- OTHERS-NEWS -->
     <section class="mb-10">
       <div class="jonopath-container">
         <OthersNews :othersNews="othersNews" />
+      </div>
+    </section>
+
+    <!-- SOCIAL-SECTION -->
+    <section class="mb-10">
+      <div class="jonopath-container">
+        <SocialSection />
       </div>
     </section>
   </div>
@@ -34,6 +41,7 @@
   import MainNews from '@/components/sections/MainNews.vue';
   import OthersNews from '@/components/sections/OthersNews.vue';
   import SelectedNews from '@/components/sections/SelectedNews.vue';
+  import SocialSection from '@/components/sections/SocialSection.vue';
   import type { NewsItem, OthersNewsItem } from '@/types/news';
 
   // FETCH-MAIN-NEWS
