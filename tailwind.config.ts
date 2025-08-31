@@ -31,6 +31,7 @@ const config: Config = {
           surface: 'hsl(0, 0%, 8%)', // rgb(20, 20, 20)
           divider: 'hsl(240, 2%, 25%)', // rgb(63, 63, 66)
           knight: 'hsl(236, 88%, 7%)', // rgb(2, 4, 32)
+          hover: 'hsl(210, 2%, 34%)', //rgb(84, 86, 88)
         },
       },
       fontFamily: {
@@ -47,6 +48,9 @@ const config: Config = {
         sizeMedium: ['0.9375rem', { lineHeight: '1.5' }],
         sizeDefault: ['1rem', { lineHeight: '1.375' }],
         sizeBig: ['1.0625rem', { lineHeight: '1.5' }],
+        sizeLg: ['1.125rem', { lineHeight: '1.5' }],
+        sizeXl: ['1.25rem', { lineHeight: '1.5' }],
+        sizeXXl: ['1.75rem', { lineHeight: '1.5' }],
       },
       spacing: {
         0.125: '0.125rem', //2px
@@ -84,12 +88,14 @@ const config: Config = {
       xs: '15rem', // <= 240px
       ss: '25rem', // <= 400px
       sm: '36rem', // <= 576px
-      md: '48rem', // <= 768px
+      md: '37.5rem', // <= 600px
       lg: '62rem', // <= 992px
       xl: '75rem', // <= 1200px
       xxl: '80rem', // <= 1280px
       // <= MEDIA (MAX-WIDTH)
-      'max-md': { max: '37.4375rem' }, // <= 599px
+      'max-md': { max: '47.9375rem' }, // <= 767px
+      'max-sm': { max: '37.4375rem' }, // <= 599px
+      'max-xs': { max: '25rem' }, // <= 400px
     },
   },
   plugins: [],

@@ -1,19 +1,19 @@
 {
-  "headerNavItems": [
-    { "name": "মূলপাতা", "url": "/" },
-    { "name": "রাজনীতি", "url": "/topics/politics" },
-    { "name": "সর্বাধিক পঠিত", "url": "/popular/read" },
-    { "name": "বিশ্ব", "url": "/topics/world" },
-    { "name": "অর্থনীতি", "url": "/topics/economy" },
-    { "name": "স্বাস্থ্য", "url": "/topics/health" },
-    { "name": "খেলা", "url": "/topics/game" },
-    { "name": "প্রযুক্তি", "url": "/topics/technology" },
-    { "name": "ভিডিও", "url": "/topics/video" }
+  "headNavItems": [
+    { "label": "মূলপাতা", "to": "/" },
+    { "label": "রাজনীতি", "to": "/topics/politics" },
+    { "label": "সর্বাধিক পঠিত", "to": "/popular/read" },
+    { "label": "বিশ্ব", "to": "/topics/world" },
+    { "label": "অর্থনীতি", "to": "/topics/economy" },
+    { "label": "স্বাস্থ্য", "to": "/topics/health" },
+    { "label": "খেলা", "to": "/topics/game" },
+    { "label": "প্রযুক্তি", "to": "/topics/technology" },
+    { "label": "ভিডিও", "to": "/topics/video" }
   ],
-  "footerNavItems": [
-    { "name": "ব্যবহারের শর্তাবলী", "url": "/institutional/terms-of-use" },
-    { "name": "প্রিভেসি নীতি", "url": "/institutional/privacy-policy" },
-    { "name": "জনপথ সম্পর্কে", "url": "/institutional/about" },
-    { "name": "জনপথের সাথে যোগাযোগ করুন", "url": "/institutional/contact" }
+  "footNavItems": [
+    { "label": "ব্যবহারের শর্তাবলী", "to": "/institutional/terms-of-use" },
+    { "label": "প্রিভেসি নীতি", "to": "/institutional/privacy-policy" },
+    { "label": "জনপথ সম্পর্কে", "to": "/institutional/about" },
+    { "label": "জনপথের সাথে যোগাযোগ করুন", "to": "/institutional/contact" }
   ]
 }

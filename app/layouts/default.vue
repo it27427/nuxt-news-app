@@ -64,7 +64,6 @@
   import TopBar from '@/components/global/TopBar.vue';
   import { onMounted, onUnmounted, ref } from 'vue';
 
-  /* NAV ITEMS */
   const navItems = ref([
     { label: 'মূলপাতা', to: '/' },
     { label: 'রাজনীতি', to: '/topics/politics' },
