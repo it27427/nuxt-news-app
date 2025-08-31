@@ -19,6 +19,7 @@ const config: Config = {
       colors: {
         primary: {
           DEFAULT: 'hsl(0, 100%, 36%)', //rgb(184, 0, 0)
+          dark: 'rgb(162, 2, 25)', //rgb(162, 2, 25)
         },
         light: {
           DEFAULT: 'hsl(0, 0%, 99%)', //rgb(252, 252, 252)
