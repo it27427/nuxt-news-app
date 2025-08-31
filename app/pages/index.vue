@@ -33,6 +33,11 @@
         <SocialSection />
       </div>
     </section>
+
+    <!-- AD-SECTION -->
+    <AdSection />
+
+    <div class="mb-6"></div>
   </div>
 </template>
 

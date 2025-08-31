@@ -4,7 +4,7 @@
       <div
         class="bg-adGradient w-full h-64 md:h-40 flex items-center justify-center"
       >
-        <h2>{{ title }}</h2>
+        <h2 class="font-bold text-size2Xl md:text-2xl">{{ title }}</h2>
       </div>
     </div>
   </section>
