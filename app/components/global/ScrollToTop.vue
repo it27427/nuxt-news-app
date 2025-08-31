@@ -1,7 +1,7 @@
 <template>
   <div
     ref="scrollTopButton"
-    class="sticky w-full flex justify-end bottom-0 pb-3 pr-5 z-modal"
+    class="sticky w-full flex justify-end bottom-12 right-5 md:bottom-0 md:right-0 md:pb-1 pr-5 z-modal"
   >
     <div
       :class="[
