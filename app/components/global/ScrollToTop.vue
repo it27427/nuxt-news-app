@@ -13,7 +13,7 @@
     >
       <button
         @click="scrollToTop"
-        class="bg-primary text-light border-0 cursor-pointer font-bold text-2xl w-10 h-10 rounded-full flex items-center justify-center"
+        class="bg-adGradient text-light border-0 cursor-pointer font-bold text-2xl w-10 h-10 rounded-full flex items-center justify-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,7 @@
   const isVisible = ref(false);
 
   const handleScroll = () => {
-    isVisible.value = window.scrollY > 100; // show after scrolling 100px
+    isVisible.value = window.scrollY > 200; // show after scrolling 100px
   };
 
   const scrollToTop = () => {
