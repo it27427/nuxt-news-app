@@ -508,13 +508,21 @@ $font-weights: (
   }
 
   .others-news-list {
-    @apply grid grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;
+    @apply grid ss:grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;
 
     &-item {
-      @apply pt-2;
+      @apply max-sm:row-span-1 max-sm:col-span-2 pt-2;
 
       .others-news-article {
+        @apply max-sm:flex;
+
+        .others-news-thumbnail {
+          @apply max-sm:w-1/3;
+        }
+
         .others-news-details {
+          @apply max-sm:w-2/3 max-sm:pl-2;
+
           h2 {
             @apply text-dark-surface hover:text-dark-hover dark:text-light dark:hover:text-white text-sizeBig font-bold sm:mb-2 md:text-sizeLg leading-6 max-xs:line-clamp-2;
           }
@@ -550,11 +558,11 @@ $font-weights: (
       }
 
       .news-counter {
-        @apply text-primary text-size2Xl md:text-5xl lg:text-sizeXXXl;
+        @apply text-primary font-bengali text-size3XXl md:text-5xl lg:text-sizeXXXl;
       }
 
       .news-title {
-        @apply text-dark-surface dark:text-white font-medium text-sizeMedium md:text-sizeXl lg:text-size2Xl transition-all;
+        @apply text-dark-surface dark:text-white font-bengali font-bold text-sizeMedium md:text-sizeXl lg:text-size1Xl transition-all;
       }
 
       &:hover {

@@ -8,7 +8,7 @@
     </section>
 
     <!-- AD-SECTION -->
-    <AdSection />
+    <AdSection class="py-8 mb-5" />
 
     <!-- SELECTED-NEWS -->
     <section>
@@ -18,7 +18,7 @@
     </section>
 
     <!-- AD-SECTION -->
-    <AdSection />
+    <AdSection class="py-8 mb-5" />
 
     <!-- OTHERS-NEWS -->
     <section class="mb-5">
@@ -42,9 +42,7 @@
     </section>
 
     <!-- AD-SECTION -->
-    <AdSection />
-
-    <div class="mb-6"></div>
+    <AdSection class="py-8 my-5" />
   </div>
 </template>
 
