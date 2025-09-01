@@ -24,3 +24,30 @@ export interface PopularItem {
   counter: string;
   title: string;
 }
+
+export interface TopicItem {
+  _id: string;
+  title: string;
+  image_url: string;
+  datetime: string;
+}
+
+export interface VideoItem {
+  _id: string;
+  title: string;
+  image_url: string;
+  duration: string;
+  datetime: string;
+}
+
+/*
+economy
+game
+health
+politics
+technology
+world
+video
+bangladesh
+india
+*/
