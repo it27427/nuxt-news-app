@@ -59,6 +59,7 @@ const config: Config = {
         size2Xl: ['1.375rem', { lineHeight: '1.5' }],
         sizeXXl: ['1.75rem', { lineHeight: '1.5' }],
         size3XXl: ['2rem', { lineHeight: '1.5' }],
+        size4Xl: ['2.5rem', { lineHeight: '3.5rem' }],
         sizeXXXl: ['3.25rem', { lineHeight: '1.5' }],
       },
       spacing: {

@@ -30,7 +30,7 @@
         </NuxtLink>
 
         <!-- Topic Pages -->
-        <h2 v-else class="font-bold text-size2Xl md:text-2xl">
+        <h2 v-else class="font-bold text-size2Xl md:text-2xl lg:text-size4Xl">
           {{ topicTitle }}
         </h2>
 

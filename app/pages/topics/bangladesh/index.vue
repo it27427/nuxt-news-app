@@ -15,11 +15,11 @@
   import type { TopicItem } from '@/types/news';
   import { ref } from 'vue';
 
-  // Fetch data
+  /** Fetch data **/
   const { data: bangladeshNewsData } = await useFetch<{ data: TopicItem[] }>(
     '/api/bangladeshNews'
   );
 
-  // Full news list
+  /** Full news list **/
   const bangladeshNews = ref<TopicItem[]>(bangladeshNewsData.value?.data ?? []);
 </script>
