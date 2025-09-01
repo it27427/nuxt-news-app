@@ -8,24 +8,26 @@
         v-for="news in othersNews"
         :key="news._id"
       >
-        <NuxtLink :to="`/articles/${news._id}`" class="others-news-link">
-          <article class="others-news-article">
-            <BaseFigure class="mb-2 others-news-thumbnail">
-              <BaseImage
-                :src="news.image_url"
-                :alt="news.title"
-                :srcset="news.image_url"
-                class="object-cover aspect-video"
-              />
-            </BaseFigure>
+        <client-only>
+          <NuxtLink :to="`/articles/${news._id}`" class="others-news-link">
+            <article class="others-news-article">
+              <BaseFigure class="mb-2 others-news-thumbnail">
+                <BaseImage
+                  :src="news.image_url"
+                  :alt="news.title"
+                  :srcset="news.image_url"
+                  class="object-cover aspect-video"
+                />
+              </BaseFigure>
 
-            <div class="others-news-details">
-              <h2 :title="news.title">{{ news.title }}</h2>
+              <div class="others-news-details">
+                <h2 :title="news.title">{{ news.title }}</h2>
 
-              <time :datetime="news.datetime">{{ news.datetime }}</time>
-            </div>
-          </article>
-        </NuxtLink>
+                <time :datetime="news.datetime">{{ news.datetime }}</time>
+              </div>
+            </article>
+          </NuxtLink>
+        </client-only>
       </li>
     </ul>
   </div>

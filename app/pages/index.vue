@@ -20,6 +20,28 @@
     <!-- AD-SECTION -->
     <AdSection class="py-8 mb-5" />
 
+    <!-- HOME-HERO-SECTION -->
+    <section>
+      <div class="jonopath-container">
+        <MainNews :mainNews="mainNews" />
+      </div>
+    </section>
+
+    <!-- BANGLADESH-NEWS -->
+    <TopicNews :newsList="bangladeshNews" topicName="বাংলাদেশ" />
+
+    <!-- INDIA-NEWS -->
+    <TopicNews :newsList="indiaNews" topicName="ভারত" />
+
+    <!-- WORLD-NEWS -->
+    <TopicNews :newsList="worldNews" topicName="বিশ্ব" />
+
+    <!-- HEALTH-NEWS -->
+    <TopicNews :newsList="healthNews" topicName="স্বাস্থ্য" />
+
+    <!-- HEALTH-NEWS -->
+    <TopicNews :newsList="videoNews" topicName="ভিডিও" />
+
     <!-- OTHERS-NEWS -->
     <section class="mb-5">
       <div class="jonopath-container">
@@ -53,30 +75,58 @@
   import PopularNews from '@/components/sections/PopularNews.vue';
   import SelectedNews from '@/components/sections/SelectedNews.vue';
   import SocialSection from '@/components/sections/SocialSection.vue';
-  import type { NewsItem, OthersNewsItem, PopularItem } from '@/types/news';
+  import TopicNews from '@/components/sections/TopicNews.vue';
 
-  /* FETCH-MAIN-NEWS */
+  import type {
+    NewsItem,
+    OthersNewsItem,
+    PopularItem,
+    TopicItem,
+    VideoItem,
+  } from '@/types/news';
+
   const { data: mainNewsData } = await useFetch<{ data: NewsItem[] }>(
     '/api/mainNews'
   );
-
-  /* FETCH-SELECTED-NEWS */
   const { data: selectedNewsData } = await useFetch<{ data: NewsItem[] }>(
     '/api/selectedNews'
   );
-
-  /* FETCH-OTHERS-NEWS */
   const { data: othersNewsData } = await useFetch<{ data: OthersNewsItem[] }>(
     '/api/othersNews'
   );
-
-  /* FETCH-POPULAR-NEWS */
   const { data: popularNewsData } = await useFetch<{ data: PopularItem[] }>(
     '/api/popularNews'
+  );
+  const { data: bangladeshNewsData } = await useFetch<{ data: TopicItem[] }>(
+    '/api/bangladeshNews'
+  );
+  const { data: indiaNewsData } = await useFetch<{ data: TopicItem[] }>(
+    '/api/indiaNews'
+  );
+  const { data: worldNewsData } = await useFetch<{ data: TopicItem[] }>(
+    '/api/worldNews'
+  );
+  const { data: healthNewsData } = await useFetch<{ data: TopicItem[] }>(
+    '/api/healthNews'
+  );
+  const { data: videoNewsData } = await useFetch<{ data: VideoItem[] }>(
+    '/api/videoNews'
   );
 
   const mainNews: NewsItem[] = mainNewsData.value?.data ?? [];
   const selectedNews: NewsItem[] = selectedNewsData.value?.data ?? [];
   const othersNews: OthersNewsItem[] = othersNewsData.value?.data ?? [];
   const popularNews: PopularItem[] = popularNewsData.value?.data ?? [];
+
+  // Only first 4 items
+  const bangladeshNews: TopicItem[] = (
+    bangladeshNewsData.value?.data ?? []
+  ).slice(0, 4);
+  const indiaNews: TopicItem[] = (indiaNewsData.value?.data ?? []).slice(0, 4);
+  const worldNews: TopicItem[] = (worldNewsData.value?.data ?? []).slice(0, 4);
+  const healthNews: TopicItem[] = (healthNewsData.value?.data ?? []).slice(
+    0,
+    4
+  );
+  const videoNews: VideoItem[] = (videoNewsData.value?.data ?? []).slice(0, 4);
 </script>

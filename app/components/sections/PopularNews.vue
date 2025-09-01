@@ -8,11 +8,16 @@
         v-for="news in popularNews"
         :key="news._id"
       >
-        <NuxtLink :to="`/articles/${news._id}`" class="popular-news-list-link">
-          <span class="news-counter">{{ news.counter }}</span>
+        <client-only>
+          <NuxtLink
+            :to="`/articles/${news._id}`"
+            class="popular-news-list-link"
+          >
+            <span class="news-counter">{{ news.counter }}</span>
 
-          <span class="news-title">{{ news.title }}</span>
-        </NuxtLink>
+            <span class="news-title">{{ news.title }}</span>
+          </NuxtLink>
+        </client-only>
       </li>
     </ul>
   </div>

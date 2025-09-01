@@ -8,25 +8,27 @@
         v-for="news in selectedNews"
         :key="news._id"
       >
-        <NuxtLink :to="`/articles/${news._id}`" class="selected-news-link">
-          <article class="selected-news-article">
-            <BaseFigure class="mb-2 selected-news-thumbnail">
-              <BaseImage
-                :src="news.image_url"
-                :alt="news.title"
-                :srcset="news.image_url"
-                class="object-cover aspect-video"
-              />
-            </BaseFigure>
+        <client-only>
+          <NuxtLink :to="`/articles/${news._id}`" class="selected-news-link">
+            <article class="selected-news-article">
+              <BaseFigure class="mb-2 selected-news-thumbnail">
+                <BaseImage
+                  :src="news.image_url"
+                  :alt="news.title"
+                  :srcset="news.image_url"
+                  class="object-cover aspect-video"
+                />
+              </BaseFigure>
 
-            <div class="selected-news-details">
-              <h2 :title="news.title">{{ news.title }}</h2>
-              <p>{{ news.description }}</p>
+              <div class="selected-news-details">
+                <h2 :title="news.title">{{ news.title }}</h2>
+                <p>{{ news.description }}</p>
 
-              <time :datetime="news.datetime">{{ news.datetime }}</time>
-            </div>
-          </article>
-        </NuxtLink>
+                <time :datetime="news.datetime">{{ news.datetime }}</time>
+              </div>
+            </article>
+          </NuxtLink>
+        </client-only>
       </li>
     </ul>
   </div>
