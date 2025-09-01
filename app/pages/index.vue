@@ -28,7 +28,7 @@
     </section>
 
     <!-- SOCIAL-SECTION -->
-    <section class="mb-10">
+    <section class="mb-12">
       <div class="jonopath-container">
         <SocialSection />
       </div>

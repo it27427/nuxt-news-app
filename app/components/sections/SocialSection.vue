@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-8">
+  <div class="flex flex-col gap-5">
     <h2 class="font-bold text-size2Xl md:text-2xl">{{ title }}</h2>
 
     <SocialMenu />
