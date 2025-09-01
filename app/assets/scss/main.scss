@@ -630,69 +630,112 @@ $font-weights: (
       }
     }
   }
-}
 
-/*=======================================================
+  .mostread-news-list {
+    @apply grid gap-1 grid-flow-col grid-rows-5;
+
+    &-link {
+      @apply flex items-center gap-4;
+
+      .news-counter,
+      .news-title {
+        @apply inline-block;
+      }
+
+      .news-counter {
+        @apply text-primary font-bengali text-size3XXl md:text-5xl lg:text-sizeXXXl;
+      }
+
+      .news-title {
+        @apply text-dark-surface dark:text-white font-bengali font-bold text-sizeMedium md:text-sizeXl lg:text-size1Xl transition-all;
+      }
+
+      &:hover {
+        .news-title {
+          @apply underline;
+        }
+      }
+    }
+  }
+
+  .page-link {
+    @apply cursor-pointer w-11 h-11 flex items-center justify-center mx-1 border border-transparent text-lg;
+
+    &:hover:not(.active) {
+      @apply border-primary;
+    }
+
+    &.active {
+      @apply border-0 border-b-4 border-primary font-bold;
+    }
+
+    &:disabled {
+      @apply hidden;
+    }
+  }
+
+  /*=======================================================
                   FEATURE QUERIES / SUPPORT
 =========================================================*/
 
-/* ✅ Put @supports */
-@supports (grid-template-columns: fit-content(var(--footer-col))) {
-  .footer-list {
-    @apply grid auto-cols-[fit-content(var(--footer-col))] grid-flow-col;
+  /* ✅ Put @supports */
+  @supports (grid-template-columns: fit-content(var(--footer-col))) {
+    .footer-list {
+      @apply grid auto-cols-[fit-content(var(--footer-col))] grid-flow-col;
+    }
   }
-}
 
-/*=======================================================
+  /*=======================================================
                   KEYFRAMES
 =========================================================*/
-@keyframes slideUp {
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
+  @keyframes slideUp {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
   }
-  100% {
-    transform: translateY(0%);
-    opacity: 1;
+  @keyframes slideUpFade {
+    0% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
   }
-}
-@keyframes slideUpFade {
-  0% {
-    transform: translateY(0%);
-    opacity: 1;
+  @keyframes slideDownFade {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
   }
-  100% {
-    transform: translateY(-100%);
-    opacity: 0;
+  @keyframes slideUpFadeBottom {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
   }
-}
-@keyframes slideDownFade {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0%);
-    opacity: 1;
-  }
-}
-@keyframes slideUpFadeBottom {
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0%);
-    opacity: 1;
-  }
-}
-@keyframes slideDownFadeBottom {
-  0% {
-    transform: translateY(0%);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100%);
-    opacity: 0;
+  @keyframes slideDownFadeBottom {
+    0% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
   }
 }

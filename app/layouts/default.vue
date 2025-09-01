@@ -42,7 +42,7 @@
     <!-- Main Content -->
     <main
       :class="[
-        'transition-all duration-300 min-h-screen',
+        'transition-all duration-300',
         collapseMenuIsOpen ? 'mt-5' : 'mt-0',
       ]"
     >

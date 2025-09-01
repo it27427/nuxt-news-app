@@ -3,7 +3,7 @@
     v-if="totalPages > 1"
     class="w-full flex items-center justify-center mt-6"
   >
-    <ul class="pagination flex items-center gap-2">
+    <ul class="pagination flex items-center">
       <!-- Previous button -->
       <li>
         <button

@@ -26,6 +26,7 @@ const config: Config = {
           50: 'rgb(230, 232, 234)', // rgb(230, 232, 234)
           divider: 'hsl(0, 0%, 99%)', //rgb(253, 253, 253)
           surface: 'hsl(0, 0%, 98%)', // rgb(250,250,250)
+          heading: 'hsl(240, 2%, 44%)', //rgb(110, 110, 115)
         },
         dark: {
           DEFAULT: 'hsl(0, 0%, 13%)', // rgb(34, 34, 34)
@@ -56,7 +57,8 @@ const config: Config = {
         sizeLg: ['1.125rem', { lineHeight: '1.5' }],
         sizeXl: ['1.25rem', { lineHeight: '1.5' }],
         size1Xl: ['1.3125rem', { lineHeight: '1.5' }],
-        size2Xl: ['1.375rem', { lineHeight: '1.5' }],
+        size2Xl: ['1.375rem', { lineHeight: '1.875rem' }],
+        size2XXl: ['1.4375rem', { lineHeight: '2rem' }],
         sizeXXl: ['1.75rem', { lineHeight: '1.5' }],
         size3XXl: ['2rem', { lineHeight: '1.5' }],
         size4Xl: ['2.5rem', { lineHeight: '3.5rem' }],
@@ -71,7 +73,11 @@ const config: Config = {
         25: '6.75rem', // 108px
         63: '63rem', // 1008px
         36.5: '36.5rem', //584px
+        hmw: '80rem', //1280px
         'footer-col': '12.5',
+      },
+      maxWidth: {
+        '80p': '80%',
       },
       zIndex: {
         '60': '60',
