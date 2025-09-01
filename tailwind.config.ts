@@ -57,9 +57,11 @@ const config: Config = {
         sizeXl: ['1.25rem', { lineHeight: '1.5' }],
         size2Xl: ['1.375rem', { lineHeight: '1.5' }],
         sizeXXl: ['1.75rem', { lineHeight: '1.5' }],
+        sizeXXXl: ['3.25rem', { lineHeight: '1.5' }],
       },
       spacing: {
         0.125: '0.125rem', //2px
+        0.375: '0.375rem', // 6px
         7.5: '1.875rem', //30px
         12.5: '12.5rem', //200px
         15: '3.75rem', // 60px

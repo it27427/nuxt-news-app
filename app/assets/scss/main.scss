@@ -428,7 +428,7 @@ $font-weights: (
   }
 
   .selected-news-list {
-    @apply grid grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;
+    @apply grid grid-cols-2 gap-4 mb-5 md:mb-10 md:grid-cols-3 lg:grid-cols-4;
 
     &-item {
       @apply pt-2;
@@ -533,6 +533,33 @@ $font-weights: (
           h2 {
             @apply text-dark-hover dark:text-white underline;
           }
+        }
+      }
+    }
+  }
+
+  .popular-news-list {
+    @apply grid gap-4 grid-flow-col grid-rows-5 md:grid-rows-3 md:grid-cols-2;
+
+    &-link {
+      @apply flex items-center gap-4;
+
+      .news-counter,
+      .news-title {
+        @apply inline-block;
+      }
+
+      .news-counter {
+        @apply text-primary text-size2Xl md:text-5xl lg:text-sizeXXXl;
+      }
+
+      .news-title {
+        @apply text-dark-surface dark:text-white font-medium text-sizeMedium md:text-sizeXl lg:text-size2Xl transition-all;
+      }
+
+      &:hover {
+        .news-title {
+          @apply underline;
         }
       }
     }

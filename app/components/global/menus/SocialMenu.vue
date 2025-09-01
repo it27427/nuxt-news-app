@@ -13,8 +13,8 @@
             :alt="menu.label"
             :srcset="menu.icon"
             class="object-contain"
-            width="64"
-            height="64"
+            width="54"
+            height="54"
           />
         </BasePicture>
 

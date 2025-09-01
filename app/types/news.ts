@@ -18,3 +18,9 @@ export interface SocialItem {
   to: string;
   icon: string;
 }
+
+export interface PopularItem {
+  _id: string;
+  counter: string;
+  title: string;
+}
