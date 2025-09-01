@@ -20,27 +20,28 @@
     <!-- AD-SECTION -->
     <AdSection class="py-8 mb-5" />
 
-    <!-- HOME-HERO-SECTION -->
-    <section>
-      <div class="jonopath-container">
-        <MainNews :mainNews="mainNews" />
-      </div>
-    </section>
-
     <!-- BANGLADESH-NEWS -->
-    <TopicNews :newsList="bangladeshNews" topicName="বাংলাদেশ" />
+    <TopicNews
+      :newsList="bangladeshNews"
+      topicName="bangladesh"
+      topicTitle="বাংলাদেশ"
+    />
 
     <!-- INDIA-NEWS -->
-    <TopicNews :newsList="indiaNews" topicName="ভারত" />
+    <TopicNews :newsList="indiaNews" topicName="india" topicTitle="ভারত" />
 
     <!-- WORLD-NEWS -->
-    <TopicNews :newsList="worldNews" topicName="বিশ্ব" />
+    <TopicNews :newsList="worldNews" topicName="world" topicTitle="বিশ্ব" />
 
     <!-- HEALTH-NEWS -->
-    <TopicNews :newsList="healthNews" topicName="স্বাস্থ্য" />
+    <TopicNews
+      :newsList="healthNews"
+      topicName="health"
+      topicTitle="স্বাস্থ্য"
+    />
 
     <!-- HEALTH-NEWS -->
-    <TopicNews :newsList="videoNews" topicName="ভিডিও" />
+    <TopicNews :newsList="videoNews" topicName="video" topicTitle="ভিডিও" />
 
     <!-- OTHERS-NEWS -->
     <section class="mb-5">
