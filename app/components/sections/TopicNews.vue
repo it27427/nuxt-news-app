@@ -36,7 +36,11 @@
 
         <!-- Topic List -->
         <ul class="topic-list">
-          <li class="topic-list-item" v-for="news in newsList" :key="news._id">
+          <li
+            class="topic-list-item"
+            v-for="news in paginatedNews"
+            :key="news._id"
+          >
             <client-only>
               <NuxtLink :to="`/articles/${news._id}`" class="topic-list-link">
                 <article class="topic-list-article">
@@ -80,13 +84,22 @@
             </client-only>
           </li>
         </ul>
+
+        <!-- PAGINATION -->
+        <Pagination
+          v-model="currentPage"
+          :total-items="newsList.length"
+          :items-per-page="itemsPerPage"
+        />
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+  import Pagination from '@/components/global/Pagination.vue';
   import type { TopicItem, VideoItem } from '@/types/news';
+  import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
   const props = defineProps<{
@@ -96,9 +109,25 @@
     sectionClass?: string | string[] | Record<string, boolean>;
   }>();
 
+  const route = useRoute();
   const newsList = props.newsList;
   const topicName = props.topicName;
+  const topicTitle = props.topicTitle;
   const sectionClass = props.sectionClass;
 
-  const route = useRoute();
+  // PAGINATION STATE
+  const currentPage = ref(1);
+  const itemsPerPage = 24;
+
+  // COMPUTED PAGINATED NEWS
+  const paginatedNews = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return newsList.slice(start, end);
+  });
+
+  // RESET PAGE WHEN NEWS CHANGES
+  watch(newsList, () => {
+    currentPage.value = 1;
+  });
 </script>
