@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     timeline: false,
     splashScreen: false,
   } as any,
-  // spaLoadingTemplate: false,
 
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 
