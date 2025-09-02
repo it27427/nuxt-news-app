@@ -11,14 +11,12 @@
 
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
-  import { ref } from 'vue';
+  import { computed } from 'vue';
   import type { TopicItem } from '~~/types/news';
 
   /** Fetch data **/
-  const { data: gameNewsData } = await useFetch<{ data: TopicItem[] }>(
-    '/api/gameNews'
-  );
+  const { data } = await useFetch<{ data: TopicItem[] }>('/api/gameNews');
 
   /** Full news list **/
-  const gameNews = ref<TopicItem[]>(gameNewsData.value?.data ?? []);
+  const gameNews = computed(() => data.value?.data ?? []);
 </script>

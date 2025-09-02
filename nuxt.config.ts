@@ -6,9 +6,10 @@ export default defineNuxtConfig({
   // @ts-ignore
   devtools: {
     enabled: true,
-    timeline: false,
     splashScreen: false,
   } as any,
+
+  ssr: true,
 
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 

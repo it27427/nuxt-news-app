@@ -6,14 +6,12 @@
 
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
-  import { ref } from 'vue';
+  import { computed } from 'vue';
   import type { TopicItem } from '~~/types/news';
 
   /** Fetch data **/
-  const { data: worldNewsData } = await useFetch<{ data: TopicItem[] }>(
-    '/api/worldNews'
-  );
+  const { data } = await useFetch<{ data: TopicItem[] }>('/api/worldNews');
 
   /** Full news list **/
-  const worldNews = ref<TopicItem[]>(worldNewsData.value?.data ?? []);
+  const worldNews = computed(() => data.value?.data ?? []);
 </script>

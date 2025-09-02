@@ -70,6 +70,8 @@
 </template>
 
 <script setup lang="ts">
+  import { computed } from 'vue';
+
   import AdSection from '@/components/sections/AdSection.vue';
   import MainNews from '@/components/sections/MainNews.vue';
   import OthersNews from '@/components/sections/OthersNews.vue';
@@ -114,20 +116,25 @@
     '/api/videoNews'
   );
 
-  const mainNews: NewsItem[] = mainNewsData.value?.data ?? [];
-  const selectedNews: NewsItem[] = selectedNewsData.value?.data ?? [];
-  const othersNews: OthersNewsItem[] = othersNewsData.value?.data ?? [];
-  const popularNews: PopularItem[] = popularNewsData.value?.data ?? [];
+  // Wrap plain arrays in computed so they become reactive
+  const mainNews = computed(() => mainNewsData.value?.data ?? []);
+  const selectedNews = computed(() => selectedNewsData.value?.data ?? []);
+  const othersNews = computed(() => othersNewsData.value?.data ?? []);
+  const popularNews = computed(() => popularNewsData.value?.data ?? []);
 
-  // Only first 4 items
-  const bangladeshNews: TopicItem[] = (
-    bangladeshNewsData.value?.data ?? []
-  ).slice(0, 4);
-  const indiaNews: TopicItem[] = (indiaNewsData.value?.data ?? []).slice(0, 4);
-  const worldNews: TopicItem[] = (worldNewsData.value?.data ?? []).slice(0, 4);
-  const healthNews: TopicItem[] = (healthNewsData.value?.data ?? []).slice(
-    0,
-    4
+  const bangladeshNews = computed(() =>
+    (bangladeshNewsData.value?.data ?? []).slice(0, 4)
   );
-  const videoNews: VideoItem[] = (videoNewsData.value?.data ?? []).slice(0, 4);
+  const indiaNews = computed(() =>
+    (indiaNewsData.value?.data ?? []).slice(0, 4)
+  );
+  const worldNews = computed(() =>
+    (worldNewsData.value?.data ?? []).slice(0, 4)
+  );
+  const healthNews = computed(() =>
+    (healthNewsData.value?.data ?? []).slice(0, 4)
+  );
+  const videoNews = computed(() =>
+    (videoNewsData.value?.data ?? []).slice(0, 4)
+  );
 </script>
