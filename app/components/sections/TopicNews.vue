@@ -97,6 +97,7 @@
 </template>
 
 <script setup lang="ts">
+  import Pagination from '@/components/global/Pagination.vue';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
   import type { TopicItem, VideoItem } from '~~/types/news';
@@ -126,7 +127,10 @@
   });
 
   // RESET PAGE WHEN NEWS CHANGES
-  watch(newsList, () => {
-    currentPage.value = 1;
-  });
+  watch(
+    () => props.newsList, // getter function returning the reactive prop
+    () => {
+      currentPage.value = 1;
+    }
+  );
 </script>
