@@ -67,8 +67,9 @@
   import ScrollToTop from '@/components/global/ScrollToTop.vue';
   import TopBar from '@/components/global/TopBar.vue';
   import { onMounted, onUnmounted, ref } from 'vue';
+  import type { NavItem } from '~~/types/global';
 
-  const navItems = ref([
+  const navItems = ref<NavItem[]>([
     { label: 'মূলপাতা', to: '/' },
     { label: 'রাজনীতি', to: '/topics/politics' },
     { label: 'সর্বাধিক পঠিত', to: '/popular/read' },
@@ -81,7 +82,7 @@
   ]);
 
   /* FOOTER-NAV-ITEMS */
-  const footerNavItems = ref([
+  const footerNavItems = ref<NavItem[]>([
     {
       label: 'জনপথের ওপর কেন আপনি আস্থা রাখতে পারেন',
       to: '/institutional/trust-and-transparency',

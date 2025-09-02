@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { NewsItem } from '@/types/news';
+  import type { NewsItem } from '~~/types/news';
 
   const { mainNews } = defineProps<{ mainNews: NewsItem[] }>();
 </script>

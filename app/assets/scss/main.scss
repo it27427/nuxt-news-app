@@ -62,6 +62,10 @@ $font-weights: (
 @include customfont($family, semibold);
 @include customfont($family, bold);
 
+#__nuxt-devtools-splash {
+  display: none !important;
+}
+
 /*=======================================================
                         BASE LAYER
    (Put global @apply here so Tailwind can expand it)

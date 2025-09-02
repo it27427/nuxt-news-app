@@ -3,14 +3,30 @@ import { defineNuxtConfig } from 'nuxt/config';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  // @ts-ignore
+  devtools: {
+    enabled: true,
+    timeline: false,
+    splashScreen: false,
+  } as any,
   ssr: false,
   // spaLoadingTemplate: false,
 
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 
   imports: {
-    autoImport: true,
+    dirs: ['content', 'composables', 'server', 'types'],
+    presets: [
+      {
+        from: 'vue',
+        imports: ['ref', 'computed', 'watch', 'onMounted', 'onUnmounted'],
+      },
+    ],
+  },
+
+  components: {
+    global: true,
+    dirs: ['~/components'],
   },
 
   modules: [
@@ -22,7 +38,6 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    '@nuxtjs/i18n',
   ],
 
   // @ts-ignore => to skip unsupported options.

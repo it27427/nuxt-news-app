@@ -34,8 +34,8 @@
 </template>
 
 <script lang="ts" setup>
-  import type { OthersNewsItem } from '@/types/news';
   import { ref } from 'vue';
+  import type { OthersNewsItem } from '~~/types/news';
 
   const title = ref('অন্যান্য খবর');
 

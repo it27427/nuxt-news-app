@@ -1,4 +1,4 @@
-import type { TopicItem } from '@/types/news';
+import type { TopicItem } from '~~/types/news';
 import { readFile } from 'fs/promises';
 import path from 'path';
 

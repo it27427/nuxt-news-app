@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { PopularItem } from '@/types/news';
+  import type { PopularItem } from '~~/types/news';
   const props = defineProps<{ popularNews: PopularItem[] }>();
 
   const popularNews = props.popularNews;

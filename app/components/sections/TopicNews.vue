@@ -97,10 +97,9 @@
 </template>
 
 <script setup lang="ts">
-  import Pagination from '@/components/global/Pagination.vue';
-  import type { TopicItem, VideoItem } from '@/types/news';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
+  import type { TopicItem, VideoItem } from '~~/types/news';
 
   const props = defineProps<{
     newsList: (TopicItem | VideoItem)[];

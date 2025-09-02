@@ -16,10 +16,11 @@
 <script setup lang="ts">
   import Header from '@/components/global/layouts/Header.vue';
   import NavBar from '@/components/global/NavBar.vue';
+  import type { NavItem } from '~~/types/global';
 
   // Props
   const { navItems, offcanvasIsOpen, toggleOffcanvas, show } = defineProps<{
-    navItems: Array<{ label: string; to: string }>;
+    navItems: Array<NavItem>;
     offcanvasIsOpen: boolean;
     toggleOffcanvas: () => void;
     show: boolean;

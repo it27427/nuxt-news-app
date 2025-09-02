@@ -84,7 +84,7 @@
     PopularItem,
     TopicItem,
     VideoItem,
-  } from '@/types/news';
+  } from '~~/types/news';
 
   const { data: mainNewsData } = await useFetch<{ data: NewsItem[] }>(
     '/api/mainNews'

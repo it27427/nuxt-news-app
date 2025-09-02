@@ -39,7 +39,7 @@
 
   const title = ref('নির্বাচিত খবর');
 
-  import type { NewsItem } from '@/types/news';
+  import type { NewsItem } from '~~/types/news';
 
   const { selectedNews } = defineProps<{ selectedNews: NewsItem[] }>();
 </script>

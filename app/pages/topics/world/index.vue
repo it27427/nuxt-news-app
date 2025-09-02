@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
-  import type { TopicItem } from '@/types/news';
   import { ref } from 'vue';
+  import type { TopicItem } from '~~/types/news';
 
   /** Fetch data **/
   const { data: worldNewsData } = await useFetch<{ data: TopicItem[] }>(

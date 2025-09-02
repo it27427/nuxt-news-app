@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
   import MostRead from '@/components/sections/MostRead.vue';
-  import type { PopularItem } from '@/types/news';
   import { ref } from 'vue';
+  import type { PopularItem } from '~~/types/news';
 
   const title = ref('পাঠকপ্রিয় খবর');
 

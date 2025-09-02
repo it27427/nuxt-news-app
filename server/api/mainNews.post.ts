@@ -1,4 +1,4 @@
-import type { NewsItem } from '@/types/news';
+import type { NewsItem } from '~~/types/news';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 

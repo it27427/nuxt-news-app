@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { PopularItem } from '@/types/news';
+  import type { PopularItem } from '~~/types/news';
   import { ref } from 'vue';
 
   const title = ref('পাঠকপ্রিয় খবর');

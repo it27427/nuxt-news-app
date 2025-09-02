@@ -34,7 +34,7 @@
   import DesktopMenu from '@/components/global/menus/DesktopMenu.vue';
   import { onMounted, onUnmounted, ref } from 'vue';
 
-  type NavItem = { label: string; to: string };
+  import type { NavItem } from '~~/types/global';
 
   // Props
   const props = defineProps<{

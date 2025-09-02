@@ -1,4 +1,4 @@
-import type { VideoItem } from '@/types/news';
+import type { VideoItem } from '~~/types/news';
 import { readFile } from 'fs/promises';
 import path from 'path';
 
