@@ -9,7 +9,7 @@
         :key="news._id"
       >
         <client-only>
-          <NuxtLink :to="`/articles/${news._id}`" class="selected-news-link">
+          <BaseLink :to="`/articles/${news._id}`" class="selected-news-link">
             <article class="selected-news-article">
               <BasePicture class="mb-2 selected-news-thumbnail">
                 <BaseImage
@@ -26,7 +26,7 @@
                 <time :datetime="news.datetime">{{ news.datetime }}</time>
               </div>
             </article>
-          </NuxtLink>
+          </BaseLink>
         </client-only>
       </li>
     </ul>
@@ -35,6 +35,7 @@
 
 <script lang="ts" setup>
   import BaseImage from '@/components/base/BaseImage.vue';
+  import BaseLink from '@/components/base/BaseLink.vue';
   import BasePicture from '@/components/base/BasePicture.vue';
   import { ref } from 'vue';
 

@@ -3,7 +3,7 @@
     <ul class="main-news-list">
       <li class="main-news-list-item" v-for="news in mainNews" :key="news._id">
         <client-only>
-          <NuxtLink :to="`/articles/${news._id}`" class="main-news-link">
+          <BaseLink :to="`/articles/${news._id}`" class="main-news-link">
             <article class="main-news-article">
               <BasePicture class="mb-2 main-news-thumbnail">
                 <BaseImage
@@ -20,7 +20,7 @@
                 <time :datetime="news.datetime">{{ news.datetime }}</time>
               </div>
             </article>
-          </NuxtLink>
+          </BaseLink>
         </client-only>
       </li>
     </ul>
@@ -29,6 +29,7 @@
 
 <script setup lang="ts">
   import BaseImage from '@/components/base/BaseImage.vue';
+  import BaseLink from '@/components/base/BaseLink.vue';
   import BasePicture from '@/components/base/BasePicture.vue';
   import type { NewsItem } from '~~/types/news';
 
