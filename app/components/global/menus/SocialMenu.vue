@@ -2,7 +2,7 @@
   <ul class="grid gap-4 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
     <li v-for="(menu, index) in socialMenu" :key="index">
       <client-only>
-        <NuxtLink
+        <BaseLink
           :to="menu.to"
           class="flex items-center gap-4 text-dark-surface transition-all hover:text-dark-hover dark:text-white dark:hover:text-light-50 hover:underline"
         >
@@ -12,7 +12,6 @@
             <BaseImage
               :src="menu.icon"
               :alt="menu.label"
-              :srcset="menu.icon"
               class="object-contain w-full h-full"
               width="48"
               height="48"
@@ -22,15 +21,18 @@
           <span class="text-sizeBig font-sans font-bold">
             {{ menu.label }}
           </span>
-        </NuxtLink>
+        </BaseLink>
       </client-only>
     </li>
   </ul>
 </template>
 
 <script lang="ts" setup>
-  import type { SocialItem } from '@/types/news';
+  import BaseImage from '@/components/base/BaseImage.vue';
+  import BaseLink from '@/components/base/BaseLink.vue';
+  import BasePicture from '@/components/base/BasePicture.vue';
   import { ref } from 'vue';
+  import type { SocialItem } from '~~/types/news';
 
   const socialMenu = ref<SocialItem[]>([
     {

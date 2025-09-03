@@ -6,19 +6,20 @@
       class="py-3 border-b border-light-50 dark:border-dark-divider"
     >
       <client-only>
-        <NuxtLink
+        <BaseLink
           :to="navItem.to"
           class="text-dark dark:text-light mobile-link h-10 flex items-center"
           @click="close"
         >
           <span class="mobile-link-text">{{ navItem.label }}</span>
-        </NuxtLink>
+        </BaseLink>
       </client-only>
     </li>
   </ul>
 </template>
 <script setup lang="ts">
   type NavItem = { label: string; to: string };
+  import BaseLink from '@/components/base/BaseLink.vue';
 
   const { navItems, close } = defineProps<{
     navItems: NavItem[];

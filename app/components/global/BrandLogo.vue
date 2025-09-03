@@ -17,6 +17,5 @@
   const brand = ref({
     src: '/images/logo/logo.webp',
     alt: 'JONOPATH-BRAND-LOGO',
-    // height: '32',
   });
 </script>

@@ -1,17 +1,22 @@
 <template>
   <ul class="footer-list" role="list">
-    <li v-for="navItem in navItems" :key="navItem.label" class="footer-list-item">
+    <li
+      v-for="navItem in navItems"
+      :key="navItem.label"
+      class="footer-list-item"
+    >
       <client-only>
-        <NuxtLink :to="navItem.to" class="footer-list-link">
+        <BaseLink :to="navItem.to" class="footer-list-link">
           {{ navItem.label }}
-        </NuxtLink>
+        </BaseLink>
       </client-only>
     </li>
   </ul>
 </template>
 
 <script setup lang="ts">
-const { navItems } = defineProps<{
-  navItems: Array<{ label: string; to: string }>;
-}>();
+  import BaseLink from '@/components/base/BaseLink.vue';
+  const { navItems } = defineProps<{
+    navItems: Array<{ label: string; to: string }>;
+  }>();
 </script>
