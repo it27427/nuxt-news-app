@@ -37,6 +37,7 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
+    '@pinia/nuxt',
   ],
 
   // @ts-ignore => to skip unsupported options.
