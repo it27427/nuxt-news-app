@@ -7,16 +7,23 @@
     >
       <client-only>
         <NuxtLink :to="`/articles/${news._id}`" class="mostread-news-list-link">
-          <h3 class="news-counter">{{ news.counter }}</h3>
-          <article class="most-read-news-article">
-            <BasePicture>
+          <h3 class="news-counter w-6">{{ news.counter }}</h3>
+          <article
+            class="w-[calc(100%-1.5rem)] bg-light-divider text-dark dark:bg-dark-divider dark:text-white flex items-center p-2"
+          >
+            <BasePicture class="w-[6.8rem] md:w-[7.5rem]">
               <BaseImage
                 :src="news.image_url"
                 :alt="news.title"
                 class="object-cover w-full h-full"
               />
             </BasePicture>
-            <h3 class="news-title">{{ news.title }}</h3>
+
+            <div
+              class="w-[calc(100%-6.8rem)] md:w-[calc(100%-7.5rem)] px-2 md:px-4"
+            >
+              <h3 class="news-title" title="news.title">{{ news.title }}</h3>
+            </div>
           </article>
         </NuxtLink>
       </client-only>

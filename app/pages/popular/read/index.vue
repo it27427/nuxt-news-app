@@ -1,5 +1,5 @@
 <template>
-  <section class="flex flex-col gap-6 md:gap-8 pt-6 pb-16">
+  <section class="flex flex-col gap-6 md:gap-8 pt-6 pb-40">
     <header class="w-full max-w-hmw mx-auto">
       <h2 class="text-size2Xl md:text-size2XXl text-heading dark:text-light-50">
         {{ title }}

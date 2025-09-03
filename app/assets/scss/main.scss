@@ -76,7 +76,7 @@ $font-weights: (
   }
 
   body {
-    @apply bg-light text-dark dark:bg-dark-surface dark:text-white font-bengali text-sizeDefault font-normal;
+    @apply bg-gray-200 text-dark dark:bg-dark-surface dark:text-white font-bengali text-sizeDefault font-normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -632,7 +632,7 @@ $font-weights: (
   }
 
   .mostread-news-list {
-    @apply grid gap-1 grid-flow-col grid-rows-5;
+    @apply grid gap-2 grid-flow-col grid-rows-5;
 
     &-link {
       @apply flex items-center gap-4;
@@ -647,7 +647,7 @@ $font-weights: (
       }
 
       .news-title {
-        @apply text-dark-surface dark:text-white font-bengali font-bold text-sizeMedium md:text-sizeXl lg:text-size1Xl transition-all;
+        @apply text-dark-surface dark:text-white font-bengali font-bold text-sizeMedium md:text-sizeBig transition-all;
       }
 
       &:hover {

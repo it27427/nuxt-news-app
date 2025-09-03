@@ -39,6 +39,8 @@ const config: Config = {
       backgroundImage: {
         adGradient:
           'linear-gradient(-120deg, rgb(27, 166, 115) 0%, rgb(15, 23, 43) 54%, rgb(15, 23, 43) 90%)',
+        bgGradient:
+          'linear-gradient(128deg, rgba(64, 175, 255, 1) 0%, rgba(63, 97, 255, 1) 100%)',
       },
       fontFamily: {
         bengali: [
