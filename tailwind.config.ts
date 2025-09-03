@@ -31,8 +31,8 @@ const config: Config = {
         dark: {
           DEFAULT: 'hsl(223, 48%, 11%)', // rgb(15, 23, 43)
           surface: 'hsl(236, 88%, 7%)', // rgb(2, 4, 32)
-          divider: 'hsl(240, 2%, 25%)', // rgb(63, 63, 66)
-          knight: 'hsl(236, 88%, 7%)', // rgb(2, 4, 32)
+          divider: 'hsl(218, 36%, 18%)', // rgb(29, 41, 61)
+          knight: 'hsl(229, 85%, 5%)', // rgb(2, 6, 24)
           hover: 'hsl(210, 2%, 34%)', //rgb(84, 86, 88)
         },
       },

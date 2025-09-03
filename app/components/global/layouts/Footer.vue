@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-dark text-white">
+  <footer class="bg-dark-knight text-white">
     <!-- FOOTER-TOPBAR (without DarkMode) -->
     <TopBar />
 

@@ -1,14 +1,14 @@
 <template>
   <Header
     :class="[
-      'w-full transition-transform duration-300',
+      'w-full backdrop-blur transition-transform duration-300',
       props.show
         ? 'sticky top-0 left-0 z-40 translate-y-0'
         : 'relative -translate-y-full',
     ]"
   >
     <nav
-      class="bg-white border-b border-light-50 dark:bg-dark dark:border-dark-divider h-12"
+      class="bg-white border-b border-light-50 dark:bg-dark-knight dark:border-dark-divider h-12"
     >
       <div class="jonopath-container flex items-center mobcontainer">
         <!-- Hamburger (Mobile) -->
