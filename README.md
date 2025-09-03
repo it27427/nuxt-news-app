@@ -70,4 +70,4 @@ yarn preview
 bun run preview
 ```
 
-<!-- View [live demo]() -->
+View [live demo](https://nuxt-news-app.vercel.app/)
