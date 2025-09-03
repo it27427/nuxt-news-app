@@ -15,7 +15,7 @@
   import { ref } from 'vue';
 
   const brand = ref({
-    src: '/images/logo/logo.png',
+    src: '/images/logo/logo-v1.svg',
     alt: 'JONOPATH-BRAND-LOGO',
     // height: '32',
   });

@@ -62,18 +62,13 @@ $font-weights: (
 @include customfont($family, semibold);
 @include customfont($family, bold);
 
-#__nuxt-devtools-splash {
-  display: none !important;
-  color: hsl(229, 85%, 5%);
-}
-
 /*=======================================================
                         BASE LAYER
    (Put global @apply here so Tailwind can expand it)
 =========================================================*/
 @layer base {
   ::selection {
-    @apply bg-primary text-light;
+    @apply bg-primary-dark text-light;
   }
 
   html {
