@@ -24,6 +24,12 @@ export interface PopularItem {
   counter: string;
   title: string;
 }
+export interface MostReadItem {
+  _id: string;
+  counter: string;
+  title: string;
+  image_url: string;
+}
 
 export interface TopicItem {
   _id: string;

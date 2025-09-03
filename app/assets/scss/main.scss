@@ -68,7 +68,7 @@ $font-weights: (
 =========================================================*/
 @layer base {
   ::selection {
-    @apply bg-primary-dark text-light;
+    @apply bg-primary text-light;
   }
 
   html {
@@ -95,7 +95,7 @@ $font-weights: (
     @apply w-full h-full flex items-center justify-center overflow-hidden; //sm:h-7 md:h-7.5 lg:h-8
 
     img {
-      @apply w-full h-full object-cover md:object-contain;
+      @apply w-full h-full object-contain;
     }
   }
 
@@ -233,7 +233,7 @@ $font-weights: (
     @apply bg-primary flex items-center w-full h-11 xs:h-15 sm:h-16;
 
     &-link {
-      @apply w-40 h-full border-b-4 border-transparent hover:border-b-white dark:hover:border-gray-300 flex items-center justify-center px-0.125;
+      @apply w-44 md:w-48 h-full border-b-4 border-transparent hover:border-b-white dark:hover:border-gray-300 flex items-center justify-center px-0.125;
 
       &.router-link-active,
       &.router-link-exact-active {

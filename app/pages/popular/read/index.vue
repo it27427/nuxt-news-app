@@ -7,7 +7,7 @@
     </header>
 
     <div class="jonopath-container">
-      <MostRead :popularNews="popularNews" />
+      <MostRead :mostReadNews="mostReadNews" />
     </div>
   </section>
 </template>
@@ -15,13 +15,13 @@
 <script setup lang="ts">
   import MostRead from '@/components/sections/MostRead.vue';
   import { ref } from 'vue';
-  import type { PopularItem } from '~~/types/news';
+  import type { MostReadItem } from '~~/types/news';
 
   const title = ref('পাঠকপ্রিয় খবর');
 
-  const { data: popularNewsData } = await useFetch<{ data: PopularItem[] }>(
-    '/api/popularNews'
+  const { data: mostReadData } = await useFetch<{ data: MostReadItem[] }>(
+    '/api/mostRead'
   );
 
-  const popularNews: PopularItem[] = popularNewsData.value?.data ?? [];
+  const mostReadNews: MostReadItem[] = mostReadData.value?.data ?? [];
 </script>
