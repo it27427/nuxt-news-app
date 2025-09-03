@@ -40,6 +40,10 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
+  routeRules: {
+    '/institutional': { redirect: '/institutional/about' },
+  },
+
   // @ts-ignore => to skip unsupported options.
   content: {},
 

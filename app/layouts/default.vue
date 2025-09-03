@@ -135,9 +135,7 @@
     { label: 'ব্যবহারের শর্তাবলী', to: '/institutional/terms-of-use' },
     { label: 'জনপথ সম্পর্কে', to: '/institutional/about' },
     { label: 'প্রিভেসি নীতি', to: '/institutional/privacy-policy' },
-    { label: 'কুকিজ', to: '#' },
     { label: 'জনপথের সাথে যোগাযোগ করুন', to: '/institutional/contact' },
-    { label: 'অন্যান্য ভাষায় জনপথের সংবাদ', to: '#' },
   ]);
 
   /* COLLAPSE & OFFCANVAS STATE */
