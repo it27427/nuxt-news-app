@@ -18,8 +18,8 @@ const config: Config = {
       },
       colors: {
         primary: {
-          DEFAULT: 'hsl(0, 100%, 36%)', //rgb(184, 0, 0)
-          dark: 'rgb(162, 2, 25)', //rgb(162, 2, 25)
+          DEFAULT: 'hsl(155, 100%, 43%)', //rgb(0, 219, 128)
+          dark: 'hsl(158, 72%, 38%)', //rgb(27, 167, 116)
         },
         light: {
           DEFAULT: 'hsl(0, 0%, 99%)', //rgb(252, 252, 252)
@@ -29,8 +29,8 @@ const config: Config = {
           heading: 'hsl(240, 2%, 44%)', //rgb(110, 110, 115)
         },
         dark: {
-          DEFAULT: 'hsl(0, 0%, 13%)', // rgb(34, 34, 34)
-          surface: 'hsl(0, 0%, 8%)', // rgb(20, 20, 20)
+          DEFAULT: 'hsl(223, 48%, 11%)', // rgb(15, 23, 43)
+          surface: 'hsl(236, 88%, 7%)', // rgb(2, 4, 32)
           divider: 'hsl(240, 2%, 25%)', // rgb(63, 63, 66)
           knight: 'hsl(236, 88%, 7%)', // rgb(2, 4, 32)
           hover: 'hsl(210, 2%, 34%)', //rgb(84, 86, 88)
@@ -38,7 +38,7 @@ const config: Config = {
       },
       backgroundImage: {
         adGradient:
-          'linear-gradient(-120deg, rgb(162, 2, 25) 0%, rgb(24, 1, 9) 54%, rgb(24, 1, 9) 90%)',
+          'linear-gradient(-120deg, rgb(27, 166, 115) 0%, rgb(15, 23, 43) 54%, rgb(15, 23, 43) 90%)',
       },
       fontFamily: {
         bengali: [
