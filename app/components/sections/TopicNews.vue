@@ -48,7 +48,7 @@
               <client-only>
                 <NuxtLink :to="`/articles/${news._id}`" class="topic-list-link">
                   <article class="topic-list-article">
-                    <BaseFigure class="mb-2 topic-list-thumbnail relative">
+                    <BasePicture class="mb-2 topic-list-thumbnail relative">
                       <BaseImage
                         :src="news.image_url"
                         :alt="news.title"
@@ -75,7 +75,7 @@
                         </span>
                         {{ news.duration }}
                       </div>
-                    </BaseFigure>
+                    </BasePicture>
                     <div class="topic-list-details">
                       <h2 :title="news.title">{{ news.title }}</h2>
                       <time :datetime="news.datetime">{{ news.datetime }}</time>
@@ -99,6 +99,8 @@
 </template>
 
 <script setup lang="ts">
+  import BaseImage from '@/components/base/BaseImage.vue';
+  import BasePicture from '@/components/base/BasePicture.vue';
   import Pagination from '@/components/global/Pagination.vue';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';

@@ -11,14 +11,13 @@
         <client-only>
           <NuxtLink :to="`/articles/${news._id}`" class="others-news-link">
             <article class="others-news-article">
-              <BaseFigure class="mb-2 others-news-thumbnail">
+              <BasePicture class="mb-2 others-news-thumbnail">
                 <BaseImage
                   :src="news.image_url"
                   :alt="news.title"
-                  :srcset="news.image_url"
                   class="object-cover aspect-video"
                 />
-              </BaseFigure>
+              </BasePicture>
 
               <div class="others-news-details">
                 <h2 :title="news.title">{{ news.title }}</h2>
@@ -34,6 +33,8 @@
 </template>
 
 <script lang="ts" setup>
+  import BaseImage from '@/components/base/BaseImage.vue';
+  import BasePicture from '@/components/base/BasePicture.vue';
   import { ref } from 'vue';
   import type { OthersNewsItem } from '~~/types/news';
 
