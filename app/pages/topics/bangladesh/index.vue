@@ -16,7 +16,9 @@
   import type { TopicItem } from '~~/types/news';
 
   /** Fetch data **/
-  const { data } = await useFetch<{ data: TopicItem[] }>('/api/bangladeshNews');
+  const { data } = await useFetch<{ data: TopicItem[] }>(
+    '/data/topics/bangladeshNews'
+  );
 
   /** Full news list **/
   const bangladeshNews = computed(() => data.value?.data ?? []);

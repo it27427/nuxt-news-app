@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "_id": "1",
+      "counter": "১",
+      "title": "মার্কিন নেতৃত্বাধীন বিশ্বব্যবস্থার বিরুদ্ধে চীনের জোরালো বার্তা ",
+      "image_url": "https://ichef.bbci.co.uk/ace/ws/660/cpsprodpb/ef1a/live/1fe02340-88e0-11f0-8c02-ed32f57a7bac.jpg.webp"
+    },
+    {
+      "_id": "2",
+      "counter": "২",
+      "title": "বাংলাদেশ-পাকিস্তানে 'ধর্মীয় নিপীড়নের' শিকার সংখ্যালঘুদের ভারতের নতুন আইনে ছাড়",
+      "image_url": "https://ichef.bbci.co.uk/ace/ws/660/cpsprodpb/9f86/live/ac1e6170-88ac-11f0-aa06-3df3b9ae7236.jpg.webp"
+    },
+    {
+      "_id": "3",
+      "counter": "৩",
+      "title": "কুমারীদের 'ছিপি আঁটা বোতল' বলে বিপদে এক অধ্যাপক!",
+      "image_url": "https://ichef.bbci.co.uk/ace/ws/660/cpsprodpb/93A6/production/_105189773_gettyimages-906833372.jpg.webp"
+    },
+    {
+      "_id": "4",
+      "counter": "৪",
+      "title": "বাবাকে নজরবন্দি, ভাইদের আটক - সৌদি রাজতন্ত্রে যেভাবে ক্ষমতাধর হয়ে ওঠেন মোহাম্মদ বিন সালমান",
+      "image_url": "https://ichef.bbci.co.uk/ace/ws/660/cpsprodpb/8900/live/9e7b92f0-87e3-11f0-84c8-99de564f0440.jpg.webp"
+    },
+    {
+      "_id": "5",
+      "counter": "৫",
+      "title": "পাকিস্তান থেকে ভারতে গিয়ে নাগরিকত্ব না পেয়ে রাষ্ট্রবিহীন হয়ে আছেন দুই বোন",
+      "image_url": "https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/f2b1/live/a80bb0b0-87ee-11f0-b36e-47414de99d82.jpg.webp"
+    }
+  ]
+}

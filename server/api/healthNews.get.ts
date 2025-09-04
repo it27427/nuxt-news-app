@@ -1,17 +1,10 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import healthNewsData from '~~/server/data/topics/economy.json';
 import type { TopicItem } from '~~/types/news';
 
 export default defineEventHandler(async () => {
   try {
-    // Path to JSON file in public folder
-    const filePath = join(process.cwd(), 'public/data/topics/health.json');
-
-    // Read JSON file
-    const fileContent = await readFile(filePath, 'utf-8');
-
     // Parse JSON
-    const jsonData: { data: TopicItem[] } = JSON.parse(fileContent);
+    const jsonData: { data: TopicItem[] } = healthNewsData as any;
 
     return jsonData;
   } catch (err) {

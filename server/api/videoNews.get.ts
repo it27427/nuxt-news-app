@@ -5,7 +5,7 @@ import type { VideoItem } from '~~/types/news';
 export default defineEventHandler(async () => {
   try {
     // Path to JSON file in public folder
-    const filePath = join(process.cwd(), 'public/data/topics/video.json');
+    const filePath = join(process.cwd(), 'server/data/topics/video.json');
 
     // Read JSON file
     const fileContent = await readFile(filePath, 'utf-8');

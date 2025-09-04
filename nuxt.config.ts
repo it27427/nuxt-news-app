@@ -37,8 +37,8 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    '@sidebase/nuxt-auth',
-    '@pinia/nuxt',
+    // '@sidebase/nuxt-auth',
+    // '@pinia/nuxt',
   ],
 
   routeRules: {
@@ -140,6 +140,9 @@ export default defineNuxtConfig({
         ),
         server: fileURLToPath(
           new URL(process.env.NUXT_ALIAS_SERVER || './server/', import.meta.url)
+        ),
+        shared: fileURLToPath(
+          new URL(process.env.NUXT_ALIAS_SHARED || './shared/', import.meta.url)
         ),
         content: fileURLToPath(
           new URL(

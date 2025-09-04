@@ -5,7 +5,7 @@ import type { NewsItem } from '~~/types/news';
 export default defineEventHandler(async () => {
   try {
     // Path to JSON file in public folder
-    const filePath = join(process.cwd(), 'public/data/home/mainNews.json');
+    const filePath = join(process.cwd(), 'server/data/home/mainNews.json');
 
     // Read JSON file
     const fileContent = await readFile(filePath, 'utf-8');
