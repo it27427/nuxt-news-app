@@ -23,26 +23,18 @@
   import { onMounted, ref } from 'vue';
   import type { MostReadItem } from '~~/types/news';
 
-  // TITLE
   const title = ref('পাঠকপ্রিয় খবর');
-
-  // DATA
   const mostReadNews = ref<MostReadItem[]>([]);
-
-  // LOADING STATE
   const loading = ref(true);
 
   onMounted(async () => {
     try {
-      const res = await useFetch<{ data: MostReadItem[] }>(
-        '/data/topics/mostRead.json',
-        { server: false }
+      const data = await $fetch<{ data: MostReadItem[] }>(
+        '/data/topics/mostRead.json'
       );
-
-      // ✅ Access data.value safely
-      mostReadNews.value = res.data.value?.data ?? [];
-    } catch (error) {
-      console.error('Failed to load most read news:', error);
+      mostReadNews.value = data?.data ?? [];
+    } catch (e) {
+      console.error('Failed to load most read news', e);
     } finally {
       loading.value = false;
     }
