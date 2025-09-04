@@ -3,9 +3,10 @@
     <!-- HOME-HERO-SECTION -->
     <section>
       <div class="jonopath-container">
-        <div v-if="mainNewsLoading" class="text-center py-10">
+        <!-- <div v-if="mainNewsLoading" class="text-center py-10">
           Loading main news...
-        </div>
+        </div> -->
+        <MainNewsSkeleton v-if="mainNewsLoading" />
         <MainNews v-else :mainNews="mainNews" />
       </div>
     </section>
@@ -113,6 +114,8 @@
   import SelectedNews from '@/components/sections/SelectedNews.vue';
   import SocialSection from '@/components/sections/SocialSection.vue';
   import TopicNews from '@/components/sections/TopicNews.vue';
+  /** NEWS-SKELETON-COMPONENTS-FOR-DATA-LOADING  */
+  import MainNewsSkeleton from '@/components/Skeleton/MainNewsSkeleton.vue';
 
   import type {
     NewsItem,

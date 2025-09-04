@@ -9,7 +9,7 @@
                 <BaseImage
                   :src="news.image_url"
                   :alt="news.title"
-                  class="object-cover aspect-video"
+                  class="object-cover"
                 />
               </BasePicture>
 
