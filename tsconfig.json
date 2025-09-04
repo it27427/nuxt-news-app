@@ -2,12 +2,20 @@
   "files": [],
   "compilerOptions": {
     "baseUrl": ".",
-    "types": [
-      "@types/node"
-    ],
+    "paths": {
+      "~/*": [
+        "app/*"
+      ],
+      "@/*": [
+        "app/*"
+      ]
+    },
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "@types/node"
+    ]
   },
   "references": [
     {

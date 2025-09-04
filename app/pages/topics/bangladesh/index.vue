@@ -17,7 +17,8 @@
 
   /** Fetch data **/
   const { data } = await useFetch<{ data: TopicItem[] }>(
-    '/data/topics/bangladeshNews'
+    '/data/topics/bangladeshNews.json',
+    { server: false }
   );
 
   /** Full news list **/

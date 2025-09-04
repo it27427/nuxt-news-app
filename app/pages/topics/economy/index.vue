@@ -15,7 +15,10 @@
   import type { TopicItem } from '~~/types/news';
 
   /** Fetch data **/
-  const { data } = await useFetch<{ data: TopicItem[] }>('/api/economyNews');
+  const { data } = await useFetch<{ data: TopicItem[] }>(
+    '/data/topics/economyNews.json',
+    { server: false }
+  );
 
   /** Full news list **/
   const economyNews = computed(() => data.value?.data ?? []);

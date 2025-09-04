@@ -7,21 +7,44 @@
     </header>
 
     <div class="jonopath-container">
-      <MostRead :mostReadNews="mostReadNews" />
+      <!-- LOADING -->
+      <div v-if="loading" class="text-center py-10">
+        Loading most read news...
+      </div>
+
+      <!-- CONTENT -->
+      <MostRead v-else :mostReadNews="mostReadNews" />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
   import MostRead from '@/components/sections/MostRead.vue';
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import type { MostReadItem } from '~~/types/news';
 
+  // TITLE
   const title = ref('পাঠকপ্রিয় খবর');
 
-  const { data: mostReadData } = await useFetch<{ data: MostReadItem[] }>(
-    '/api/mostRead'
-  );
+  // DATA
+  const mostReadNews = ref<MostReadItem[]>([]);
 
-  const mostReadNews: MostReadItem[] = mostReadData.value?.data ?? [];
+  // LOADING STATE
+  const loading = ref(true);
+
+  onMounted(async () => {
+    try {
+      const res = await useFetch<{ data: MostReadItem[] }>(
+        '/data/topics/mostRead.json',
+        { server: false }
+      );
+
+      // ✅ Access data.value safely
+      mostReadNews.value = res.data.value?.data ?? [];
+    } catch (error) {
+      console.error('Failed to load most read news:', error);
+    } finally {
+      loading.value = false;
+    }
+  });
 </script>

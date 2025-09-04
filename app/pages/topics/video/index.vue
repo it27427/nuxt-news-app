@@ -15,7 +15,10 @@
   import type { VideoItem } from '~~/types/news';
 
   /** Fetch data **/
-  const { data } = await useFetch<{ data: VideoItem[] }>('/api/videoNews');
+  const { data } = await useFetch<{ data: VideoItem[] }>(
+    '/data/topics/videoNews.json',
+    { server: false }
+  );
 
   /** Full news list **/
   const videoNews = computed(() => data.value?.data ?? []);

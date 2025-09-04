@@ -10,7 +10,10 @@
   import type { TopicItem } from '~~/types/news';
 
   /** Fetch data **/
-  const { data } = await useFetch<{ data: TopicItem[] }>('/api/worldNews');
+  const { data } = await useFetch<{ data: TopicItem[] }>(
+    '/data/topics/worldNews.json',
+    { server: false }
+  );
 
   /** Full news list **/
   const worldNews = computed(() => data.value?.data ?? []);
