@@ -1,6 +1,11 @@
 <template>
   <div>
+    <!-- LOADING -->
+    <div v-if="loading" class="text-center py-10">Loading video news...</div>
+
+    <!-- CONTENT -->
     <TopicNews
+      v-else
       :newsList="videoNews"
       topicName="video"
       topicTitle="ভিডিও"
@@ -11,15 +16,29 @@
 
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
-  import { computed } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import type { VideoItem } from '~~/types/news';
 
-  /** Fetch data **/
-  const { data } = await useFetch<{ data: VideoItem[] }>(
-    '/data/topics/videoNews.json',
-    { server: false }
-  );
+  // LOADING STATE
+  const loading = ref(true);
 
-  /** Full news list **/
-  const videoNews = computed(() => data.value?.data ?? []);
+  // DATA
+  const videoNewsData = ref<VideoItem[]>([]);
+
+  // COMPUTED
+  const videoNews = computed(() => videoNewsData.value ?? []);
+
+  // FETCH DATA ON CLIENT
+  onMounted(async () => {
+    try {
+      const data = await $fetch<{ data: VideoItem[] }>(
+        '/data/topics/video.json'
+      );
+      videoNewsData.value = data?.data ?? [];
+    } catch (error) {
+      console.error('Failed to load video news:', error);
+    } finally {
+      loading.value = false;
+    }
+  });
 </script>

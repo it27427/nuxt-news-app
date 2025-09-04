@@ -1,7 +1,13 @@
 <template>
   <div>
-    <!-- Topic News Section -->
+    <!-- LOADING -->
+    <div v-if="loading" class="text-center py-10">
+      Loading Bangladesh news...
+    </div>
+
+    <!-- CONTENT -->
     <TopicNews
+      v-else
       :newsList="bangladeshNews"
       topicName="bangladesh"
       topicTitle="বাংলাদেশ"
@@ -12,15 +18,29 @@
 
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
-  import { computed } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import type { TopicItem } from '~~/types/news';
 
-  /** Fetch data **/
-  const { data } = await useFetch<{ data: TopicItem[] }>(
-    '/data/topics/bangladeshNews.json',
-    { server: false }
-  );
+  // LOADING STATE
+  const loading = ref(true);
 
-  /** Full news list **/
-  const bangladeshNews = computed(() => data.value?.data ?? []);
+  // DATA
+  const bangladeshNewsData = ref<TopicItem[]>([]);
+
+  // COMPUTED
+  const bangladeshNews = computed(() => bangladeshNewsData.value ?? []);
+
+  // FETCH DATA ON CLIENT
+  onMounted(async () => {
+    try {
+      const data = await $fetch<{ data: TopicItem[] }>(
+        '/data/topics/bangladesh.json'
+      );
+      bangladeshNewsData.value = data?.data ?? [];
+    } catch (error) {
+      console.error('Failed to load Bangladesh news:', error);
+    } finally {
+      loading.value = false;
+    }
+  });
 </script>
