@@ -37,12 +37,23 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
+    '@sidebase/nuxt-auth',
     '@pinia/nuxt',
   ],
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about' },
   },
+
+  // OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  // TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+  // runtimeConfig: {
+  //   session: {
+  //     password: '',
+  //     name: 'nau-session',
+  //     cookie: {}
+  //   },
+  // },
 
   // @ts-ignore => to skip unsupported options.
   content: {},
