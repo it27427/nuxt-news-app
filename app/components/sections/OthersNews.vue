@@ -11,11 +11,11 @@
         <client-only>
           <BaseLink :to="`/articles/${news._id}`" class="others-news-link">
             <article class="others-news-article">
-              <BasePicture class="mb-2 others-news-thumbnail">
+              <BasePicture class="others-news-thumbnail">
                 <BaseImage
                   :src="news.image_url"
                   :alt="news.title"
-                  class="object-cover aspect-video"
+                  class="object-cover mb-2"
                 />
               </BasePicture>
 

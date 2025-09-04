@@ -3,9 +3,6 @@
     <!-- HOME-HERO-SECTION -->
     <section>
       <div class="jonopath-container">
-        <!-- <div v-if="mainNewsLoading" class="text-center py-10">
-          Loading main news...
-        </div> -->
         <MainNewsSkeleton v-if="mainNewsLoading" />
         <MainNews v-else :mainNews="mainNews" />
       </div>
@@ -17,9 +14,7 @@
     <!-- SELECTED-NEWS -->
     <section>
       <div class="jonopath-container">
-        <div v-if="selectedNewsLoading" class="text-center py-10">
-          Loading selected news...
-        </div>
+        <SelectedNewsSkeleton v-if="selectedNewsLoading" />
         <SelectedNews v-else :selectedNews="selectedNews" />
       </div>
     </section>
@@ -75,9 +70,7 @@
     <!-- OTHERS-NEWS -->
     <section class="mb-5">
       <div class="jonopath-container">
-        <div v-if="othersNewsLoading" class="text-center py-10">
-          Loading others news...
-        </div>
+        <OthersNewsSkeleton v-if="othersNewsLoading" />
         <OthersNews v-else :othersNews="othersNews" />
       </div>
     </section>
@@ -92,9 +85,7 @@
     <!-- POPULAR-NEWS-SECTION -->
     <section>
       <div class="jonopath-container">
-        <div v-if="popularNewsLoading" class="text-center py-10">
-          Loading popular news...
-        </div>
+        <PopularNewsSkeleton v-if="popularNewsLoading" />
         <PopularNews v-else :popularNews="popularNews" />
       </div>
     </section>
@@ -115,7 +106,10 @@
   import SocialSection from '@/components/sections/SocialSection.vue';
   import TopicNews from '@/components/sections/TopicNews.vue';
   /** NEWS-SKELETON-COMPONENTS-FOR-DATA-LOADING  */
-  import MainNewsSkeleton from '@/components/Skeleton/MainNewsSkeleton.vue';
+  import MainNewsSkeleton from '~/components/Skeleton/Home/MainNewsSkeleton.vue';
+  import OthersNewsSkeleton from '~/components/Skeleton/Home/OthersNewsSkeleton.vue';
+  import PopularNewsSkeleton from '~/components/Skeleton/Home/PopularNewsSkeleton.vue';
+  import SelectedNewsSkeleton from '~/components/Skeleton/Home/SelectedNewsSkeleton.vue';
 
   import type {
     NewsItem,
