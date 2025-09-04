@@ -99,7 +99,7 @@
     </section>
 
     <!-- AD-SECTION -->
-    <AdSection class="py-8 my-5" />
+    <AdSection class="py-8 mt-5 mb-8" />
   </div>
 </template>
 
