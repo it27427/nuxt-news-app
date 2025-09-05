@@ -16,10 +16,10 @@
 
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
-  /** SKELETON-COMPONENTS-FOR-DATA-LOADING  */
-  import TopicNewsSkeleton from '@/components/Skeleton/Topics/TopicNewsSkeleton.vue';
-  import { computed, onMounted, ref } from 'vue';
-  import type { TopicItem } from '~~/types/news';
+  /** DATA-LOADING-SKELETON  */
+  import TopicNewsSkeleton from '@/components/Skeleton/TopicNewsSkeleton.vue';
+import { computed, onMounted, ref } from 'vue';
+import type { TopicItem } from '~~/types/news';
 
   // LOADING STATE
   const loading = ref(true);
