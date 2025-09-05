@@ -36,33 +36,33 @@
             </article>
           </li>
         </ul>
-
-        <!-- Pagination Skeleton -->
-        <nav class="w-full flex items-center justify-center mt-6">
-          <ul class="pagination flex items-center">
-            <!-- Previous -->
-            <li>
-              <div
-                class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
-              ></div>
-            </li>
-
-            <!-- Page Numbers -->
-            <li v-for="n in 5" :key="n">
-              <div
-                class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
-              ></div>
-            </li>
-
-            <!-- Next -->
-            <li>
-              <div
-                class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
-              ></div>
-            </li>
-          </ul>
-        </nav>
       </div>
+
+      <!-- Pagination Skeleton -->
+      <nav class="w-full flex items-center justify-center mt-6">
+        <ul class="pagination flex items-center">
+          <!-- Previous -->
+          <li>
+            <div
+              class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
+            ></div>
+          </li>
+
+          <!-- Page Numbers -->
+          <li v-for="n in 5" :key="n">
+            <div
+              class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
+            ></div>
+          </li>
+
+          <!-- Next -->
+          <li>
+            <div
+              class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
+            ></div>
+          </li>
+        </ul>
+      </nav>
     </div>
   </section>
 </template>

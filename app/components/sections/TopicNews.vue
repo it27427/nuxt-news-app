@@ -80,14 +80,14 @@
             </client-only>
           </li>
         </ul>
-
-        <!-- PAGINATION -->
-        <Pagination
-          v-model="currentPage"
-          :total-items="newsList.length"
-          :items-per-page="itemsPerPage"
-        />
       </div>
+
+      <!-- PAGINATION -->
+      <Pagination
+        v-model="currentPage"
+        :total-items="newsList.length"
+        :items-per-page="itemsPerPage"
+      />
     </div>
   </section>
 </template>

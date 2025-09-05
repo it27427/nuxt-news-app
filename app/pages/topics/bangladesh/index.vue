@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Loader -->
+    <!-- LOADING -->
     <TopicNewsSkeleton v-if="loading" />
 
     <!-- CONTENT -->
@@ -16,10 +16,10 @@
 
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
+  /** SKELETON-COMPONENTS-FOR-DATA-LOADING  */
+  import TopicNewsSkeleton from '@/components/Skeleton/Topics/TopicNewsSkeleton.vue';
   import { computed, onMounted, ref } from 'vue';
   import type { TopicItem } from '~~/types/news';
-  /** NEWS-SKELETON-COMPONENTS-FOR-DATA-LOADING  */
-  import TopicNewsSkeleton from '@/components/Skeleton/Topics/TopicNewsSkeleton.vue';
 
   // LOADING STATE
   const loading = ref(true);
