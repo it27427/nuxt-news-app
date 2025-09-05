@@ -1,46 +1,44 @@
 <template>
-  <section class="flex flex-col gap-6 animate-pulse md:gap-8 pt-6 pb-40">
+  <section class="flex flex-col gap-6 md:gap-8 pt-6 pb-40">
     <!-- Title Skeleton -->
-    <header class="w-full max-w-hmw mx-auto">
+    <header class="w-full max-w-hmw mx-auto px-2 ss:px-4">
       <div
-        class="h-8 md:h-10 w-full bg-gray-300 dark:bg-dark-divider rounded mb-4"
+        class="h-[1.875rem] md:h-[2rem] w-1/3 md:w-1/6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"
       ></div>
     </header>
 
     <div class="jonopath-container">
-      <ul class="mostread-news-list">
+      <ul class="grid gap-2 grid-flow-col grid-rows-5">
         <li
           v-for="n in 5"
           :key="n"
-          class="mostread-news-list-item animate-pulse"
+          class="flex items-center gap-4 animate-pulse"
         >
-          <div class="mostread-news-list-link">
-            <!-- Counter Skeleton -->
+          <!-- Counter Skeleton -->
+          <div
+            class="news-counter w-8 h-12 bg-gray-300 dark:bg-gray-700 rounded"
+          ></div>
+
+          <article
+            class="flex items-center gap-4 w-[calc(100%-2rem)] h-[5.215rem] bg-gray-100 dark:bg-gray-800 p-2 rounded"
+          >
+            <!-- Thumbnail Skeleton -->
             <div
-              class="news-counter w-6 h-10 bg-gray-300 dark:bg-gray-700 rounded"
+              class="w-[6.8rem] md:w-[7.5rem] h-16 md:h-[4.215rem] bg-gray-300 dark:bg-gray-700 rounded"
             ></div>
 
-            <article
-              class="w-[calc(100%-1.5rem)] bg-gray-100 dark:bg-dark-surface flex items-center p-2 rounded"
+            <!-- Title Skeleton -->
+            <div
+              class="w-[calc(100%-6.8rem)] md:w-[calc(100%-7.5rem)] h-16 md:h-[4.215rem] flex flex-col justify-center gap-2 px-2 md:px-4"
             >
-              <!-- Thumbnail Skeleton -->
               <div
-                class="w-[6.8rem] md:w-[7.5rem] h-[4.5rem] md:h-[5rem] bg-gray-300 dark:bg-dark-divider rounded"
+                class="h-3 md:h-4 bg-gray-300 dark:bg-gray-700 rounded w-5/6"
               ></div>
-
-              <!-- Title Skeleton -->
               <div
-                class="w-[calc(100%-6.8rem)] md:w-[calc(100%-7.5rem)] px-2 md:px-4 flex flex-col justify-center"
-              >
-                <div
-                  class="h-4 md:h-5 bg-gray-300 dark:bg-gray-800 rounded w-5/6 mb-2"
-                ></div>
-                <div
-                  class="h-4 md:h-5 bg-gray-300 dark:bg-gray-800 rounded w-4/6"
-                ></div>
-              </div>
-            </article>
-          </div>
+                class="h-3 md:h-4 bg-gray-300 dark:bg-gray-700 rounded w-4/6"
+              ></div>
+            </div>
+          </article>
         </li>
       </ul>
     </div>

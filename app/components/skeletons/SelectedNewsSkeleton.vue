@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-5 my-6 lg:my-10">
     <!-- Title Skeleton -->
     <div
-      class="h-8 md:h-10 w-1/3 bg-gray-300 dark:bg-dark-divider rounded animate-pulse mb-4"
+      class="h-8 md:h-10 w-1/3 md:w-1/5 bg-gray-300 dark:bg-dark-divider rounded animate-pulse"
     ></div>
 
     <ul class="selected-news-list">

@@ -2,8 +2,8 @@
   <div class="flex flex-col gap-5 my-6 lg:my-10">
     <!-- Title Skeleton -->
     <div
-      class="bg-gray-300 dark:bg-dark-divider rounded w-1/3"
-      :class="['h-[1.875rem] md:h-[2rem] mb-4']"
+      class="bg-gray-300 dark:bg-dark-divider rounded w-1/3 md:w-1/5"
+      :class="['h-[1.875rem] md:h-[2rem]']"
     ></div>
 
     <ul

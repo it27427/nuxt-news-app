@@ -3,9 +3,14 @@
   <MostReadNewsSkeleton v-if="loading" />
 
   <!-- CONTENT -->
-  <section v-else class="flex flex-col gap-6 md:gap-8 pt-6 pb-40">
-    <header class="w-full max-w-hmw mx-auto">
-      <h2 class="text-size2Xl md:text-size2XXl text-heading dark:text-light-50">
+  <section
+    v-else
+    class="flex flex-col gap-4 sm:gap-6 md:gap-8 pt-6 pb-20 md:pb-40"
+  >
+    <header class="w-full max-w-hmw mx-auto px-2 ss:px-4">
+      <h2
+        class="font-normal text-size2Xl md:text-size2XXl text-heading dark:text-light-50"
+      >
         {{ title }}
       </h2>
     </header>
@@ -18,6 +23,7 @@
 
 <script setup lang="ts">
   import MostRead from '@/components/sections/MostRead.vue';
+  /** DATA-LOADING-SKELETON  */
   import MostReadNewsSkeleton from '@/components/skeletons/MostReadNewsSkeleton.vue';
   import { onMounted, ref } from 'vue';
   import type { MostReadItem } from '~~/types/news';

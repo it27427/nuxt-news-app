@@ -43,6 +43,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about' },
+    '/popular': { redirect: '/popular/read' },
   },
 
   // OPENAI_API_KEY: process.env.OPENAI_API_KEY,
@@ -70,7 +71,6 @@ export default defineNuxtConfig({
     cssPath: '@/assets/scss/main.scss',
     configPath: 'tailwind.config.ts',
     exposeConfig: false,
-    config: {},
     viewer: true,
   },
 

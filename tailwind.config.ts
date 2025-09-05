@@ -53,9 +53,9 @@ const config: Config = {
       },
       fontSize: {
         sizeSmall: ['0.90625rem', { lineHeight: '1.375' }],
-        sizeMedium: ['0.9375rem', { lineHeight: '1.5' }],
+        sizeMedium: ['0.9375rem', { lineHeight: '1.4375rem' }],
         sizeDefault: ['1rem', { lineHeight: '1.375' }],
-        sizeBig: ['1.0625rem', { lineHeight: '1.5' }],
+        sizeBig: ['1.0625rem', { lineHeight: '1.5rem' }],
         sizeLg: ['1.125rem', { lineHeight: '1.5' }],
         sizeXl: ['1.25rem', { lineHeight: '1.5' }],
         size1Xl: ['1.3125rem', { lineHeight: '1.5' }],
@@ -117,7 +117,7 @@ const config: Config = {
       'max-xs': { max: '24.9375rem' }, // <= 399px
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/line-clamp')],
 };
 
 export default config;
