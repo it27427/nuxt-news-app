@@ -15,7 +15,7 @@
                 <BaseImage
                   :src="news.image_url"
                   :alt="news.title"
-                  class="object-cover mb-2"
+                  class="object-cover w-full mb-2"
                 />
               </BasePicture>
 

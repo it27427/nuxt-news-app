@@ -1,33 +1,32 @@
 <template>
-  <div class="flex flex-col gap-5">
-    <!-- Section Title Skeleton -->
+  <div class="flex flex-col gap-5 my-6 lg:my-10">
+    <!-- Title Skeleton -->
     <div
-      class="bg-gray-300 dark:bg-dark-divider rounded w-1/3 animate-pulse h-[1.875rem] md:h-[2rem]"
+      class="bg-gray-300 dark:bg-dark-divider rounded w-1/3"
+      :class="['h-[1.875rem] md:h-[2rem] mb-4']"
     ></div>
 
-    <!-- Others News List Skeleton -->
-    <ul class="grid ss:grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4">
-      <li
-        v-for="n in 4"
-        :key="n"
-        class="max-sm:row-span-1 max-sm:col-span-2 pt-2"
-      >
+    <ul
+      class="others-news-list grid ss:grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
+    >
+      <li v-for="n in 4" :key="n" class="others-news-list-item animate-pulse">
         <article
-          class="bg-gray-200 dark:bg-dark-surface rounded-md overflow-hidden animate-pulse flex flex-col gap-2 max-sm:flex md:flex-col"
+          class="others-news-article bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden flex max-sm:flex-col"
           :class="[
-            'max-xs:h-[6rem]',
-            'sm:h-[8rem]',
-            'md:h-[16rem]',
-            'lg:h-[16.25rem]',
+            'max-w-[400px]:h-[6rem]',
+            'max-w-[599px]:h-[7.75rem]',
+            'min-w-[600px]:h-[15.5rem]',
+            'min-w-[768px] max-w-[991px]:h-[17.5rem]',
+            'min-w-[992px]:h-[16rem]',
           ]"
         >
           <!-- Thumbnail -->
           <div
-            class="bg-gray-300 dark:bg-dark-divider w-full aspect-video rounded max-sm:w-1/3 mb-2 max-sm:mb-0"
+            class="others-news-thumbnail bg-gray-300 dark:bg-dark-divider w-full aspect-video max-sm:w-1/3 mb-2 max-sm:mb-0"
           ></div>
 
           <!-- Details -->
-          <div class="flex flex-col space-y-2 max-sm:pl-2 flex-1">
+          <div class="others-news-details space-y-2 max-sm:pl-2 flex-1">
             <div
               class="h-6 bg-gray-300 dark:bg-dark-divider rounded w-5/6"
             ></div>
@@ -41,4 +40,24 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<style scoped lang="scss">
+  .others-news-list {
+    @apply grid ss:grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;
+
+    &-item {
+      @apply max-sm:row-span-1 max-sm:col-span-2 pt-2;
+    }
+
+    .others-news-article {
+      @apply max-sm:flex flex-col md:flex-col gap-2 rounded-md overflow-hidden;
+    }
+
+    .others-news-thumbnail {
+      @apply w-full aspect-video rounded;
+    }
+
+    .others-news-details {
+      @apply flex flex-col space-y-2;
+    }
+  }
+</style>

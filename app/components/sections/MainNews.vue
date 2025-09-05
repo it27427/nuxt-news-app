@@ -5,11 +5,11 @@
         <client-only>
           <BaseLink :to="`/articles/${news._id}`" class="main-news-link">
             <article class="main-news-article">
-              <BasePicture class="mb-2 main-news-thumbnail">
+              <BasePicture class="main-news-thumbnail">
                 <BaseImage
                   :src="news.image_url"
                   :alt="news.title"
-                  class="object-cover"
+                  class="object-cover w-full mb-2"
                 />
               </BasePicture>
 

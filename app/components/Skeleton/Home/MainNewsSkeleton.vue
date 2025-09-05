@@ -31,8 +31,6 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
-
 <style scoped lang="scss">
   .main-news-list {
     @apply grid grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;

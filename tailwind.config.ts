@@ -114,7 +114,7 @@ const config: Config = {
       // <= MEDIA (MAX-WIDTH)
       'max-md': { max: '47.9375rem' }, // <= 767px
       'max-sm': { max: '37.4375rem' }, // <= 599px
-      'max-xs': { max: '25rem' }, // <= 400px
+      'max-xs': { max: '24.9375rem' }, // <= 399px
     },
   },
   plugins: [],

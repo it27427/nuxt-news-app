@@ -1,9 +1,7 @@
 <template>
   <div>
-    <!-- LOADING -->
-    <div v-if="loading" class="text-center py-10">
-      Loading Bangladesh news...
-    </div>
+    <!-- Loader -->
+    <TopicNewsSkeleton v-if="loading" />
 
     <!-- CONTENT -->
     <TopicNews
@@ -20,6 +18,8 @@
   import TopicNews from '@/components/sections/TopicNews.vue';
   import { computed, onMounted, ref } from 'vue';
   import type { TopicItem } from '~~/types/news';
+  /** NEWS-SKELETON-COMPONENTS-FOR-DATA-LOADING  */
+  import TopicNewsSkeleton from '@/components/Skeleton/Topics/TopicNewsSkeleton.vue';
 
   // LOADING STATE
   const loading = ref(true);
