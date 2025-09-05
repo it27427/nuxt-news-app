@@ -105,11 +105,14 @@
   import SelectedNews from '@/components/sections/SelectedNews.vue';
   import SocialSection from '@/components/sections/SocialSection.vue';
   import TopicNews from '@/components/sections/TopicNews.vue';
-  /** NEWS-SKELETON-COMPONENTS-FOR-DATA-LOADING  */
-  import MainNewsSkeleton from '~/components/Skeleton/Home/MainNewsSkeleton.vue';
-  import OthersNewsSkeleton from '~/components/Skeleton/Home/OthersNewsSkeleton.vue';
-  import PopularNewsSkeleton from '~/components/Skeleton/Home/PopularNewsSkeleton.vue';
-  import SelectedNewsSkeleton from '~/components/Skeleton/Home/SelectedNewsSkeleton.vue';
+
+  /** DATA-LOADING-SKELETON  */
+  import OthersNewsSkeleton from '@/components/Skeleton/OthersNewsSkeleton.vue';
+  import PopularNewsSkeleton from '@/components/Skeleton/PopularNewsSkeleton.vue';
+  import {
+    default as MainNewsSkeleton,
+    default as SelectedNewsSkeleton,
+  } from '@/components/Skeleton/SelectedNewsSkeleton.vue';
 
   import type {
     NewsItem,
