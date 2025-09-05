@@ -4,24 +4,22 @@
       <div class="flex flex-col gap-5">
         <!-- Title Skeleton -->
         <div
-          class="h-8 md:h-10 w-1/6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-4"
+          class="h-8 md:h-10 w-1/3 md:w-1/5 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-4"
         ></div>
 
         <!-- Skeleton Loader -->
-        <ul
-          class="grid ss:grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4"
-        >
-          <li v-for="n in 12" :key="n" class="pt-2 animate-pulse">
+        <ul class="topic-list">
+          <li v-for="n in 12" :key="n" class="topic-list-item animate-pulse">
             <article
-              class="max-sm:flex flex-col gap-2 bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden"
+              class="topic-list-article flex-col gap-2 bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden"
             >
               <!-- Thumbnail Skeleton -->
               <div
-                class="max-sm:w-1/3 sm:h-[130px] bg-gray-300 dark:bg-dark-divider rounded mb-2 w-full"
+                class="topic-list-thumbnail bg-gray-300 dark:bg-dark-divider rounded mb-2 w-full sm:h-[130px]"
               ></div>
 
               <!-- Details Skeleton -->
-              <div class="max-sm:w-2/3 max-sm:pl-2 flex flex-col space-y-2">
+              <div class="topic-list-details flex flex-col space-y-2 w-full">
                 <div
                   class="h-6 bg-gray-300 dark:bg-gray-800 rounded w-5/6"
                 ></div>
@@ -38,6 +36,32 @@
             </article>
           </li>
         </ul>
+
+        <!-- Pagination Skeleton -->
+        <nav class="w-full flex items-center justify-center mt-6">
+          <ul class="pagination flex items-center">
+            <!-- Previous -->
+            <li>
+              <div
+                class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
+              ></div>
+            </li>
+
+            <!-- Page Numbers -->
+            <li v-for="n in 5" :key="n">
+              <div
+                class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
+              ></div>
+            </li>
+
+            <!-- Next -->
+            <li>
+              <div
+                class="page-link w-9 h-9 animate-pulse bg-gray-300 dark:bg-gray-700 rounded"
+              ></div>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </section>

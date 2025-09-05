@@ -13,11 +13,11 @@
         <article
           class="others-news-article bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden flex max-sm:flex-col"
           :class="[
-            'max-w-[400px]:h-[6rem]',
-            'max-w-[599px]:h-[7.75rem]',
-            'min-w-[600px]:h-[15.5rem]',
-            'min-w-[768px] max-w-[991px]:h-[17.5rem]',
-            'min-w-[992px]:h-[16rem]',
+            'max-w-[25rem]:h-[6rem]',
+            'max-w-[37.4375rem]:h-[7.75rem]',
+            'min-w-[37.5rem]:h-[15.5rem]',
+            'min-w-[48rem] max-w-[61.9375rem]:h-[17.5rem]',
+            'min-w-[62rem]:h-[16rem]',
           ]"
         >
           <!-- Thumbnail -->

@@ -43,11 +43,11 @@
             <client-only>
               <BaseLink :to="`/articles/${news._id}`" class="topic-list-link">
                 <article class="topic-list-article">
-                  <BasePicture class="mb-2 topic-list-thumbnail relative">
+                  <BasePicture class="topic-list-thumbnail relative">
                     <BaseImage
                       :src="news.image_url"
                       :alt="news.title"
-                      class="object-cover w-full h-full"
+                      class="object-cover mb-2 w-full md:h-40 lg:h-[8.125rem]"
                     />
                     <div v-if="'duration' in news" class="duration">
                       <span class="icon">
