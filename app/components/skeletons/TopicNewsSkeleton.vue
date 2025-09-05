@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-5">
         <!-- Title Skeleton -->
         <div
-          class="h-8 md:h-10 w-1/3 md:w-1/5 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"
+          class="h-8 md:h-10 w-1/3 md:w-1/6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"
         ></div>
 
         <!-- Skeleton Loader -->
@@ -89,7 +89,7 @@
 
 <style scoped lang="scss">
   .topic-list {
-    @apply grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+    @apply grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4;
   }
   .topic-list-item {
     @apply rounded-md w-full;

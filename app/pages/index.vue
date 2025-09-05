@@ -23,49 +23,70 @@
     <AdSection class="py-8 mb-5" />
 
     <!-- BANGLADESH-NEWS -->
+    <TopicNewsSkeleton
+      v-if="bangladeshNewsLoading"
+      :item-count="4"
+      :show-pagination="false"
+    />
+
     <TopicNews
-      v-if="!bangladeshNewsLoading"
+      v-else
       :newsList="bangladeshNews"
       topicName="bangladesh"
       topicTitle="বাংলাদেশ"
     />
-    <div v-else class="text-center py-10">Loading বাংলাদেশ news...</div>
 
     <!-- INDIA-NEWS -->
+    <TopicNewsSkeleton
+      v-if="indiaNewsLoading"
+      :item-count="4"
+      :show-pagination="false"
+    />
     <TopicNews
-      v-if="!indiaNewsLoading"
+      v-else
       :newsList="indiaNews"
       topicName="india"
       topicTitle="ভারত"
     />
-    <div v-else class="text-center py-10">Loading ভারত news...</div>
 
     <!-- WORLD-NEWS -->
+    <TopicNewsSkeleton
+      v-if="worldNewsLoading"
+      :item-count="4"
+      :show-pagination="false"
+    />
     <TopicNews
-      v-if="!worldNewsLoading"
+      v-else
       :newsList="worldNews"
       topicName="world"
       topicTitle="বিশ্ব"
     />
-    <div v-else class="text-center py-10">Loading বিশ্ব news...</div>
 
     <!-- HEALTH-NEWS -->
+    <TopicNewsSkeleton
+      v-if="healthNewsLoading"
+      :item-count="4"
+      :show-pagination="false"
+    />
     <TopicNews
-      v-if="!healthNewsLoading"
+      v-else
       :newsList="healthNews"
       topicName="health"
       topicTitle="স্বাস্থ্য"
     />
-    <div v-else class="text-center py-10">Loading স্বাস্থ্য news...</div>
 
     <!-- VIDEO-NEWS -->
+    <TopicNewsSkeleton
+      v-if="videoNewsLoading"
+      :item-count="4"
+      :show-pagination="false"
+    />
     <TopicNews
-      v-if="!videoNewsLoading"
+      v-else
       :newsList="videoNews"
       topicName="video"
       topicTitle="ভিডিও"
     />
-    <div v-else class="text-center py-10">Loading ভিডিও news...</div>
 
     <!-- OTHERS-NEWS -->
     <section class="mb-5">
@@ -113,7 +134,7 @@
     default as MainNewsSkeleton,
     default as SelectedNewsSkeleton,
   } from '@/components/skeletons/SelectedNewsSkeleton.vue';
-  // import TopicNewsSkeleton from '@/components/skeletons/TopicNewsSkeleton.vue';
+  import TopicNewsSkeleton from '@/components/skeletons/TopicNewsSkeleton.vue';
 
   import type {
     NewsItem,

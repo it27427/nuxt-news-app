@@ -42,7 +42,7 @@
 
 <style scoped lang="scss">
   .others-news-list {
-    @apply grid ss:grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;
+    @apply grid ss:grid-cols-2 gap-4 mb-10 lg:grid-cols-4;
 
     &-item {
       @apply max-sm:row-span-1 max-sm:col-span-2 pt-2;
