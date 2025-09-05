@@ -128,12 +128,10 @@
   import TopicNews from '@/components/sections/TopicNews.vue';
 
   /** DATA-LOADING-SKELETON  */
+  import MainNewsSkeleton from '@/components/skeletons/MainNewsSkeleton.vue';
   import OthersNewsSkeleton from '@/components/skeletons/OthersNewsSkeleton.vue';
   import PopularNewsSkeleton from '@/components/skeletons/PopularNewsSkeleton.vue';
-  import {
-    default as MainNewsSkeleton,
-    default as SelectedNewsSkeleton,
-  } from '@/components/skeletons/SelectedNewsSkeleton.vue';
+  import SelectedNewsSkeleton from '@/components/skeletons/SelectedNewsSkeleton.vue';
   import TopicNewsSkeleton from '@/components/skeletons/TopicNewsSkeleton.vue';
 
   import type {
