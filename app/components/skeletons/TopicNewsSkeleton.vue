@@ -9,7 +9,11 @@
 
         <!-- Skeleton Loader -->
         <ul class="topic-list">
-          <li v-for="n in 12" :key="n" class="topic-list-item animate-pulse">
+          <li
+            v-for="n in itemCount"
+            :key="n"
+            class="topic-list-item animate-pulse"
+          >
             <article
               class="topic-list-article flex-col gap-2 bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden"
             >
@@ -39,7 +43,10 @@
       </div>
 
       <!-- Pagination Skeleton -->
-      <nav class="w-full flex items-center justify-center mt-6">
+      <nav
+        v-if="showPagination"
+        class="w-full flex items-center justify-center mt-6"
+      >
         <ul class="pagination flex items-center">
           <!-- Previous -->
           <li>
@@ -66,3 +73,25 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+  interface SkeletonProps {
+    itemCount?: number;
+    showPagination?: boolean;
+  }
+
+  const props = defineProps<SkeletonProps>();
+
+  // Default values
+  const itemCount = props.itemCount ?? 12;
+  const showPagination = props.showPagination ?? true;
+</script>
+
+<style scoped lang="scss">
+  .topic-list {
+    @apply grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  .topic-list-item {
+    @apply rounded-md w-full;
+  }
+</style>

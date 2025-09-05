@@ -113,6 +113,7 @@
     default as MainNewsSkeleton,
     default as SelectedNewsSkeleton,
   } from '@/components/skeletons/SelectedNewsSkeleton.vue';
+  // import TopicNewsSkeleton from '@/components/skeletons/TopicNewsSkeleton.vue';
 
   import type {
     NewsItem,

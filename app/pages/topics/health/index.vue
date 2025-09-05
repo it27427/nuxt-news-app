@@ -1,7 +1,11 @@
 <template>
   <div>
     <!-- LOADING -->
-    <TopicNewsSkeleton v-if="loading" />
+    <TopicNewsSkeleton
+      v-if="loading"
+      :item-count="12"
+      :show-pagination="true"
+    />
 
     <!-- CONTENT -->
     <TopicNews
