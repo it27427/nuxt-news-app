@@ -17,7 +17,7 @@
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
   /** DATA-LOADING-SKELETON  */
-  import TopicNewsSkeleton from '@/components/Skeleton/TopicNewsSkeleton.vue';
+  import TopicNewsSkeleton from '@/components/skeletons/TopicNewsSkeleton.vue';
   import { computed, onMounted, ref } from 'vue';
   import type { VideoItem } from '~~/types/news';
 

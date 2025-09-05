@@ -17,9 +17,9 @@
 <script setup lang="ts">
   import TopicNews from '@/components/sections/TopicNews.vue';
   /** DATA-LOADING-SKELETON  */
-  import TopicNewsSkeleton from '@/components/Skeleton/TopicNewsSkeleton.vue';
-import { computed, onMounted, ref } from 'vue';
-import type { TopicItem } from '~~/types/news';
+  import TopicNewsSkeleton from '@/components/skeletons/TopicNewsSkeleton.vue';
+  import { computed, onMounted, ref } from 'vue';
+  import type { TopicItem } from '~~/types/news';
 
   // LOADING STATE
   const loading = ref(true);

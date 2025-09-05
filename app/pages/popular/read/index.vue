@@ -1,5 +1,9 @@
 <template>
-  <section class="flex flex-col gap-6 md:gap-8 pt-6 pb-40">
+  <!-- LOADING -->
+  <MostReadNewsSkeleton v-if="loading" />
+
+  <!-- CONTENT -->
+  <section v-else class="flex flex-col gap-6 md:gap-8 pt-6 pb-40">
     <header class="w-full max-w-hmw mx-auto">
       <h2 class="text-size2Xl md:text-size2XXl text-heading dark:text-light-50">
         {{ title }}
@@ -7,25 +11,20 @@
     </header>
 
     <div class="jonopath-container">
-      <!-- LOADING -->
-      <div v-if="loading" class="text-center py-10">
-        Loading most read news...
-      </div>
-
-      <!-- CONTENT -->
-      <MostRead v-else :mostReadNews="mostReadNews" />
+      <MostRead :mostReadNews="mostReadNews" />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
   import MostRead from '@/components/sections/MostRead.vue';
+  import MostReadNewsSkeleton from '@/components/skeletons/MostReadNewsSkeleton.vue';
   import { onMounted, ref } from 'vue';
   import type { MostReadItem } from '~~/types/news';
 
+  const loading = ref(true);
   const title = ref('পাঠকপ্রিয় খবর');
   const mostReadNews = ref<MostReadItem[]>([]);
-  const loading = ref(true);
 
   onMounted(async () => {
     try {

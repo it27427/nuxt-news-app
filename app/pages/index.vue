@@ -107,12 +107,12 @@
   import TopicNews from '@/components/sections/TopicNews.vue';
 
   /** DATA-LOADING-SKELETON  */
-  import OthersNewsSkeleton from '@/components/Skeleton/OthersNewsSkeleton.vue';
-  import PopularNewsSkeleton from '@/components/Skeleton/PopularNewsSkeleton.vue';
+  import OthersNewsSkeleton from '@/components/skeletons/OthersNewsSkeleton.vue';
+  import PopularNewsSkeleton from '@/components/skeletons/PopularNewsSkeleton.vue';
   import {
     default as MainNewsSkeleton,
     default as SelectedNewsSkeleton,
-  } from '@/components/Skeleton/SelectedNewsSkeleton.vue';
+  } from '@/components/skeletons/SelectedNewsSkeleton.vue';
 
   import type {
     NewsItem,
