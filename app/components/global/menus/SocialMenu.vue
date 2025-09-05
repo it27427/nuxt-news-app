@@ -1,5 +1,5 @@
 <template>
-  <ul class="grid gap-4 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+  <ul class="grid gap-4 lg:gap-6 grid-cols-2 lg:grid-cols-4">
     <li v-for="(menu, index) in socialMenu" :key="index">
       <client-only>
         <BaseLink
@@ -31,23 +31,9 @@
   import BaseImage from '@/components/base/BaseImage.vue';
   import BaseLink from '@/components/base/BaseLink.vue';
   import BasePicture from '@/components/base/BasePicture.vue';
-  import { ref } from 'vue';
   import type { SocialItem } from '~~/types/news';
 
-  const socialMenu = ref<SocialItem[]>([
-    {
-      label: 'WhatsApp',
-      to: '#',
-      icon: '/images/social/whatsapp.svg',
-    },
-    { label: 'Facebook', to: '#', icon: '/images/social/facebook.svg' },
-    { label: 'YouTube', to: '#', icon: '/images/social/youtube.svg' },
-    { label: 'X', to: '#', icon: '/images/social/x.svg' },
-    {
-      label: 'Instagram',
-      to: '#',
-      icon: '/images/social/instagram.svg',
-    },
-    { label: 'TikTok', to: '#', icon: '/images/social/tiktok.svg' },
-  ]);
+  defineProps<{
+    socialMenu: SocialItem[];
+  }>();
 </script>
