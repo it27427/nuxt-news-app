@@ -1,6 +1,6 @@
 <template>
   <div class="my-6 lg:my-10">
-    <ul class="main-news-list max-sm:px-2">
+    <ul class="main-news-list">
       <li v-for="n in 9" :key="n" class="main-news-list-item animate-pulse">
         <article
           class="main-news-article bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden"

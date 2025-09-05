@@ -11,27 +11,22 @@
     >
       <li v-for="n in 4" :key="n" class="others-news-list-item animate-pulse">
         <article
-          class="others-news-article bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden flex max-sm:flex-col"
-          :class="[
-            'max-w-[25rem]:h-[6rem]',
-            'max-w-[37.4375rem]:h-[7.75rem]',
-            'min-w-[37.5rem]:h-[15.5rem]',
-            'min-w-[48rem] max-w-[61.9375rem]:h-[17.5rem]',
-            'min-w-[62rem]:h-[16rem]',
-          ]"
+          class="others-news-article bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden flex max-md:flex-row md:flex-col"
         >
           <!-- Thumbnail -->
           <div
-            class="others-news-thumbnail bg-gray-300 dark:bg-dark-divider w-full aspect-video max-sm:w-1/3 mb-2 max-sm:mb-0"
+            class="others-news-thumbnail bg-gray-300 dark:bg-dark-divider w-1/3 md:w-full sm:h-[8.125rem] md:aspect-video mb-2 max-sm:mb-0"
           ></div>
 
           <!-- Details -->
-          <div class="others-news-details space-y-2 max-sm:pl-2 flex-1">
+          <div
+            class="others-news-details space-y-2 max-sm:pl-2 md:flex-1 w-2/3 md:w-full"
+          >
+            <div class="h-5 bg-gray-300 dark:bg-gray-800 rounded w-5/6"></div>
+            <div class="h-4 bg-gray-300 dark:bg-gray-800 rounded w-full"></div>
+            <div class="h-3 bg-gray-300 dark:bg-gray-800 rounded w-4/6"></div>
             <div
-              class="h-6 bg-gray-300 dark:bg-dark-divider rounded w-5/6"
-            ></div>
-            <div
-              class="h-3 bg-gray-300 dark:bg-dark-divider rounded w-1/3"
+              class="h-2 bg-gray-300 dark:bg-gray-800 rounded w-1/3 mt-2"
             ></div>
           </div>
         </article>
@@ -49,15 +44,15 @@
     }
 
     .others-news-article {
-      @apply max-sm:flex flex-col md:flex-col gap-2 rounded-md overflow-hidden;
+      @apply max-sm:flex max-sm:flex-row md:flex-col gap-2 rounded-md overflow-hidden;
     }
 
     .others-news-thumbnail {
-      @apply w-full aspect-video rounded;
+      @apply max-sm:w-1/3 max-sm:aspect-video max-sm:rounded;
     }
 
     .others-news-details {
-      @apply flex flex-col space-y-2;
+      @apply flex flex-col space-y-2 max-sm:w-2/3 max-sm:pl-2 max-sm:pt-2;
     }
   }
 </style>

@@ -18,16 +18,16 @@
           <!-- Details -->
           <div class="selected-news-details space-y-2">
             <div
-              class="h-6 bg-gray-300 dark:bg-dark-divider rounded w-5/6"
+              class="h-5 bg-gray-300 dark:bg-dark-divider rounded w-5/6"
             ></div>
             <div
               class="h-4 bg-gray-300 dark:bg-dark-divider rounded w-full"
             ></div>
             <div
-              class="h-4 bg-gray-300 dark:bg-dark-divider rounded w-4/6"
+              class="h-3 bg-gray-300 dark:bg-dark-divider rounded w-4/6"
             ></div>
             <div
-              class="h-3 bg-gray-300 dark:bg-dark-divider rounded w-1/3 mt-2"
+              class="h-2 bg-gray-300 dark:bg-dark-divider rounded w-1/3 mt-2"
             ></div>
           </div>
         </article>
@@ -52,6 +52,18 @@
       &:nth-child(4),
       &:nth-child(5) {
         @apply row-span-1 col-span-2 ss:row-span-2 ss:col-span-1 border-t border-light-50 dark:border-dark-divider ss:border-0;
+
+        .selected-news-article {
+          @apply max-sm:flex max-sm:flex-row;
+
+          .selected-news-thumbnail {
+            @apply max-sm:w-1/3 max-sm:aspect-video max-sm:rounded;
+          }
+
+          .selected-news-details {
+            @apply max-sm:w-2/3 max-sm:pl-2 max-sm:pt-2;
+          }
+        }
       }
 
       &:nth-child(2),
@@ -66,11 +78,11 @@
     }
 
     .selected-news-article {
-      @apply flex flex-col md:flex-col gap-2;
+      @apply flex ss:flex-col gap-2;
     }
 
     .selected-news-thumbnail {
-      @apply w-full aspect-video rounded;
+      @apply ss:w-full ss:aspect-video ss:rounded;
     }
 
     .selected-news-details {

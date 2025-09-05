@@ -15,26 +15,28 @@
             class="topic-list-item animate-pulse"
           >
             <article
-              class="topic-list-article flex-col gap-2 bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden"
+              class="topic-list-article md:flex-col gap-2 bg-gray-100 dark:bg-dark-surface rounded-md overflow-hidden"
             >
               <!-- Thumbnail Skeleton -->
               <div
-                class="topic-list-thumbnail bg-gray-300 dark:bg-dark-divider rounded mb-2 w-full sm:h-[130px]"
+                class="topic-list-thumbnail bg-gray-300 dark:bg-dark-divider rounded mb-2 w-1/3 md:w-full sm:h-[8.125rem]"
               ></div>
 
               <!-- Details Skeleton -->
-              <div class="topic-list-details flex flex-col space-y-2 w-full">
+              <div
+                class="topic-list-details flex flex-col space-y-2 w-2/3 md:w-full"
+              >
                 <div
-                  class="h-6 bg-gray-300 dark:bg-gray-800 rounded w-5/6"
+                  class="h-5 bg-gray-300 dark:bg-gray-800 rounded w-5/6"
                 ></div>
                 <div
                   class="h-4 bg-gray-300 dark:bg-gray-800 rounded w-full"
                 ></div>
                 <div
-                  class="h-4 bg-gray-300 dark:bg-gray-800 rounded w-4/6"
+                  class="h-3 bg-gray-300 dark:bg-gray-800 rounded w-4/6"
                 ></div>
                 <div
-                  class="h-3 bg-gray-300 dark:bg-gray-800 rounded w-1/3 mt-2"
+                  class="h-2 bg-gray-300 dark:bg-gray-800 rounded w-1/3 mt-2"
                 ></div>
               </div>
             </article>
