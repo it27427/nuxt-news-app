@@ -1,10 +1,11 @@
 <template>
   <div>
-    <h1>Sign Up</h1>
+    <RegisterForm />
   </div>
 </template>
 
 <script setup lang="ts">
+  import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
   definePageMeta({
     layout: 'authentication',
   });
