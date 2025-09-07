@@ -37,14 +37,29 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    // '@sidebase/nuxt-auth',
-    // '@pinia/nuxt',
+    'v-gsap-nuxt',
+    '@prisma/nuxt',
+    '@sidebase/nuxt-auth',
+    '@pinia/nuxt',
+    'nuxt-tiptap-editor',
+    [
+      'nuxt-jsonapi',
+      {
+        // baseURL: 'http://www.example.com/api',
+        /* other module options */
+      },
+    ],
+    // 'nuxt-svg-sprite-icon',
   ],
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about' },
     '/popular': { redirect: '/popular/read' },
   },
+
+  // tiptap: {
+  //   prefix: 'Tiptap',
+  // },
 
   // OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   // TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
