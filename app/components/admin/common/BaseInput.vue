@@ -1,16 +1,22 @@
 <template>
-  <div class="flex flex-col gap-1">
-    <label v-if="label" :for="id" class="text-sm font-medium text-gray-700">
-      {{ label }}
-    </label>
+  <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-1">
+      <label
+        v-if="label"
+        :for="id"
+        class="text-sm font-medium text-dark dark:text-light"
+      >
+        {{ label }}
+      </label>
 
-    <input
-      :id="id"
-      :type="type"
-      :placeholder="placeholder"
-      v-model="modelValue"
-      class="px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-divider focus:ring-2 focus:ring-green-500 focus:outline-none"
-    />
+      <input
+        :id="id"
+        :type="type"
+        :placeholder="placeholder"
+        :value="modelValue"
+        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-divider focus:ring-2 focus:ring-green-500 focus:outline-none"
+      />
+    </div>
 
     <p v-if="error" class="text-sm text-red-500">{{ error }}</p>
   </div>
@@ -27,5 +33,8 @@
   }
 
   const props = defineProps<Props>();
+
+  const { id, type, label, placeholder, error, modelValue } = props;
+
   const emit = defineEmits(['update:modelValue']);
 </script>

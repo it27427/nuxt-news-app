@@ -42,19 +42,28 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
     '@pinia/nuxt',
     'nuxt-tiptap-editor',
-    [
-      'nuxt-jsonapi',
-      {
-        // baseURL: 'http://www.example.com/api',
-        /* other module options */
-      },
-    ],
     // 'nuxt-svg-sprite-icon',
   ],
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about' },
     '/popular': { redirect: '/popular/read' },
+  },
+
+  auth: {
+    baseURL: '/api/auth',
+    provider: {
+      type: 'credentials',
+      authorize: async (credentials: { email: string; password: string }) => {
+        if (
+          credentials.email === 'admin@example.com' &&
+          credentials.password === 'admin'
+        ) {
+          return { id: 1, name: 'Admin', email: credentials.email };
+        }
+        return null;
+      },
+    },
   },
 
   // tiptap: {

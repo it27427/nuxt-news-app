@@ -1,23 +1,27 @@
 <template>
-  <BaseForm title="Login" submitText="Login" @submit="handleLogin">
-    <BaseInput
-      id="email"
-      label="Email"
-      type="email"
-      placeholder="Enter your email"
-      v-model="form.email"
-      :error="errors.email"
-    />
+  <div>
+    <BaseForm title="Login" submitText="Login" @submit="handleLogin">
+      <BaseInput
+        id="email"
+        label="Email"
+        type="email"
+        placeholder="Enter your email"
+        v-model="form.email"
+        :error="errors.email"
+      />
 
-    <BaseInput
-      id="password"
-      label="Password"
-      type="password"
-      placeholder="Enter your password"
-      v-model="form.password"
-      :error="errors.password"
-    />
-  </BaseForm>
+      <BaseInput
+        id="password"
+        label="Password"
+        type="password"
+        placeholder="Enter your password"
+        v-model="form.password"
+        :error="errors.password"
+      />
+
+      <BaseButton label="Login" type="submit" variant="primary" />
+    </BaseForm>
+  </div>
 </template>
 
 <script setup lang="ts">

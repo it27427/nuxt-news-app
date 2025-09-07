@@ -7,23 +7,20 @@
       {{ title }}
     </h2>
 
-    <slot />
-
-    <button
-      type="submit"
-      class="w-full py-2 px-4 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700"
-    >
-      {{ submitText }}
-    </button>
+    <div class="flex flex-col gap-4">
+      <slot />
+    </div>
   </form>
 </template>
 
 <script setup lang="ts">
   interface Props {
     title?: string;
-    submitText?: string;
   }
 
-  defineProps<Props>();
+  const props = defineProps<Props>();
+
+  const title = props.title;
+
   defineEmits(['submit']);
 </script>

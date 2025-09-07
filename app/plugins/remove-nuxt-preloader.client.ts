@@ -1,4 +1,4 @@
-export default defineNuxtPlugin(() => {
+/*export default defineNuxtPlugin(() => {
   // Run ASAP on client
   const removeLoader = () => {
     const loader = document.getElementById('__nuxt_loading__');
@@ -20,3 +20,4 @@ export default defineNuxtPlugin(() => {
     observer.observe(document.body, { childList: true });
   }
 });
+*/
