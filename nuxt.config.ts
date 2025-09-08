@@ -37,34 +37,38 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    'v-gsap-nuxt',
-    // '@sidebase/nuxt-auth',
+    // 'v-gsap-nuxt',
+    '@sidebase/nuxt-auth',
     '@pinia/nuxt',
     'nuxt-tiptap-editor',
     // 'nuxt-svg-sprite-icon',
   ],
 
+  runtimeConfig: {
+    // Private config (only available on server)
+    mongodbUri: process.env.MONGODB_URI,
+    authSecret: process.env.NUXT_AUTH_SECRET,
+
+    // Public config (available on client also)
+    public: {
+      appName: 'Jonopath',
+    },
+  },
+
   // @ts-ignore
-  // auth: {
-  //   isEnabled: true,
-  //   disableServerSideAuth: false,
-  //   originEnvKey: 'AUTH_ORIGIN',
-  //   baseURL: `http://localhost:${process.env.PORT || 3000}/api/auth`,
-  //   provider: {
-  //     type: 'local',
-  //     endpoints: {
-  //       signIn: { path: '/login', method: 'post' },
-  //     },
-  //   },
-  //   sessionRefresh: {
-  //     enablePeriodically: true,
-  //     enableOnWindowFocus: true,
-  //   },
-  // },
+  auth: {
+    baseURL: process.env.AUTH_ORIGIN,
+    provider: {
+      type: 'authjs',
+    },
+  },
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about' },
     '/popular': { redirect: '/popular/read' },
+    '/admin/auth/': { redirect: '/login' },
+    '/admin/auth/login': { redirect: '/login' },
+    '/admin/auth/register': { redirect: '/register' },
   },
 
   // tiptap: {
@@ -134,11 +138,13 @@ export default defineNuxtConfig({
         '@components': fileURLToPath(
           new URL('./app/components/', import.meta.url)
         ),
+        '@layouts': fileURLToPath(new URL('./app/layouts/', import.meta.url)),
+        '@assets': fileURLToPath(new URL('./app/assets/', import.meta.url)),
+        '@plugins': fileURLToPath(new URL('./app/plugins/', import.meta.url)),
+        '@utils': fileURLToPath(new URL('./app/utils/', import.meta.url)),
         '@content': fileURLToPath(new URL('./content/', import.meta.url)),
         '@server': fileURLToPath(new URL('./server/', import.meta.url)),
-        '@prisma': fileURLToPath(new URL('./prisma/', import.meta.url)),
         '@shared': fileURLToPath(new URL('./shared/', import.meta.url)),
-        '@utils': fileURLToPath(new URL('./utils/', import.meta.url)),
         '@lib': fileURLToPath(new URL('./lib/', import.meta.url)),
         '@types': fileURLToPath(new URL('./types/', import.meta.url)),
       },

@@ -23,6 +23,7 @@
     "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.2.0",
+    "mongoose": "^8.18.0",
     "next-auth": "^4.21.1",
     "nuxt": "^4.1.0",
     "nuxt-tiptap-editor": "^2.3.1",
