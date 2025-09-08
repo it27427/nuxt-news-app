@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 
   imports: {
-    dirs: ['content', 'composables', 'server', 'types'],
+    dirs: ['content', 'composables', 'server', 'types', 'utils', 'lib'],
     presets: [
       {
         from: 'vue',
@@ -38,32 +38,33 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     'v-gsap-nuxt',
-    '@prisma/nuxt',
-    '@sidebase/nuxt-auth',
+    // '@sidebase/nuxt-auth',
     '@pinia/nuxt',
     'nuxt-tiptap-editor',
     // 'nuxt-svg-sprite-icon',
   ],
 
+  // @ts-ignore
+  // auth: {
+  //   isEnabled: true,
+  //   disableServerSideAuth: false,
+  //   originEnvKey: 'AUTH_ORIGIN',
+  //   baseURL: `http://localhost:${process.env.PORT || 3000}/api/auth`,
+  //   provider: {
+  //     type: 'local',
+  //     endpoints: {
+  //       signIn: { path: '/login', method: 'post' },
+  //     },
+  //   },
+  //   sessionRefresh: {
+  //     enablePeriodically: true,
+  //     enableOnWindowFocus: true,
+  //   },
+  // },
+
   routeRules: {
     '/institutional': { redirect: '/institutional/about' },
     '/popular': { redirect: '/popular/read' },
-  },
-
-  auth: {
-    baseURL: '/api/auth',
-    provider: {
-      type: 'credentials',
-      authorize: async (credentials: { email: string; password: string }) => {
-        if (
-          credentials.email === 'admin@example.com' &&
-          credentials.password === 'admin'
-        ) {
-          return { id: 1, name: 'Admin', email: credentials.email };
-        }
-        return null;
-      },
-    },
   },
 
   // tiptap: {
@@ -129,51 +130,17 @@ export default defineNuxtConfig({
   vite: {
     resolve: {
       alias: {
-        '@': fileURLToPath(
-          new URL(process.env.NUXT_ALIAS_APP || './app/', import.meta.url)
+        '@': fileURLToPath(new URL('./app/', import.meta.url)),
+        '@components': fileURLToPath(
+          new URL('./app/components/', import.meta.url)
         ),
-        assets: fileURLToPath(
-          new URL(
-            process.env.NUXT_ALIAS_ASSETS || './app/assets/',
-            import.meta.url
-          )
-        ),
-        layouts: fileURLToPath(
-          new URL(
-            process.env.NUXT_ALIAS_LAYOUTS || './app/layouts/',
-            import.meta.url
-          )
-        ),
-        components: fileURLToPath(
-          new URL(
-            process.env.NUXT_ALIAS_COMPONENTS || './app/components/',
-            import.meta.url
-          )
-        ),
-        pages: fileURLToPath(
-          new URL(
-            process.env.NUXT_ALIAS_PAGES || './app/pages/',
-            import.meta.url
-          )
-        ),
-        plugins: fileURLToPath(
-          new URL(
-            process.env.NUXT_ALIAS_PLUGINS || './app/plugins/',
-            import.meta.url
-          )
-        ),
-        server: fileURLToPath(
-          new URL(process.env.NUXT_ALIAS_SERVER || './server/', import.meta.url)
-        ),
-        shared: fileURLToPath(
-          new URL(process.env.NUXT_ALIAS_SHARED || './shared/', import.meta.url)
-        ),
-        content: fileURLToPath(
-          new URL(
-            process.env.NUXT_ALIAS_CONTENT || './content/',
-            import.meta.url
-          )
-        ),
+        '@content': fileURLToPath(new URL('./content/', import.meta.url)),
+        '@server': fileURLToPath(new URL('./server/', import.meta.url)),
+        '@prisma': fileURLToPath(new URL('./prisma/', import.meta.url)),
+        '@shared': fileURLToPath(new URL('./shared/', import.meta.url)),
+        '@utils': fileURLToPath(new URL('./utils/', import.meta.url)),
+        '@lib': fileURLToPath(new URL('./lib/', import.meta.url)),
+        '@types': fileURLToPath(new URL('./types/', import.meta.url)),
       },
     },
   },
