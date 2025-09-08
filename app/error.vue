@@ -6,26 +6,27 @@
       v-if="error"
       class="flex flex-col items-center justify-center text-center gap-2"
     >
-      <h1 class="text-7xl font-semibold">
+      <h1 class="text-7xl font-semibold text-dark">
         Error
         <span class="text-red-500 font-sans font-bold">
           {{ error.statusCode }}
         </span>
       </h1>
-      <p class="text-2xl font-medium mb-4">{{ error.message }}</p>
-      <NuxtLink
+      <p class="text-2xl font-medium text-dark mb-4">{{ error.message }}</p>
+      <BaseLink
         to="/"
-        class="bg-red-600 text-white font-bold rounded-sm px-5 font-sans h-12 flex items-center justify-center :hover:bg-red-800"
+        class="bg-primary text-white font-bold rounded-sm px-5 font-sans h-12 flex items-center justify-center hover:bg-primary-dark"
       >
-        <i class="fa-solid mt-1 mr-1 fa-arrow-left" />
+        <i class="fa-solid mt-0.5 mr-1 fa-arrow-left" />
         Back to Home
-      </NuxtLink>
+      </BaseLink>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import type { NuxtError } from '#app';
+  import BaseLink from '@/components/base/BaseLink.vue';
 
   // ✅ Correct defineProps usage (no import needed)
   const props = defineProps<{

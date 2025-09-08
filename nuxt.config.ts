@@ -57,9 +57,14 @@ export default defineNuxtConfig({
 
   // @ts-ignore
   auth: {
-    baseURL: process.env.AUTH_ORIGIN,
-    provider: {
-      type: 'authjs',
+    isEnabled: true,
+    disableServerSideAuth: false,
+    originEnvKey: 'AUTH_ORIGIN',
+    baseURL: '/api/auth',
+    provider: { type: 'authjs' },
+    sessionRefresh: {
+      enablePeriodically: true,
+      enableOnWindowFocus: true,
     },
   },
 
@@ -69,6 +74,7 @@ export default defineNuxtConfig({
     '/admin/auth/': { redirect: '/admin/login/' },
     '/admin/auth/login': { redirect: '/admin/login/' },
     '/admin/auth/register': { redirect: '/admin/register/' },
+    '/admin/': { redirect: '/admin/dashboard/' },
   },
 
   // tiptap: {

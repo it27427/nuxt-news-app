@@ -1,5 +1,7 @@
 import { NuxtAuthHandler } from '#auth';
+import { compare } from 'bcrypt';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { connectToDatabase } from '~~/server/utils/mongo';
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,
@@ -10,8 +12,21 @@ export default NuxtAuthHandler({
       credentials: {},
       async authorize(credentials: { username: string; password: string }) {
         // TODO: Fetch User From Database
+        const db = await connectToDatabase();
+        const user = await db.collection('users').findOne({
+          username: credentials.username,
+          role: 'admin',
+        });
 
-        return {};
+        if (!user) return null;
+        const isValid = await compare(credentials.password, user.password);
+        if (!isValid) return null;
+
+        return {
+          id: user._id.toString(),
+          username: user.username,
+          role: user.role,
+        };
       },
     }),
   ],
@@ -40,5 +55,9 @@ export default NuxtAuthHandler({
 
       return session;
     },
+  },
+
+  pages: {
+    signIn: '/admin/login',
   },
 });
