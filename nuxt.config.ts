@@ -64,11 +64,11 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/institutional': { redirect: '/institutional/about' },
-    '/popular': { redirect: '/popular/read' },
-    '/admin/auth/': { redirect: '/login' },
-    '/admin/auth/login': { redirect: '/login' },
-    '/admin/auth/register': { redirect: '/register' },
+    '/institutional': { redirect: '/institutional/about/' },
+    '/popular': { redirect: '/popular/read/' },
+    '/admin/auth/': { redirect: '/admin/login/' },
+    '/admin/auth/login': { redirect: '/admin/login/' },
+    '/admin/auth/register': { redirect: '/admin/register/' },
   },
 
   // tiptap: {
