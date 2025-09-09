@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 
   imports: {
-    dirs: ['content', 'composables', 'server', 'types', 'utils', 'lib'],
+    dirs: ['content', 'composables', 'server', 'shared'],
     presets: [
       {
         from: 'vue',
@@ -37,44 +37,27 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    // 'v-gsap-nuxt',
     '@sidebase/nuxt-auth',
     '@pinia/nuxt',
     'nuxt-tiptap-editor',
-    // 'nuxt-svg-sprite-icon',
   ],
 
   runtimeConfig: {
-    // Private config (only available on server)
     mongodbUri: process.env.MONGODB_URI,
     authSecret: process.env.NUXT_AUTH_SECRET,
-
-    // Public config (available on client also)
-    public: {
-      appName: 'Jonopath',
-    },
+    public: { appName: 'Jonopath' },
   },
 
   // @ts-ignore
   auth: {
-    isEnabled: true,
-    disableServerSideAuth: false,
-    originEnvKey: 'AUTH_ORIGIN',
-    baseURL: '/api/auth',
+    baseURL: (process.env.AUTH_ORIGIN || 'http://localhost:3000') + '/api/auth',
     provider: { type: 'authjs' },
-    sessionRefresh: {
-      enablePeriodically: true,
-      enableOnWindowFocus: true,
-    },
   },
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about/' },
     '/popular': { redirect: '/popular/read/' },
     '/admin/auth/': { redirect: '/admin/login/' },
-    '/admin/auth/login': { redirect: '/admin/login/' },
-    '/admin/auth/register': { redirect: '/admin/register/' },
-    '/admin/': { redirect: '/admin/dashboard/' },
   },
 
   // tiptap: {
@@ -148,6 +131,9 @@ export default defineNuxtConfig({
         '@assets': fileURLToPath(new URL('./app/assets/', import.meta.url)),
         '@plugins': fileURLToPath(new URL('./app/plugins/', import.meta.url)),
         '@utils': fileURLToPath(new URL('./app/utils/', import.meta.url)),
+        '@middleware': fileURLToPath(
+          new URL('./app/middleware/', import.meta.url)
+        ),
         '@content': fileURLToPath(new URL('./content/', import.meta.url)),
         '@server': fileURLToPath(new URL('./server/', import.meta.url)),
         '@shared': fileURLToPath(new URL('./shared/', import.meta.url)),

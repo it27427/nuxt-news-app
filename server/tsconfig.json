@@ -1,3 +1,21 @@
 {
-  "extends": "../.nuxt/tsconfig.server.json"
+  "extends": "../.nuxt/tsconfig.server.json",
+  "compilerOptions": {
+    "types": [
+      "@types/node",
+      "next-auth",
+      "./types/next-auth"
+    ],
+    "strict": true,
+    "paths": {
+      "#app": [
+        "./node_modules/nuxt/dist/app"
+      ]
+    }
+  },
+  "include": [
+    "types/**/*.d.ts",
+    "server/**/*.ts",
+    "app/**/*.ts"
+  ]
 }

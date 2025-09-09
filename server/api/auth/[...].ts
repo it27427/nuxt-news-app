@@ -1,31 +1,32 @@
 import { NuxtAuthHandler } from '#auth';
-import { compare } from 'bcrypt';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { connectToDatabase } from '~~/server/utils/mongo';
+import bcrypt from 'bcryptjs';
+import * as CredentialsProvider from 'next-auth/providers/credentials';
+import { User } from '~~/server/models/User';
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().authSecret,
-  providers: [
-    //@ts-expect-error
-    CredentialsProvider.default({
-      name: 'credentials',
-      credentials: {},
-      async authorize(credentials: { username: string; password: string }) {
-        // TODO: Fetch User From Database
-        const db = await connectToDatabase();
-        const user = await db.collection('users').findOne({
-          username: credentials.username,
-          role: 'admin',
-        });
 
+  pages: {
+    signIn: '/admin/login',
+  },
+
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {},
+      async authorize(credentials: any) {
+        if (!credentials?.email || !credentials?.password) return null;
+
+        const user = await User.findOne({ email: credentials.email });
         if (!user) return null;
-        const isValid = await compare(credentials.password, user.password);
-        if (!isValid) return null;
+
+        const valid = await bcrypt.compare(credentials.password, user.password);
+        if (!valid) return null;
 
         return {
           id: user._id.toString(),
-          username: user.username,
-          role: user.role,
+          email: user.email,
+          userName: user.userName,
         };
       },
     }),
@@ -36,28 +37,21 @@ export default NuxtAuthHandler({
   },
 
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
-        token = {
-          ...token,
-          ...user,
-        };
+        token.id = user.id;
+        token.email = user.email;
+        token.userName = user.userName;
       }
-
       return token;
     },
-
     async session({ session, token }) {
       session.user = {
-        ...token,
-        ...session.user,
+        id: token.id as string,
+        email: token.email as string,
+        userName: token.userName as string,
       };
-
       return session;
     },
-  },
-
-  pages: {
-    signIn: '/admin/login',
   },
 });

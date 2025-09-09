@@ -32,6 +32,7 @@
       />
     </svg>
 
+    <!-- Button Label -->
     <span>{{ label }}</span>
   </button>
 </template>
@@ -62,6 +63,8 @@
         return 'bg-primary text-light hover:text-white hover:bg-primary-dark dark:bg-primary-dark dark:hover:bg-primary';
       case 'danger':
         return 'bg-red-600 text-white hover:bg-red-700';
+      case 'secondary':
+        return 'bg-gray-500 text-white hover:bg-gray-600';
       default:
         return 'bg-dark text-light hover:text-white hover:bg-dark-hover';
     }
