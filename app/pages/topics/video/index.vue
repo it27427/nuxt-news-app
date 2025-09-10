@@ -25,6 +25,8 @@
   import { computed, onMounted, ref } from 'vue';
   import type { VideoItem } from '~~/types/news';
 
+  definePageMeta({ auth: false });
+
   // LOADING STATE
   const loading = ref(true);
 

@@ -25,6 +25,8 @@
   import { computed, onMounted, ref } from 'vue';
   import type { TopicItem } from '~~/types/news';
 
+  definePageMeta({ auth: false });
+
   // LOADING STATE
   const loading = ref(true);
 

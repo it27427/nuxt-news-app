@@ -134,6 +134,8 @@
   import SelectedNewsSkeleton from '@/components/skeletons/SelectedNewsSkeleton.vue';
   import TopicNewsSkeleton from '@/components/skeletons/TopicNewsSkeleton.vue';
 
+  definePageMeta({ auth: false });
+
   import type {
     NewsItem,
     OthersNewsItem,

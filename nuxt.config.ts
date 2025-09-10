@@ -44,14 +44,21 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     mongodbUri: process.env.MONGODB_URI,
-    authSecret: process.env.NUXT_AUTH_SECRET,
-    public: { appName: 'Jonopath' },
+    baseURL: process.env.APP_BASE_URL || 'http://localhost:3000',
+    auth: {
+      secret: process.env.NUXT_AUTH_SECRET,
+    },
+    public: {
+      appName: 'Jonopath',
+    },
   },
 
   // @ts-ignore
   auth: {
-    baseURL: (process.env.AUTH_ORIGIN || 'http://localhost:3000') + '/api/auth',
+    baseURL: '/api/auth',
     provider: { type: 'authjs' },
+    globalMiddleware: true,
+    ignorePaths: ['/admin/login'],
   },
 
   routeRules: {
@@ -60,24 +67,10 @@ export default defineNuxtConfig({
     '/admin/auth/': { redirect: '/admin/login/' },
   },
 
-  // tiptap: {
-  //   prefix: 'Tiptap',
-  // },
-
-  // OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-  // TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
-  // runtimeConfig: {
-  //   session: {
-  //     password: '',
-  //     name: 'nau-session',
-  //     cookie: {}
-  //   },
-  // },
-
-  // @ts-ignore => to skip unsupported options.
+  // @ts-ignore
   content: {},
 
-  // @ts-ignore => to skip unsupported options.
+  // @ts-ignore
   colorMode: {
     preference: 'system',
     fallback: 'light',

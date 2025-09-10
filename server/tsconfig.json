@@ -6,7 +6,6 @@
       "next-auth",
       "./types/next-auth"
     ],
-    "strict": true,
     "paths": {
       "#app": [
         "./node_modules/nuxt/dist/app"

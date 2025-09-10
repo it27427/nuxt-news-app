@@ -6,6 +6,8 @@
 
 <script setup lang="ts">
   const { id } = useRoute().params;
+
+  definePageMeta({ auth: false });
 </script>
 
 /** /topics/articles/${news._id} */

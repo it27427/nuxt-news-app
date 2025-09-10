@@ -28,6 +28,8 @@
   import { onMounted, ref } from 'vue';
   import type { MostReadItem } from '~~/types/news';
 
+  definePageMeta({ auth: false });
+
   const loading = ref(true);
   const title = ref('পাঠকপ্রিয় খবর');
   const mostReadNews = ref<MostReadItem[]>([]);
