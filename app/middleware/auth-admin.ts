@@ -1,17 +1,12 @@
-import { getServerSession } from '#auth';
-
-export default defineNuxtRouteMiddleware(async (to: any, event: any) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   if (!to.path.startsWith('/admin')) return;
 
-  try {
-    const session = await getServerSession(event);
+  const { data: session, error } = await useFetch('/api/auth/session');
 
-    const isAdmin = (session?.user as { admin?: boolean } | undefined)?.admin;
+  const isAdmin = (session.value?.user as { admin?: boolean } | undefined)
+    ?.admin;
 
-    if (!isAdmin) {
-      return navigateTo('/admin/login');
-    }
-  } catch (err) {
+  if (error.value || !isAdmin) {
     return navigateTo('/admin/login');
   }
 });

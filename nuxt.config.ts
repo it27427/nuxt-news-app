@@ -57,14 +57,15 @@ export default defineNuxtConfig({
   auth: {
     baseURL: '/api/auth',
     provider: { type: 'authjs' },
-    globalMiddleware: true,
-    ignorePaths: ['/admin/login'],
+    globalMiddleware: false,
+    ignorePaths: ['/admin/login', '/', '/**/*.{js,css}'],
   },
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about/' },
     '/popular': { redirect: '/popular/read/' },
     '/admin/auth/': { redirect: '/admin/login/' },
+    '/session': { redirect: '/api/auth/session' },
   },
 
   // @ts-ignore
