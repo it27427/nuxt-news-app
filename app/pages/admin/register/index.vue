@@ -33,6 +33,8 @@
   // Listen to success
   function onSuccess(user: any) {
     alert(`${user.userName} সফলভাবে নিবন্ধিত!`);
+    // Redirect to login
+    navigateTo('/admin/login');
   }
 
   // Listen to field errors

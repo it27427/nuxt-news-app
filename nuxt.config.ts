@@ -42,6 +42,8 @@ export default defineNuxtConfig({
     'nuxt-tiptap-editor',
   ],
 
+  plugins: ['@/plugins/vue-toastification.ts'],
+
   runtimeConfig: {
     mongodbUri: process.env.MONGODB_URI,
     baseURL: process.env.APP_BASE_URL || 'http://localhost:3000',
