@@ -119,10 +119,13 @@
           password: errorMessage,
         });
       } else {
+        // Log the success and immediately reload the page.
+        // This forces the middleware to re-evaluate the auth state.
+        console.log('সফলভাবে লগইন হয়েছে, রিডাইরেক্ট করা হচ্ছে...');
+        window.location.href = '/admin/dashboard';
         emit('success', {
           message: 'সফলভাবে লগইন হয়েছে...',
         });
-        // The parent component (Login Page) will now handle the redirection.
       }
     } catch (err) {
       console.error('লগইন ত্রুটি:', err);

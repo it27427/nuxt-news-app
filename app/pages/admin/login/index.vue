@@ -12,6 +12,7 @@
   import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
 
+  // @ts-ignore
   definePageMeta({ layout: 'authentication' });
 
   const formTitle = ref('লগইন করুন');
@@ -30,10 +31,6 @@
 
   function onSuccess(data: any) {
     toast.success(data.message || 'সফলভাবে লগইন হয়েছে...');
-
-    setTimeout(() => {
-      navigateTo('/admin/dashboard');
-    }, 1000);
   }
 
   function onError(errors: any) {
