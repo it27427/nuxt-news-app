@@ -1,47 +1,58 @@
 import { compare } from 'bcryptjs';
-import { defineEventHandler, readBody } from 'h3';
+import { defineEventHandler, readBody, setResponseStatus } from 'h3';
+import jwt from 'jsonwebtoken';
+import { Model } from 'mongoose';
+import { connectDB } from '~~/server/db/db';
 import { User } from '~~/server/models/User';
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const { email, password } = body;
+  const { email, password } = await readBody(event);
 
-  const errors: Record<string, string> = {};
-
-  if (!email) errors.email = 'Email is required.';
-  if (!password) errors.password = 'Password is required.';
-
-  if (Object.keys(errors).length > 0) {
-    return { success: false, data: errors, message: 'Validation failed.' };
+  if (!email || !password) {
+    setResponseStatus(event, 400); // Bad Request
+    return {
+      message: 'ইমেল এবং পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।',
+    };
   }
 
-  const user = await User.findOne({ email });
+  await connectDB();
+
+  // Fixing the TypeScript error by casting the User model.
+  const user = await (User as Model<any>).findOne({ email });
 
   if (!user) {
+    setResponseStatus(event, 401); // Unauthorized
     return {
-      success: false,
-      data: { email: 'User not found.' },
-      message: 'Invalid email or password.',
+      message: 'ইমেল বা পাসওয়ার্ড বৈধ নয়।',
     };
   }
 
   const isValid = await compare(password, user.password);
-
   if (!isValid) {
+    setResponseStatus(event, 401); // Unauthorized
     return {
-      success: false,
-      data: { password: 'Invalid password.' },
-      message: 'Invalid email or password.',
+      message: 'ইমেল বা পাসওয়ার্ড বৈধ নয়।',
     };
   }
 
+  // Correcting the import and function call for jsonwebtoken
+  const token = jwt.sign(
+    {
+      id: user._id.toString(),
+      email: user.email,
+      admin: user.admin || false,
+    },
+    useRuntimeConfig().auth.secret,
+    { expiresIn: '1h' }
+  );
+
+  setResponseStatus(event, 200); // OK
   return {
-    success: true,
+    token,
     user: {
       id: user._id.toString(),
       email: user.email,
-      userName: user.userName,
+      admin: user.admin || false,
     },
-    message: 'Login successful.',
   };
 });

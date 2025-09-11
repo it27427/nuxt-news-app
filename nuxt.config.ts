@@ -59,6 +59,7 @@ export default defineNuxtConfig({
   auth: {
     baseURL: '/api/auth',
     provider: { type: 'authjs' },
+    defaultProvider: 'credentials',
     globalMiddleware: false,
     ignorePaths: ['/admin/login', '/', '/**/*.{js,css}'],
   },

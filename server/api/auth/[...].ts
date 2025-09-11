@@ -1,5 +1,8 @@
 import { NuxtAuthHandler } from '#auth';
 import { compare } from 'bcryptjs';
+import { Model } from 'mongoose';
+import type { Session } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
 import CredentialsProviderCJS from 'next-auth/providers/credentials';
 import { connectDB } from '~~/server/db/db';
 import { User } from '~~/server/models/User';
@@ -14,26 +17,32 @@ export default NuxtAuthHandler({
   },
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials: any) {
-        // Here's the key change: ensure the database connection is ready.
         await connectDB();
 
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
-        // Use the Mongoose model to find the user.
-        const user = await User.findOne({
+        // Fix for the Mongoose callable error.
+        // We explicitly cast the User model to a Mongoose Model type.
+        const user = await (User as Model<any>).findOne({
           email: credentials.email,
         });
 
-        if (!user) return null;
+        if (!user) {
+          return null;
+        }
 
         const isValid = await compare(credentials.password, user.password);
-        if (!isValid) return null;
+        if (!isValid) {
+          return null;
+        }
 
         return {
           id: user._id.toString(),
@@ -47,7 +56,7 @@ export default NuxtAuthHandler({
     strategy: 'jwt',
   },
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       return {
         ...session,
         user: {
@@ -56,7 +65,7 @@ export default NuxtAuthHandler({
         },
       };
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         token.admin = (user as any).admin || false;
         token.id = (user as any).id;

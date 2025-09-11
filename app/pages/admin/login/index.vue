@@ -29,18 +29,15 @@
   const toast = useToast();
 
   function onSuccess(data: any) {
-    toast.success(data.message || 'সফলভাবে লগইন হয়েছে!');
-
-    // Redirect to dashboard
-    setTimeout(() => {
-      navigateTo('/admin/dashboard');
-    }, 1000);
+    toast.success(data.message || 'সফলভাবে লগইন হয়েছে...');
+    // `LoginForm.vue` ফাইল থেকে সরাসরি নেভিগেশন করা হয়, তাই এখানে কোনো রিডাইরেক্টের প্রয়োজন নেই।
+    // শুধুমাত্র সফলতার বার্তাটি দেখানো হচ্ছে।
   }
 
   function onError(errors: any) {
     console.log('লগইন ত্রুটি:', errors);
 
-    const errorMessage = errors.message || 'লগইন ব্যর্থ হয়েছে।';
+    const errorMessage = errors.message || 'লগইন ব্যর্থ হয়েছে...';
     toast.error(errorMessage);
 
     if (errors.email) {

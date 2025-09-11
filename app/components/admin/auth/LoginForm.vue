@@ -34,7 +34,6 @@
   import BaseForm from '@/components/admin/common/BaseForm.vue';
   import BaseInput from '@/components/admin/common/BaseInput.vue';
   import { reactive, ref, watch } from 'vue';
-  const { signIn } = useAuth();
 
   interface FormData {
     email: string;
@@ -102,29 +101,33 @@
 
     isLoading.value = true;
     try {
-      const response = await signIn('credentials', {
-        email: localForm.email,
-        password: localForm.password,
-        redirect: false,
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(localForm),
       });
 
-      if (response?.error) {
-        console.error('লগইন ত্রুটি:', response.error);
-        const errorMessage =
-          response.error === 'CredentialsSignin'
-            ? 'ইমেল বা পাসওয়ার্ড বৈধ নয়!'
-            : 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে!';
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMessage = data.message || 'লগইন ব্যর্থ হয়েছে...';
         emit('error', {
           message: errorMessage,
           email: errorMessage,
           password: errorMessage,
         });
       } else {
-        emit('success', { message: 'সফলভাবে লগইন হয়েছে!' });
+        // Upon successful login, we need to manually update the session or refresh the page
+        // to let Nuxt Auth know the user is authenticated.
+        // A simple redirect is the easiest way.
+        emit('success', { message: 'সফলভাবে লগইন হয়েছে...' });
+        navigateTo('/admin/dashboard');
       }
     } catch (err) {
       console.error('লগইন ত্রুটি:', err);
-      emit('error', { message: 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে!' });
+      emit('error', { message: 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে...' });
     } finally {
       isLoading.value = false;
     }
