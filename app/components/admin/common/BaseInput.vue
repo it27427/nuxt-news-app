@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col gap-2">
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-2">
       <label
         v-if="label"
         :for="id"
-        class="text-sm font-medium text-dark dark:text-light"
+        class="font-sans text-md font-medium text-dark dark:text-light"
       >
         {{ label }}
       </label>
@@ -14,7 +14,7 @@
         :type="type"
         :placeholder="placeholder"
         :value="modelValue"
-        class="px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-divider focus:ring-2 focus:ring-green-500 focus:outline-none"
+        class="font-sans text-dark dark:text-light bg-transparent h-12 px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-divider focus:ring-2 focus:ring-green-500 focus:outline-none"
       />
     </div>
 

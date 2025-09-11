@@ -2,7 +2,7 @@
   <button
     :type="type"
     :disabled="disabled || loading"
-    class="w-full py-2 px-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors"
+    class="w-full h-12 py-2 px-4 rounded-lg font-bengali font-semibold flex items-center justify-center gap-2 transition-all"
     :class="[
       variantClasses,
       disabled || loading ? 'opacity-50 cursor-not-allowed' : '',

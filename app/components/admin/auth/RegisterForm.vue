@@ -27,9 +27,11 @@
       :error="errors.password"
     />
 
+    <div class="mb-2"></div>
+
     <BaseButton
       type="submit"
-      label="Register"
+      label="নিবন্ধন করুন"
       variant="primary"
       :loading="isLoading"
     />
