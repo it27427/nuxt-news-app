@@ -27,7 +27,7 @@
             'focus:border-primary dark:focus:border-primary': !error,
             'focus:border-red-500 dark:focus:border-red-500': error,
           }"
-          class="font-sans text-dark dark:text-light bg-transparent h-12 px-4 py-2 rounded-lg border transition-colors focus:outline-none"
+          class="relative w-full font-sans text-dark dark:text-light bg-transparent h-12 px-4 py-2 rounded-lg border transition-colors focus:outline-none"
         />
 
         <!-- পাসওয়ার্ড শো-হাইড বাটন  -->
@@ -48,10 +48,10 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path
-              d="M17.94 17.94A5.94 5.94 0 0 1 12 20c-3.1 0-5.88-1.57-7.94-4.06M2.06 6.06a16.51 16.51 0 0 1 4.41-1.39A15.39 15.39 0 0 1 12 4c3.1 0 5.88 1.57 7.94 4.06M12 12a3 3 0 1 0-3 3 3 3 0 0 0 3-3zM1 1l22 22"
-            ></path>
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
           </svg>
+
           <svg
             v-else
             xmlns="http://www.w3.org/2000/svg"
@@ -63,8 +63,9 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M17.94 17.94A5.94 5.94 0 0 1 12 20c-3.1 0-5.88-1.57-7.94-4.06M2.06 6.06a16.51 16.51 0 0 1 4.41-1.39A15.39 15.39 0 0 1 12 4c3.1 0 5.88 1.57 7.94 4.06M12 12a3 3 0 1 0-3 3 3 3 0 0 0 3-3zM1 1l22 22"
+            ></path>
           </svg>
         </button>
       </div>
