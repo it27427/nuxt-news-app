@@ -1,5 +1,5 @@
 <template>
-  <BaseForm @submit.prevent="handleRegister">
+  <BaseForm @submit="handleRegister">
     <BaseInput
       id="userName"
       label="User Name"
@@ -51,17 +51,15 @@
   }
 
   interface FormErrors {
-    userName: string;
-    email: string;
-    password: string;
+    userName?: string;
+    email?: string;
+    password?: string;
   }
 
-  // Props: parent can pass a form object
   const props = defineProps<{
     form?: FormData;
   }>();
 
-  // Emits: parent can listen for 'success' or 'error'
   const emit = defineEmits<{
     (e: 'success', data: any): void;
     (e: 'error', errors: FormErrors): void;
@@ -81,58 +79,85 @@
 
   const isLoading = ref(false);
 
-  // Keep parent form reactive if passed
   if (props.form) {
     watch(localForm, () => {
       if (props.form) Object.assign(props.form, localForm);
     });
   }
 
+  function validateForm() {
+    Object.keys(errors).forEach((key) => {
+      errors[key as keyof FormErrors] = '';
+    });
+
+    let hasError = false;
+
+    if (!localForm.userName) {
+      errors.userName = 'User Name is required.';
+      hasError = true;
+    } else if (localForm.userName.length < 3) {
+      errors.userName = 'User name must be at least 3 characters.';
+      hasError = true;
+    }
+
+    if (!localForm.email) {
+      errors.email = 'Email is required.';
+      hasError = true;
+    } else if (!/^\S+@\S+\.\S+$/.test(localForm.email)) {
+      errors.email = 'Email is invalid.';
+      hasError = true;
+    }
+
+    if (!localForm.password) {
+      errors.password = 'Password is required.';
+      hasError = true;
+    } else if (localForm.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters.';
+      hasError = true;
+    }
+
+    return !hasError;
+  }
+
   async function handleRegister() {
+    if (!validateForm()) {
+      emit('error', errors);
+      return;
+    }
+
     try {
       isLoading.value = true;
-
-      // Clear previous errors
-      Object.keys(errors).forEach((key) => {
-        errors[key as keyof FormErrors] = '';
-      });
-
-      // API call
-      const { data, error } = await useFetch<{
+      const response = await $fetch<{
         success: boolean;
         user?: { id: string; userName: string; email: string };
         data?: FormErrors;
       }>('/api/auth/register', {
         method: 'POST',
         body: { ...localForm },
-        default: () => ({ success: false }),
       });
 
-      if (error.value) {
-        console.error('API error:', error.value);
-        emit('error', { ...errors });
+      // ব্যাকএন্ড থেকে আসা ত্রুটিগুলো হ্যান্ডেল করা হচ্ছে।
+      if (response?.success === false && response.data) {
+        Object.assign(errors, response.data);
+        emit('error', response.data);
         return;
       }
 
-      // Backend field validation errors
-      if (data.value?.success === false && data.value.data) {
-        Object.assign(errors, data.value.data);
-        emit('error', data.value.data);
-        return;
-      }
-
-      // Success
-      if (data.value?.success && data.value.user) {
-        emit('success', data.value.user);
-
-        // Reset form
+      // সফল হলে
+      if (response?.success && response.user) {
+        emit('success', response.user);
+        // ফর্ম ডেটা রিসেট করা হচ্ছে।
         Object.keys(localForm).forEach((key) => {
           localForm[key as keyof FormData] = '';
         });
       }
-    } catch (err) {
-      console.error(err);
-      emit('error', { ...errors });
+    } catch (err: any) {
+      console.error('API error:', err);
+      // সার্ভার থেকে আসা ত্রুটি (যেমন 500) হ্যান্ডেল করা হচ্ছে।
+      if (err.data?.data) {
+        Object.assign(errors, err.data.data);
+      }
+      emit('error', errors);
     } finally {
       isLoading.value = false;
     }

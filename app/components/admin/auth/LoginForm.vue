@@ -1,50 +1,125 @@
 <template>
-  <div>
-    <BaseForm title="Login" submitText="Login" @submit="handleLogin">
-      <BaseInput
-        id="email"
-        label="Email"
-        type="email"
-        placeholder="Enter your email"
-        v-model="form.email"
-        :error="errors.email"
-      />
+  <BaseForm @submit="handleLogin">
+    <BaseInputid
+      id="email"
+      label="Email Address"
+      type="email"
+      placeholder="Enter your email address"
+      v-model="localForm.email"
+      :error="errors.email"
+    />
 
-      <BaseInput
-        id="password"
-        label="Password"
-        type="password"
-        placeholder="Enter your password"
-        v-model="form.password"
-        :error="errors.password"
-      />
+    <BaseInputid
+      id="password"
+      label="Password"
+      type="password"
+      placeholder="Enter your password"
+      v-model="localForm.password"
+      :error="errors.password"
+    />
 
-      <BaseButton label="Login" type="submit" variant="primary" />
-    </BaseForm>
-  </div>
+    <div class="mb-2"></div>
+
+    <BaseButton
+      type="submit"
+      label="লগইন করুন"
+      variant="primary"
+      :loading="isLoading"
+    />
+  </BaseForm>
 </template>
 
 <script setup lang="ts">
+  import BaseButton from '@/components/admin/common/BaseButton.vue';
   import BaseForm from '@/components/admin/common/BaseForm.vue';
-  import BaseInput from '@/components/admin/common/BaseInput.vue';
+  import { reactive, ref, watch } from 'vue';
+  const { signIn } = useAuth();
 
-  const form = reactive({
+  interface FormData {
+    email: string;
+    password: string;
+  }
+
+  interface FormErrors {
+    email?: string;
+    password?: string;
+  } // Props: parent can pass a form object
+
+  const props = defineProps<{
+    form?: FormData;
+  }>(); // Emits: parent can listen for 'success' or 'error'
+
+  const emit = defineEmits<{
+    (e: 'success', data: any): void;
+    (e: 'error', errors: FormErrors): void;
+  }>();
+
+  const localForm = reactive<FormData>({
+    email: props.form?.email || '',
+    password: props.form?.password || '',
+  });
+
+  const errors = reactive<FormErrors>({
     email: '',
     password: '',
   });
 
-  const errors = reactive({
-    email: '',
-    password: '',
-  });
+  const isLoading = ref(false);
 
-  function handleLogin() {
-    errors.email = !form.email ? 'Email is required' : '';
-    errors.password = !form.password ? 'Password is required' : '';
+  if (props.form) {
+    watch(localForm, () => {
+      if (props.form) Object.assign(props.form, localForm);
+    });
+  }
 
-    if (!errors.email && !errors.password) {
-      console.log('Login Submitted:', form);
-      // Call API here
+  function validateForm() {
+    Object.keys(errors).forEach((key) => {
+      errors[key as keyof FormErrors] = '';
+    });
+
+    let hasError = false;
+
+    if (!localForm.email) {
+      errors.email = 'Email is required.';
+      hasError = true;
+    }
+
+    if (!localForm.password) {
+      errors.password = 'Password is required.';
+      hasError = true;
+    }
+
+    return !hasError;
+  }
+
+  async function handleLogin() {
+    if (!validateForm()) {
+      emit('error', errors);
+      return;
+    }
+
+    isLoading.value = true;
+    try {
+      const response = await signIn('credentials', {
+        email: localForm.email,
+        password: localForm.password,
+        redirect: false,
+      });
+
+      if (response?.error) {
+        console.error('Login error:', response.error);
+        errors.email = 'Invalid email or password.';
+        errors.password = 'Invalid email or password.';
+        emit('error', errors);
+      } else {
+        emit('success', { message: 'Login successful!' }); // Navigate to the dashboard or home page
+        navigateTo('/admin/dashboard');
+      }
+    } catch (err) {
+      console.error('Login failed:', err);
+      emit('error', { password: 'An unexpected error occurred.' });
+    } finally {
+      isLoading.value = false;
     }
   }
 </script>

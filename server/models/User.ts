@@ -1,18 +1,30 @@
-import mongoosePkg from 'mongoose';
-const { Schema, model, models } = mongoosePkg;
+import mongoose, { Document } from 'mongoose';
 
-export interface UserDocument extends mongoosePkg.Document {
+export interface UserDocument extends Document {
   userName: string;
   email: string;
   password: string;
   admin?: boolean;
 }
 
-const userSchema = new Schema<UserDocument>({
-  userName: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  admin: { type: Boolean, default: false },
-});
+const UserSchema = new mongoose.Schema<UserDocument>(
+  {
+    userName: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-export const User = models.User || model<UserDocument>('User', userSchema);
+export const User =
+  mongoose.models.User || mongoose.model<UserDocument>('User', UserSchema);

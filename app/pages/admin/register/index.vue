@@ -3,6 +3,7 @@
     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">
       “{{ formTitle }}”
     </h1>
+
     <RegisterForm :form="form" @success="onSuccess" @error="onError" />
   </div>
 </template>
@@ -37,5 +38,10 @@
   // Listen to field errors
   function onError(errors: any) {
     console.log('নিবন্ধন ত্রুটি:', errors);
+    // আপনি এখানে আরও কিছু করতে পারেন, যেমন একটি নোটিফিকেশন দেখানো
+    // উদাহরণস্বরূপ:
+    // if (errors.userName) {
+    //   alert(errors.userName);
+    // }
   }
 </script>

@@ -1,7 +1,8 @@
 import { NuxtAuthHandler } from '#auth';
 import { compare } from 'bcryptjs';
 import CredentialsProviderCJS from 'next-auth/providers/credentials';
-import { db } from '~~/server/db/db';
+import { connectDB } from '~~/server/db/db';
+import { User } from '~~/server/models/User';
 
 const CredentialsProvider =
   (CredentialsProviderCJS as any).default || CredentialsProviderCJS;
@@ -19,12 +20,16 @@ export default NuxtAuthHandler({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials: any) {
+        // Here's the key change: ensure the database connection is ready.
+        await connectDB();
+
         if (!credentials?.email || !credentials?.password) return null;
 
-        const usersCollection = await db.user();
-        const user = await usersCollection.findOne({
+        // Use the Mongoose model to find the user.
+        const user = await User.findOne({
           email: credentials.email,
         });
+
         if (!user) return null;
 
         const isValid = await compare(credentials.password, user.password);

@@ -1,55 +1,66 @@
 import bcrypt from 'bcryptjs';
-import { createError, defineEventHandler, readBody, sendError } from 'h3';
+import { defineEventHandler, readBody } from 'h3';
+import { connectDB } from '~~/server/db/db';
 import { User } from '~~/server/models/User';
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const { userName, email, password } = body;
+  try {
+    await connectDB();
 
-  const errors: Record<string, string> = {};
+    const body = await readBody(event);
+    const { userName, email, password } = body;
 
-  if (!userName || userName.length < 3)
-    errors.userName = 'User name must be at least 3 characters';
+    const errors: Record<string, string> = {};
 
-  if (!email || !/^\S+@\S+\.\S+$/.test(email))
-    errors.email = 'Email is invalid';
+    if (!userName || userName.trim() === '') {
+      errors.userName = 'Username is required.';
+    } else if (userName.length < 3) {
+      errors.userName = 'User name must be at least 3 characters.';
+    }
 
-  if (!password || password.length < 8)
-    errors.password = 'Password must be at least 8 characters';
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      errors.email = 'Email is invalid.';
+    }
 
-  if (Object.keys(errors).length > 0) {
-    return sendError(
-      event,
-      createError({
-        statusCode: 400,
-        message: 'Validation failed',
-        data: errors,
-      })
-    );
+    if (!password || password.length < 8) {
+      errors.password = 'Password must be at least 8 characters.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return { success: false, data: errors, message: 'Validation failed.' };
+    }
+
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return {
+        success: false,
+        data: { email: 'This email is already registered.' },
+        message: 'Email already exists.',
+      };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      userName,
+      email,
+      password: hashedPassword,
+    });
+
+    return {
+      success: true,
+      user: {
+        id: user._id.toString(),
+        userName: user.userName,
+        email: user.email,
+      },
+      message: 'User successfully registered.',
+    };
+  } catch (err) {
+    console.error('Server error during user registration:', err);
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Server Error: Could not register user.',
+      data: err,
+    });
   }
-
-  const existing = await User.findOne({ email });
-  if (existing) {
-    return sendError(
-      event,
-      createError({
-        statusCode: 400,
-        message: 'Email already exists',
-        data: { email: 'Email already registered' },
-      })
-    );
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = await User.create({ userName, email, password: hashedPassword });
-
-  return {
-    success: true,
-    user: {
-      id: user._id.toString(),
-      userName: user.userName,
-      email: user.email,
-    },
-  };
 });

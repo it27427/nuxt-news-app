@@ -1,30 +1,26 @@
-// /server/db.ts
-import { Db, MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
-let client: MongoClient;
-let database: Db;
+const MONGODB_URI = process.env.MONGODB_URI;
+const DB_NAME = process.env.DB_NAME;
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017';
-const DB_NAME = process.env.DB_NAME || 'jonopath';
-
-if (!MONGO_URI)
-  throw new Error('Please define the MONGO_URI environment variable');
-
-async function connectDB() {
-  if (database) return database;
-  client = new MongoClient(MONGO_URI);
-  await client.connect();
-  database = client.db(DB_NAME);
-  console.log('MongoDB connected:', DB_NAME);
-  return database;
+if (!MONGODB_URI) {
+  throw new Error('Please define the MONGODB_URI environment variable');
 }
 
-export const db = {
-  get client() {
-    return client;
-  },
-  async user() {
-    const dbInstance = await connectDB();
-    return dbInstance.collection('users');
-  },
+export const connectDB = async () => {
+  try {
+    if (mongoose.connection.readyState >= 1) {
+      console.log('MongoDB is already connected.');
+      return;
+    }
+
+    await mongoose.connect(MONGODB_URI, {
+      dbName: DB_NAME,
+    });
+
+    console.log('MongoDB connected successfully!');
+  } catch (err) {
+    console.error('MongoDB connection failed:', err);
+    throw err;
+  }
 };
