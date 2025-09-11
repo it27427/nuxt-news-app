@@ -49,7 +49,7 @@ export default defineNuxtConfig({
       secret: process.env.NUXT_AUTH_SECRET,
     },
     public: {
-      appName: 'Jonopath',
+      appName: 'জনপথ',
     },
   },
 
@@ -90,8 +90,8 @@ export default defineNuxtConfig({
     baseURL: process.env.NUXT_APP_BASE_URL || '/',
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
-      title: 'Jonopath',
-      titleTemplate: '%s | Sotter Pothe Nirvik',
+      title: 'জনপথ',
+      titleTemplate: '%s — সত্য আমাদের পথ',
       htmlAttrs: {
         lang: 'bn',
       },
@@ -99,7 +99,7 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'Your page description for SEO' },
-        { property: 'og:title', content: 'Jonopath - Sotter Pothe Nirvik' },
+        { property: 'og:title', content: 'জনপথ — সত্য আমাদের পথ' },
         {
           property: 'og:description',
           content: 'Your page description for SEO',
