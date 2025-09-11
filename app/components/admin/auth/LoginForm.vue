@@ -1,6 +1,6 @@
 <template>
   <BaseForm @submit="handleLogin">
-    <BaseInputid
+    <BaseInput
       id="email"
       label="Email Address"
       type="email"
@@ -9,7 +9,7 @@
       :error="errors.email"
     />
 
-    <BaseInputid
+    <BaseInput
       id="password"
       label="Password"
       type="password"
@@ -32,6 +32,7 @@
 <script setup lang="ts">
   import BaseButton from '@/components/admin/common/BaseButton.vue';
   import BaseForm from '@/components/admin/common/BaseForm.vue';
+  import BaseInput from '@/components/admin/common/BaseInput.vue';
   import { reactive, ref, watch } from 'vue';
   const { signIn } = useAuth();
 
@@ -43,12 +44,15 @@
   interface FormErrors {
     email?: string;
     password?: string;
-  } // Props: parent can pass a form object
+    message?: string;
+  }
 
+  // Props: parent can pass a form object
   const props = defineProps<{
     form?: FormData;
-  }>(); // Emits: parent can listen for 'success' or 'error'
+  }>();
 
+  // Emits: parent can listen for 'success' or 'error'
   const emit = defineEmits<{
     (e: 'success', data: any): void;
     (e: 'error', errors: FormErrors): void;
@@ -80,12 +84,12 @@
     let hasError = false;
 
     if (!localForm.email) {
-      errors.email = 'Email is required.';
+      errors.email = 'ইমেইল অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     }
 
     if (!localForm.password) {
-      errors.password = 'Password is required.';
+      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     }
 
@@ -107,17 +111,22 @@
       });
 
       if (response?.error) {
-        console.error('Login error:', response.error);
-        errors.email = 'Invalid email or password.';
-        errors.password = 'Invalid email or password.';
-        emit('error', errors);
+        console.error('লগইন ত্রুটি:', response.error);
+        const errorMessage =
+          response.error === 'CredentialsSignin'
+            ? 'ইমেল বা পাসওয়ার্ড বৈধ নয়!'
+            : 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে!';
+        emit('error', {
+          message: errorMessage,
+          email: errorMessage,
+          password: errorMessage,
+        });
       } else {
-        emit('success', { message: 'Login successful!' }); // Navigate to the dashboard or home page
-        navigateTo('/admin/dashboard');
+        emit('success', { message: 'সফলভাবে লগইন হয়েছে!' });
       }
     } catch (err) {
-      console.error('Login failed:', err);
-      emit('error', { password: 'An unexpected error occurred.' });
+      console.error('লগইন ত্রুটি:', err);
+      emit('error', { message: 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে!' });
     } finally {
       isLoading.value = false;
     }

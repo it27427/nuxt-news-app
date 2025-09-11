@@ -93,26 +93,26 @@
     let hasError = false;
 
     if (!localForm.userName) {
-      errors.userName = 'User Name is required.';
+      errors.userName = 'ব্যবহারকারীর নাম অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     } else if (localForm.userName.length < 3) {
-      errors.userName = 'User name must be at least 3 characters.';
+      errors.userName = 'ব্যবহারকারীর নাম অবশ্যই ৩ অক্ষরের বেশী হতে হবে।';
       hasError = true;
     }
 
     if (!localForm.email) {
-      errors.email = 'Email is required.';
+      errors.email = 'ইমেইল অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     } else if (!/^\S+@\S+\.\S+$/.test(localForm.email)) {
-      errors.email = 'Email is invalid.';
+      errors.email = 'ইমেলটি বৈধ নয়!';
       hasError = true;
     }
 
     if (!localForm.password) {
-      errors.password = 'Password is required.';
+      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     } else if (localForm.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters.';
+      errors.password = 'পাসওয়ার্ড অবশ্যই ৮ অক্ষরের অধিক হতে হবে।';
       hasError = true;
     }
 
@@ -136,24 +136,20 @@
         body: { ...localForm },
       });
 
-      // ব্যাকএন্ড থেকে আসা ত্রুটিগুলো হ্যান্ডেল করা হচ্ছে।
       if (response?.success === false && response.data) {
         Object.assign(errors, response.data);
         emit('error', response.data);
         return;
       }
 
-      // সফল হলে
       if (response?.success && response.user) {
         emit('success', response.user);
-        // ফর্ম ডেটা রিসেট করা হচ্ছে।
         Object.keys(localForm).forEach((key) => {
           localForm[key as keyof FormData] = '';
         });
       }
     } catch (err: any) {
       console.error('API error:', err);
-      // সার্ভার থেকে আসা ত্রুটি (যেমন 500) হ্যান্ডেল করা হচ্ছে।
       if (err.data?.data) {
         Object.assign(errors, err.data.data);
       }

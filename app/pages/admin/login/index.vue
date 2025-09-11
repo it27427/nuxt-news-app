@@ -10,6 +10,8 @@
 <script setup lang="ts">
   import LoginForm from '@/components/admin/auth/LoginForm.vue';
   import { reactive, ref } from 'vue';
+  import { useToast } from 'vue-toastification';
+
   definePageMeta({ layout: 'authentication' });
 
   const formTitle = ref('লগইন করুন');
@@ -24,12 +26,25 @@
     password: '',
   });
 
+  const toast = useToast();
+
   function onSuccess(data: any) {
-    alert(`লগইন সফল!`);
-    console.log(data.message);
+    toast.success(data.message || 'সফলভাবে লগইন হয়েছে!');
+
+    // Redirect to dashboard
+    setTimeout(() => {
+      navigateTo('/admin/dashboard');
+    }, 1000);
   }
 
   function onError(errors: any) {
     console.log('লগইন ত্রুটি:', errors);
+
+    const errorMessage = errors.message || 'লগইন ব্যর্থ হয়েছে।';
+    toast.error(errorMessage);
+
+    if (errors.email) {
+      toast.error(errors.email);
+    }
   }
 </script>

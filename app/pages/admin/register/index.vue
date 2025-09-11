@@ -13,9 +13,7 @@
   import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
 
-  definePageMeta({
-    layout: 'authentication',
-  });
+  definePageMeta({ layout: 'authentication' });
 
   const formTitle = ref('নিবন্ধন করুন');
 
@@ -46,10 +44,15 @@
   // Listen to field errors
   function onError(errors: any) {
     console.log('নিবন্ধন ত্রুটি:', errors);
-    // আপনি এখানে আরও কিছু করতে পারেন, যেমন একটি নোটিফিকেশন দেখানো
-    // উদাহরণস্বরূপ:
-    // if (errors.userName) {
-    //   alert(errors.userName);
-    // }
+
+    if (errors.userName) {
+      toast.error(errors.userName);
+    }
+    if (errors.email) {
+      toast.error(errors.email);
+    }
+    if (errors.password) {
+      toast.error(errors.password);
+    }
   }
 </script>
