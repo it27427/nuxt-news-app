@@ -1,5 +1,5 @@
 <template>
-  <BaseForm @submit="handleLogin">
+  <BaseForm @submit="handleLogin" class="animated-form">
     <BaseInput
       id="email"
       label="Email Address"
@@ -119,17 +119,35 @@
           password: errorMessage,
         });
       } else {
-        // Upon successful login, we need to manually update the session or refresh the page
-        // to let Nuxt Auth know the user is authenticated.
-        // A simple redirect is the easiest way.
-        emit('success', { message: 'সফলভাবে লগইন হয়েছে...' });
-        navigateTo('/admin/dashboard');
+        emit('success', {
+          message: 'সফলভাবে লগইন হয়েছে...',
+        });
+        // The parent component (Login Page) will now handle the redirection.
       }
     } catch (err) {
       console.error('লগইন ত্রুটি:', err);
-      emit('error', { message: 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে...' });
+      emit('error', {
+        message: 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে...',
+      });
     } finally {
       isLoading.value = false;
     }
   }
 </script>
+
+<style scoped lang="scss">
+  .animated-form {
+    animation: fadeInFromTop 0.8s ease-out;
+  }
+
+  @keyframes fadeInFromTop {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

@@ -30,15 +30,19 @@
 
   function onSuccess(data: any) {
     toast.success(data.message || 'সফলভাবে লগইন হয়েছে...');
-    // `LoginForm.vue` ফাইল থেকে সরাসরি নেভিগেশন করা হয়, তাই এখানে কোনো রিডাইরেক্টের প্রয়োজন নেই।
-    // শুধুমাত্র সফলতার বার্তাটি দেখানো হচ্ছে।
+
+    setTimeout(() => {
+      navigateTo('/admin/dashboard');
+    }, 1000);
   }
 
   function onError(errors: any) {
     console.log('লগইন ত্রুটি:', errors);
 
     const errorMessage = errors.message || 'লগইন ব্যর্থ হয়েছে...';
-    toast.error(errorMessage);
+    toast.error(errorMessage, {
+      dangerouslyHTML: true,
+    } as any);
 
     if (errors.email) {
       toast.error(errors.email);

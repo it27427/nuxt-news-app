@@ -33,7 +33,7 @@
 
   // Listen to success
   function onSuccess(user: any) {
-    toast.success(`${user.userName} সফলভাবে নিবন্ধিত হয়েছে!`);
+    toast.success(`${user.userName} সফলভাবে নিবন্ধিত হয়েছে...`);
 
     // Redirect to login
     setTimeout(() => {

@@ -1,5 +1,5 @@
 <template>
-  <BaseForm @submit="handleRegister">
+  <BaseForm @submit="handleRegister" class="animated-form">
     <BaseInput
       id="userName"
       label="User Name"
@@ -85,6 +85,7 @@
     });
   }
 
+  // FORM-VALIDATION
   function validateForm() {
     Object.keys(errors).forEach((key) => {
       errors[key as keyof FormErrors] = '';
@@ -119,6 +120,7 @@
     return !hasError;
   }
 
+  // HANDLE-REGISTER
   async function handleRegister() {
     if (!validateForm()) {
       emit('error', errors);
@@ -159,3 +161,20 @@
     }
   }
 </script>
+
+<style scoped lang="scss">
+  .animated-form {
+    animation: fadeInFromTop 0.8s ease-out;
+  }
+
+  @keyframes fadeInFromTop {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

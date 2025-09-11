@@ -6,7 +6,6 @@
 </template>
 
 <script setup lang="ts">
-  definePageMeta({
-    middleware: 'sidebase-auth',
-  });
+  // @ts-ignore
+  definePageMeta({ middleware: 'sidebase-auth' });
 </script>

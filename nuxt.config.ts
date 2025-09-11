@@ -68,6 +68,7 @@ export default defineNuxtConfig({
     '/institutional': { redirect: '/institutional/about/' },
     '/popular': { redirect: '/popular/read/' },
     '/admin/auth/': { redirect: '/admin/login/' },
+    '/admin/': { redirect: '/admin/dashboard/' },
     '/session': { redirect: '/api/auth/session' },
   },
 
