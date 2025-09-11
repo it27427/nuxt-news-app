@@ -104,15 +104,15 @@
       errors.email = 'ইমেইল অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     } else if (!/^\S+@\S+\.\S+$/.test(localForm.email)) {
-      errors.email = 'ইমেলটি বৈধ নয়!';
+      errors.email = 'ইমেলটি বৈধ নয়!';
       hasError = true;
     }
 
     if (!localForm.password) {
-      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
+      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     } else if (localForm.password.length < 8) {
-      errors.password = 'পাসওয়ার্ড অবশ্যই ৮ অক্ষরের অধিক হতে হবে।';
+      errors.password = 'পাসওয়ার্ড অবশ্যই ৮ অক্ষরের অধিক হতে হবে।';
       hasError = true;
     }
 

@@ -47,12 +47,10 @@
     message?: string;
   }
 
-  // Props: parent can pass a form object
   const props = defineProps<{
     form?: FormData;
   }>();
 
-  // Emits: parent can listen for 'success' or 'error'
   const emit = defineEmits<{
     (e: 'success', data: any): void;
     (e: 'error', errors: FormErrors): void;
@@ -89,7 +87,7 @@
     }
 
     if (!localForm.password) {
-      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
+      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
       hasError = true;
     }
 
@@ -114,7 +112,7 @@
         console.error('লগইন ত্রুটি:', response.error);
         const errorMessage =
           response.error === 'CredentialsSignin'
-            ? 'ইমেল বা পাসওয়ার্ড বৈধ নয়!'
+            ? 'ইমেল বা পাসওয়ার্ড বৈধ নয়!'
             : 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে!';
         emit('error', {
           message: errorMessage,
