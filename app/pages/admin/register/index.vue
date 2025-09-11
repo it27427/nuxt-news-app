@@ -11,6 +11,7 @@
 <script setup lang="ts">
   import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
   import { reactive, ref } from 'vue';
+  import { useToast } from 'vue-toastification';
 
   definePageMeta({
     layout: 'authentication',
@@ -30,11 +31,16 @@
     password: '',
   });
 
+  const toast = useToast();
+
   // Listen to success
   function onSuccess(user: any) {
-    alert(`${user.userName} সফলভাবে নিবন্ধিত!`);
+    toast.success(`${user.userName} সফলভাবে নিবন্ধিত হয়েছে!`);
+
     // Redirect to login
-    navigateTo('/admin/login');
+    setTimeout(() => {
+      navigateTo('/admin/login');
+    }, 1000);
   }
 
   // Listen to field errors
