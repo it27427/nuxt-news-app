@@ -157,7 +157,7 @@
       if (err.data?.data) {
         Object.assign(errors, err.data.data);
       } else {
-        errors.userName = err.data?.message || 'রেজিস্ট্রেশন ব্যর্থ হয়েছে।';
+        errors.userName = err.data?.message || 'নিবন্ধন ব্যর্থ হয়েছে।';
       }
       emit('error', errors);
     } finally {
