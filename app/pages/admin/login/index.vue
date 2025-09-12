@@ -1,7 +1,7 @@
 <template>
   <div class="mt-10 w-full mx-auto md:w-36.5">
     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">
-      “{{ formTitle }}”
+      "{{ formTitle }}"
     </h1>
     <LoginForm :form="form" @success="onSuccess" @error="onError" />
   </div>
@@ -12,7 +12,6 @@
   import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
 
-  // @ts-ignore
   definePageMeta({ layout: 'authentication' });
 
   const formTitle = ref('লগইন করুন');
@@ -29,20 +28,16 @@
 
   const toast = useToast();
 
-  function onSuccess(data: any) {
-    toast.success(data.message || 'সফলভাবে লগইন হয়েছে...');
+  function onSuccess(formData: any) {
+    // শুধু toast দেখাবে, navigation LoginForm.vue-এ handle হবে
+    toast.success('সফলভাবে লগইন হয়েছে...');
   }
 
   function onError(errors: any) {
     console.log('লগইন ত্রুটি:', errors);
-
     const errorMessage = errors.message || 'লগইন ব্যর্থ হয়েছে...';
-    toast.error(errorMessage, {
-      dangerouslyHTML: true,
-    } as any);
-
-    if (errors.email) {
-      toast.error(errors.email);
-    }
+    toast.error(errorMessage);
+    if (errors.email) toast.error(errors.email);
+    if (errors.password) toast.error(errors.password);
   }
 </script>

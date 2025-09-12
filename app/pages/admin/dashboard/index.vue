@@ -8,10 +8,12 @@
       <h1
         class="text-4xl font-extrabold text-center text-gray-900 dark:text-white"
       >
-        ড্যাশবোর্ড
+        Welcome to Dashboard 🎉
       </h1>
       <p class="text-center text-gray-600 dark:text-gray-300">
-        স্বাগতম! আপনি সফলভাবে লগইন করেছেন।
+        স্বাগতম,
+        <span class="font-bold">{{ user?.name || 'ব্যবহারকারী' }}</span>
+        ! আপনি সফলভাবে লগইন করেছেন।
       </p>
       <div class="mt-8 text-center">…</div>
     </div>
@@ -19,8 +21,17 @@
 </template>
 
 <script setup lang="ts">
+  import { useAuth } from '#imports';
+  import { computed } from 'vue';
+
   definePageMeta({
     middleware: ['auth-admin'],
     layout: 'admin',
   });
+
+  // useAuth কম্পোজেবল থেকে সেশন ডেটা ব্যবহার করুন
+  const { data: sessionData } = useAuth();
+
+  // কম্পোটেড প্রপার্টি ব্যবহার করে ব্যবহারকারীর ডেটা সহজে অ্যাক্সেস করুন
+  const user = computed(() => sessionData.value?.user);
 </script>

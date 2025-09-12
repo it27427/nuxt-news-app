@@ -30,10 +30,17 @@
 </template>
 
 <script setup lang="ts">
+  import { useAuth, useRuntimeConfig } from '#imports';
+  import { reactive, ref, watch } from 'vue';
+  import { useToast } from 'vue-toastification';
+
+  import { navigateTo } from '#app';
   import BaseButton from '@/components/admin/common/BaseButton.vue';
   import BaseForm from '@/components/admin/common/BaseForm.vue';
   import BaseInput from '@/components/admin/common/BaseInput.vue';
-  import { reactive, ref, watch } from 'vue';
+
+  const config = useRuntimeConfig();
+  const toast = useToast();
 
   interface FormData {
     email: string;
@@ -93,6 +100,8 @@
     return !hasError;
   }
 
+  const { signIn } = useAuth();
+
   async function handleLogin() {
     if (!validateForm()) {
       emit('error', errors);
@@ -100,38 +109,31 @@
     }
 
     isLoading.value = true;
+
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(localForm),
+      // redirect false => manual redirect + toast
+      const result = await signIn('credentials', {
+        email: localForm.email,
+        password: localForm.password,
+        redirect: false,
+        callbackUrl: '/admin/dashboard',
+        baseURL: config.public.authBaseURL,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        const errorMessage = data.message || 'লগইন ব্যর্থ হয়েছে...';
-        emit('error', {
-          message: errorMessage,
-          email: errorMessage,
-          password: errorMessage,
-        });
+      if (result?.error) {
+        toast.error('ইমেল বা পাসওয়ার্ড বৈধ নয়।');
+        emit('error', { message: result.error });
       } else {
-        // Log the success and immediately reload the page.
-        // This forces the middleware to re-evaluate the auth state.
-        console.log('সফলভাবে লগইন হয়েছে, রিডাইরেক্ট করা হচ্ছে...');
-        window.location.href = '/admin/dashboard';
-        emit('success', {
-          message: 'সফলভাবে লগইন হয়েছে...',
-        });
+        toast.success('সফলভাবে লগইন হয়েছে...');
+        emit('success', { message: 'সফলভাবে লগইন হয়েছে...' });
+
+        // redirect manually
+        await navigateTo('/admin/dashboard');
       }
-    } catch (err) {
-      console.error('লগইন ত্রুটি:', err);
-      emit('error', {
-        message: 'একটি অপ্রত্যাশিত ত্রুটি ঘটেছে...',
-      });
+    } catch (error: any) {
+      console.error('লগইন ত্রুটি (catch):', error);
+      toast.error('লগইন ব্যর্থ হয়েছে। সার্ভার ত্রুটি।');
+      emit('error', { message: 'লগইন ব্যর্থ হয়েছে। সার্ভার ত্রুটি।' });
     } finally {
       isLoading.value = false;
     }

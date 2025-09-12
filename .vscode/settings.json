@@ -1,6 +1,6 @@
 {
   "workbench.sideBar.location": "right",
-  "workbench.colorTheme": "Tomorrow Night Blue",
+  "workbench.colorTheme": "Vue Theme",
   "workbench.iconTheme": "helium-icon-theme",
   // --- Terminal UI ---
   "terminal.integrated.fontFamily": "CaskaydiaCove Nerd Font",

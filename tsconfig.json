@@ -1,0 +1,48 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./app/*"
+      ],
+      "~~/*": [
+        "./*"
+      ],
+      "@@/*": [
+        "./*"
+      ],
+      "#app": [
+        "./node_modules/nuxt/dist/app/index"
+      ],
+      "#imports": [
+        "./.nuxt/imports.d.ts"
+      ],
+      "#auth": [
+        "./.nuxt/types/auth"
+      ]
+    },
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ]
+  },
+  "include": [
+    "types/**/*.d.ts",
+    "app/**/*.ts",
+    "app/**/*.vue",
+    "server/**/*.ts",
+    "components/**/*.vue"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".nuxt"
+  ]
+}

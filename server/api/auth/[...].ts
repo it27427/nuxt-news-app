@@ -1,3 +1,4 @@
+// server/api/auth/[...].ts
 import { NuxtAuthHandler } from '#auth';
 import { compare } from 'bcryptjs';
 import { Model } from 'mongoose';
@@ -25,24 +26,16 @@ export default NuxtAuthHandler({
       async authorize(credentials: any) {
         await connectDB();
 
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+        if (!credentials?.email || !credentials?.password) return null;
 
-        // Fix for the Mongoose callable error.
-        // We explicitly cast the User model to a Mongoose Model type.
         const user = await (User as Model<any>).findOne({
           email: credentials.email,
         });
 
-        if (!user) {
-          return null;
-        }
+        if (!user) return null;
 
         const isValid = await compare(credentials.password, user.password);
-        if (!isValid) {
-          return null;
-        }
+        if (!isValid) return null;
 
         return {
           id: user._id.toString(),

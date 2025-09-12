@@ -52,15 +52,34 @@ export default defineNuxtConfig({
     },
     public: {
       appName: 'জনপথ',
+      authBaseURL:
+        process.env.NUXT_PUBLIC_AUTH_BASEURL ||
+        'http://localhost:3000/api/auth',
     },
   },
 
   // @ts-ignore
   auth: {
+    isEnabled: true,
+    disableServerSideAuth: false,
+    originEnvKey: 'AUTH_ORIGIN',
+    // baseURL:
+    //   process.env.NUXT_PUBLIC_AUTH_BASEURL || 'http://localhost:3000/api/auth',
     baseURL: '/api/auth',
-    provider: { type: 'authjs' },
     defaultProvider: 'credentials',
-    globalMiddleware: false,
+    provider: {
+      type: 'authjs',
+      pages: {
+        signIn: '/admin/login',
+      },
+    },
+    sessionRefresh: {
+      enablePeriodically: true,
+      enableOnWindowFocus: true,
+    },
+    globalAppMiddleware: {
+      isEnabled: false,
+    },
     ignorePaths: ['/admin/login', '/', '/**/*.{js,css}'],
   },
 
@@ -70,6 +89,10 @@ export default defineNuxtConfig({
     '/admin/auth/': { redirect: '/admin/login/' },
     '/admin/': { redirect: '/admin/dashboard/' },
     '/session': { redirect: '/api/auth/session' },
+    '/api/auth/**': {
+      cors: true,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+    },
   },
 
   // @ts-ignore

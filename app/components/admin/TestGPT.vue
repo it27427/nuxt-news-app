@@ -1,12 +1,12 @@
 <template>
   <div>
     <h2>Telegram Summary (via GPT-4)</h2>
-    <p>{{ data?.summary }}</p>
+    <!-- <p>{{ data?.summary }}</p>
 
     <h3>Raw Messages</h3>
     <ul>
       <li v-for="m in data?.raw" :key="m">{{ m }}</li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -16,5 +16,5 @@
     summary: string | null;
   };
 
-  const { data } = await useFetch<TelegramGPTResponse>('/api/telegram-gpt');
+  // const { data } = await useFetch<TelegramGPTResponse>('/api/telegram-gpt');
 </script>

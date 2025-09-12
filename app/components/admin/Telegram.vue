@@ -2,7 +2,7 @@
   <div>
     <h2>Latest Telegram Messages</h2>
 
-    <ul>
+    <!-- <ul>
       <li v-for="msg in data" :key="msg.id">
         <p>
           <strong>{{ msg.text }}</strong>
@@ -13,7 +13,7 @@
           <a :href="msg.media" target="_blank">Download Media</a>
         </div>
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -26,6 +26,6 @@
     media: string | null;
   };
 
-  const { data, error, pending } =
-    await useFetch<TelegramMessage[]>('/api/telegram');
+  // const { data, error, pending } =
+  //   await useFetch<TelegramMessage[]>('/api/telegram');
 </script>

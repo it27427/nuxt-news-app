@@ -1,12 +1,17 @@
-export default defineNuxtRouteMiddleware(async (to) => {
-  if (!to.path.startsWith('/admin')) return;
+import { defineNuxtRouteMiddleware, navigateTo } from '#app';
+import { useAuth } from '#imports';
 
-  const { data: session, error } = await useFetch('/api/auth/session');
+export default defineNuxtRouteMiddleware(async (to: any) => {
+  const { status, data: sessionData } = useAuth();
 
-  const isAdmin = (session.value?.user as { admin?: boolean } | undefined)
-    ?.admin;
-
-  if (error.value || !isAdmin) {
+  if (status.value !== 'authenticated') {
     return navigateTo('/admin/login');
+  }
+
+  // Type-safe: user as any if needed, but better cast
+  const isAdmin = (sessionData.value?.user as any)?.admin;
+
+  if (!isAdmin) {
+    return navigateTo('/');
   }
 });

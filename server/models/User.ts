@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema<UserDocument>(
       type: String,
       required: true,
     },
+    admin: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
