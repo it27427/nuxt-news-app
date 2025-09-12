@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+  import { navigateTo } from '#imports';
   import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
   import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
@@ -23,6 +24,12 @@
     password: string;
   }
 
+  interface FormErrors {
+    userName?: string;
+    email?: string;
+    password?: string;
+  }
+
   const form = reactive<FormData>({
     userName: '',
     email: '',
@@ -31,28 +38,22 @@
 
   const toast = useToast();
 
-  // Listen to success
-  function onSuccess(user: any) {
-    toast.success(`${user.userName} সফলভাবে নিবন্ধিত হয়েছে...`);
+  // Success listener
+  function onSuccess(user: { userName: string }) {
+    toast.success(`${user.userName} সফলভাবে নিবন্ধিত হয়েছে।`);
 
-    // Redirect to login
+    // Redirect to login page after short delay
     setTimeout(() => {
       navigateTo('/admin/login');
     }, 1000);
   }
 
-  // Listen to field errors
-  function onError(errors: any) {
+  // Error listener (FormErrors টাইপ ব্যবহার)
+  function onError(errors: FormErrors) {
     console.log('নিবন্ধন ত্রুটি:', errors);
 
-    if (errors.userName) {
-      toast.error(errors.userName);
-    }
-    if (errors.email) {
-      toast.error(errors.email);
-    }
-    if (errors.password) {
-      toast.error(errors.password);
-    }
+    if (errors.userName) toast.error(errors.userName);
+    if (errors.email) toast.error(errors.email);
+    if (errors.password) toast.error(errors.password);
   }
 </script>

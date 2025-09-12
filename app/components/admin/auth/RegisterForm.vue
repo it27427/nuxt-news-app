@@ -94,26 +94,26 @@
     let hasError = false;
 
     if (!localForm.userName) {
-      errors.userName = 'ব্যবহারকারীর নাম অবশ্যই বাধ্যতামূলক।';
+      errors.userName = 'ব্যবহারকারীর নাম আবশ্যক।';
       hasError = true;
     } else if (localForm.userName.length < 3) {
-      errors.userName = 'ব্যবহারকারীর নাম অবশ্যই ৩ অক্ষরের বেশী হতে হবে।';
+      errors.userName = 'ব্যবহারকারীর নাম কমপক্ষে ৩ অক্ষরের হতে হবে।';
       hasError = true;
     }
 
     if (!localForm.email) {
-      errors.email = 'ইমেইল অবশ্যই বাধ্যতামূলক।';
+      errors.email = 'ইমেইল আবশ্যক।';
       hasError = true;
     } else if (!/^\S+@\S+\.\S+$/.test(localForm.email)) {
-      errors.email = 'ইমেলটি বৈধ নয়!';
+      errors.email = 'ইমেইল ফরম্যাট ভুল হয়েছে। সঠিকভাবে লিখুন।';
       hasError = true;
     }
 
     if (!localForm.password) {
-      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
+      errors.password = 'পাসওয়ার্ড আবশ্যক।';
       hasError = true;
     } else if (localForm.password.length < 8) {
-      errors.password = 'পাসওয়ার্ড অবশ্যই ৮ অক্ষরের অধিক হতে হবে।';
+      errors.password = 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।';
       hasError = true;
     }
 
@@ -129,10 +129,12 @@
 
     try {
       isLoading.value = true;
+
       const response = await $fetch<{
         success: boolean;
         user?: { id: string; userName: string; email: string };
         data?: FormErrors;
+        message?: string;
       }>('/api/auth/register', {
         method: 'POST',
         body: { ...localForm },
@@ -154,6 +156,8 @@
       console.error('API error:', err);
       if (err.data?.data) {
         Object.assign(errors, err.data.data);
+      } else {
+        errors.userName = err.data?.message || 'রেজিস্ট্রেশন ব্যর্থ হয়েছে।';
       }
       emit('error', errors);
     } finally {
