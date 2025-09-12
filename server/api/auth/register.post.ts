@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { defineEventHandler, readBody } from 'h3';
+import { createError, defineEventHandler, readBody } from 'h3';
 import { connectDB } from '~~/server/db/db';
 import { User } from '~~/server/models/User';
 
@@ -8,20 +8,19 @@ export default defineEventHandler(async (event) => {
     await connectDB();
 
     const body = await readBody(event);
-    const { userName, email, password } = body;
+    const userName = body.userName?.trim();
+    const email = body.email?.trim();
+    const password = body.password;
 
     const errors: Record<string, string> = {};
-
-    if (!userName || userName.trim() === '') {
+    if (!userName) {
       errors.userName = 'Username is required.';
     } else if (userName.length < 3) {
-      errors.userName = 'User name must be at least 3 characters.';
+      errors.userName = 'Username must be at least 3 characters.';
     }
-
     if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
       errors.email = 'Email is invalid.';
     }
-
     if (!password || password.length < 8) {
       errors.password = 'Password must be at least 8 characters.';
     }
@@ -56,7 +55,7 @@ export default defineEventHandler(async (event) => {
       message: 'User successfully registered.',
     };
   } catch (err) {
-    console.error('Server error during user registration:', err);
+    console.error('Server error during registration:', err);
     throw createError({
       statusCode: 500,
       statusMessage: 'Server Error: Could not register user.',
