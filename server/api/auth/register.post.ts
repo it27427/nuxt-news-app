@@ -5,39 +5,55 @@ import { User } from '~~/server/models/User';
 
 export default defineEventHandler(async (event) => {
   try {
+    // Connect to the database
     await connectDB();
 
+    // Read data from the request body
     const body = await readBody(event);
     const userName = body.userName?.trim();
     const email = body.email?.trim();
     const password = body.password;
 
+    // Perform initial data validation
     const errors: Record<string, string> = {};
     if (!userName) {
-      errors.userName = 'Username is required.';
+      errors.userName = 'ব্যবহারকারীর নাম আবশ্যক।';
     } else if (userName.length < 3) {
-      errors.userName = 'Username must be at least 3 characters.';
+      errors.userName = 'ব্যবহারকারীর নাম কমপক্ষে ৩ অক্ষরের হতে হবে।';
     }
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      errors.email = 'Email is invalid.';
+
+    // Validate if email is provided
+    if (!email) {
+      errors.email = 'ইমেইল আবশ্যক।';
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      // Validate email format
+      errors.email = 'ইমেইল ফরম্যাট ভুল হয়েছে। সঠিকভাবে লিখুন।';
     }
+
     if (!password || password.length < 8) {
-      errors.password = 'Password must be at least 8 characters.';
+      errors.password = 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।';
     }
 
+    // If there are any validation errors, return them
     if (Object.keys(errors).length > 0) {
-      return { success: false, data: errors, message: 'Validation failed.' };
+      return {
+        success: false,
+        data: errors,
+        message: 'যাচাইকরণ ব্যর্থ হয়েছে।',
+      };
     }
 
+    // Check if the email is already registered
     const existing = await User.findOne({ email });
     if (existing) {
       return {
         success: false,
-        data: { email: 'This email is already registered.' },
-        message: 'Email already exists.',
+        data: { email: 'এই ইমেলটি ইতিমধ্যেই নিবন্ধিত।' },
+        message: 'এই ইমেলটি ইতিমধ্যেই ব্যবহৃত হয়েছে।',
       };
     }
 
+    // Hash the password and create the user
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       userName,
@@ -45,6 +61,7 @@ export default defineEventHandler(async (event) => {
       password: hashedPassword,
     });
 
+    // Respond if the user is successfully registered
     return {
       success: true,
       user: {
@@ -52,13 +69,14 @@ export default defineEventHandler(async (event) => {
         userName: user.userName,
         email: user.email,
       },
-      message: 'User successfully registered.',
+      message: 'ব্যবহারকারী সফলভাবে নিবন্ধিত হয়েছে।',
     };
   } catch (err) {
-    console.error('Server error during registration:', err);
+    // Catch and handle any server-side errors
+    console.error('নিবন্ধনের সময় সার্ভার ত্রুটি:', err);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Server Error: Could not register user.',
+      statusMessage: 'সার্ভার ত্রুটি: ব্যবহারকারীকে নিবন্ধন করা যায়নি।',
       data: err,
     });
   }
