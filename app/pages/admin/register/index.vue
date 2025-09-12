@@ -1,7 +1,7 @@
 <template>
   <div class="mt-10 w-full mx-auto md:w-36.5">
     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">
-      “{{ formTitle }}”
+      {{ formTitle }}
     </h1>
 
     <RegisterForm :form="form" @success="onSuccess" @error="onError" />

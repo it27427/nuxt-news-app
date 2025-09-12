@@ -63,9 +63,8 @@ export default defineNuxtConfig({
     isEnabled: true,
     disableServerSideAuth: false,
     originEnvKey: 'AUTH_ORIGIN',
-    // baseURL:
-    //   process.env.NUXT_PUBLIC_AUTH_BASEURL || 'http://localhost:3000/api/auth',
-    baseURL: '/api/auth',
+    baseURL:
+      process.env.NUXT_PUBLIC_AUTH_BASEURL || 'http://localhost:3000/api/auth',
     defaultProvider: 'credentials',
     provider: {
       type: 'authjs',

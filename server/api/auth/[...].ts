@@ -2,8 +2,6 @@
 import { NuxtAuthHandler } from '#auth';
 import { compare } from 'bcryptjs';
 import { Model } from 'mongoose';
-import type { Session } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
 import CredentialsProviderCJS from 'next-auth/providers/credentials';
 import { connectDB } from '~~/server/db/db';
 import { User } from '~~/server/models/User';
@@ -49,7 +47,7 @@ export default NuxtAuthHandler({
     strategy: 'jwt',
   },
   callbacks: {
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }: { session: any; token: any }) {
       return {
         ...session,
         user: {
@@ -58,10 +56,10 @@ export default NuxtAuthHandler({
         },
       };
     },
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+    async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {
-        token.admin = (user as any).admin || false;
-        token.id = (user as any).id;
+        token.admin = user.admin || false;
+        token.id = user.id;
       }
       return token;
     },

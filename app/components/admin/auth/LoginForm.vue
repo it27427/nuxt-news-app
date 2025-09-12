@@ -30,16 +30,14 @@
 </template>
 
 <script setup lang="ts">
-  import { useAuth, useRuntimeConfig } from '#imports';
-  import { reactive, ref, watch } from 'vue';
-  import { useToast } from 'vue-toastification';
-
   import { navigateTo } from '#app';
+  import { useAuth } from '#imports';
   import BaseButton from '@/components/admin/common/BaseButton.vue';
   import BaseForm from '@/components/admin/common/BaseForm.vue';
   import BaseInput from '@/components/admin/common/BaseInput.vue';
+  import { reactive, ref, watch } from 'vue';
+  import { useToast } from 'vue-toastification';
 
-  const config = useRuntimeConfig();
   const toast = useToast();
 
   interface FormData {
@@ -53,10 +51,7 @@
     message?: string;
   }
 
-  const props = defineProps<{
-    form?: FormData;
-  }>();
-
+  const props = defineProps<{ form?: FormData }>();
   const emit = defineEmits<{
     (e: 'success', data: any): void;
     (e: 'error', errors: FormErrors): void;
@@ -111,23 +106,18 @@
     isLoading.value = true;
 
     try {
-      // redirect false => manual redirect + toast
       const result = await signIn('credentials', {
         email: localForm.email,
         password: localForm.password,
         redirect: false,
-        callbackUrl: '/admin/dashboard',
-        baseURL: config.public.authBaseURL,
       });
 
       if (result?.error) {
-        toast.error('ইমেল বা পাসওয়ার্ড বৈধ নয়।');
+        toast.error('ইমেল বা পাসওয়ার্ড ভুল');
         emit('error', { message: result.error });
       } else {
-        toast.success('সফলভাবে লগইন হয়েছে...');
-        emit('success', { message: 'সফলভাবে লগইন হয়েছে...' });
-
-        // redirect manually
+        toast.success('সফলভাবে লগইন হয়েছে');
+        emit('success', { message: 'সফলভাবে লগইন হয়েছে' });
         await navigateTo('/admin/dashboard');
       }
     } catch (error: any) {
