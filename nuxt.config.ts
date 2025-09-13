@@ -44,33 +44,31 @@ export default defineNuxtConfig({
   plugins: ['@/plugins/vue-toastification.ts'],
 
   runtimeConfig: {
-    baseURL: process.env.APP_BASE_URL || 'http://localhost:3000',
     mongodbUri: process.env.MONGODB_URI,
+    dbName: process.env.DB_NAME,
     auth: {
       secret: process.env.NUXT_AUTH_SECRET,
     },
+    openaiApiKey: process.env.OPENAI_API_KEY,
+    telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
     public: {
       appName: 'জনপথ',
       authBaseURL:
         process.env.NUXT_PUBLIC_AUTH_BASEURL ||
         'http://localhost:3000/api/auth',
+      baseURL: process.env.APP_BASE_URL || 'http://localhost:3000',
+      authJs: {
+        baseURL:
+          process.env.NUXT_PUBLIC_AUTH_BASEURL ||
+          'http://localhost:3000/api/auth',
+      },
     },
   },
 
   // @ts-ignore
   auth: {
-    // @ts-ignore
-    isEnabled: true,
-    baseURL:
-      process.env.NUXT_PUBLIC_AUTH_BASEURL || 'http://localhost:3000/api/auth',
     provider: {
       type: 'authjs',
-      defaultProvider: 'credentials',
-      addDefaultCallbackUrl: true,
-    },
-    //@ts-ignore
-    pages: {
-      signIn: '/admin/login',
     },
   },
 

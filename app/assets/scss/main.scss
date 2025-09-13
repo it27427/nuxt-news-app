@@ -230,10 +230,10 @@ $font-weights: (
 @layer components {
   /* TOPBAR */
   .topbar {
-    @apply bg-primary-dark flex items-center w-full h-11 xs:h-15 sm:h-16;
+    @apply bg-green-900 flex items-center w-full h-20 md:h-24; //h-11 xs:h-15 sm:h-16
 
     &-link {
-      @apply w-44 md:w-48 h-full border-b-4 border-transparent hover:border-b-white dark:hover:border-gray-300 flex items-center justify-center px-0.125;
+      @apply h-full py-1 border-b-4 border-transparent hover:border-b-white dark:hover:border-gray-300 flex items-center justify-center px-0.125;
 
       &.router-link-active,
       &.router-link-exact-active {

@@ -1,15 +1,17 @@
 import { NuxtAuthHandler } from '#auth';
 import { compare } from 'bcryptjs';
 import { Model } from 'mongoose';
-import CredentialsProviderCJS from 'next-auth/providers/credentials';
 import { connectDB } from '~~/server/db/db';
 import { User } from '~~/server/models/User';
 
+import CredentialsProviderCJS from 'next-auth/providers/credentials';
 const CredentialsProvider =
   (CredentialsProviderCJS as any).default || CredentialsProviderCJS;
 
+const config = useRuntimeConfig();
+
 export default NuxtAuthHandler({
-  secret: useRuntimeConfig().auth.secret,
+  secret: config.auth.secret,
   pages: {
     signIn: '/admin/login',
   },
@@ -47,26 +49,26 @@ export default NuxtAuthHandler({
     maxAge: 60 * 60,
   },
   callbacks: {
-    async session({ session, token }: { session: any; token: any }) {
-      return {
-        ...session,
-        user: {
-          email: token.email || session.user?.email,
-          id: token.id,
-          admin: token.admin || false,
-        },
-      };
+    async session({ session, token }) {
+      if (token) {
+        (session.user as any) = {
+          id: token.id as string,
+          email: token.email as string,
+          admin: token.admin as boolean,
+        };
+      }
+      return session;
     },
-    async jwt({ token, user }: { token: any; user?: any }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.admin = user.admin || false;
-        token.id = user.id;
+        token.id = (user as any).id;
         token.email = user.email;
+        token.admin = (user as any).admin || false;
       }
       return token;
     },
-    async redirect({ url, baseUrl }) {
-      return '/admin/dashboard';
-    },
+    // async redirect({ url, baseUrl }) {
+    //   return '/admin/dashboard';
+    // },
   },
 });

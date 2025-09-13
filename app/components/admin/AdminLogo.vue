@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <BaseLink to="/" class="topbar-link">
+    <BaseLink to="/admin/dashboard" class="topbar-link">
       <BasePicture class="logo">
         <BaseImage v-bind="brand" />
       </BasePicture>
