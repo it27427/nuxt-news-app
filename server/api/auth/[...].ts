@@ -51,6 +51,7 @@ export default NuxtAuthHandler({
       return {
         ...session,
         user: {
+          id: token.id,
           email: session.user?.email,
           admin: token.admin || false,
         },

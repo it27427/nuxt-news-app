@@ -1,5 +1,6 @@
 <template>
   <BaseForm @submit="handleLogin" class="animated-form">
+    <!-- Email -->
     <BaseInput
       id="email"
       label="Email Address"
@@ -7,8 +8,11 @@
       placeholder="Enter your email address"
       v-model="localForm.email"
       :error="errors.email"
+      :validated="validatedFields.email"
+      @update:modelValue="() => handleValidate('email')"
     />
 
+    <!-- Password -->
     <BaseInput
       id="password"
       label="Password"
@@ -16,6 +20,8 @@
       placeholder="Enter your password"
       v-model="localForm.password"
       :error="errors.password"
+      :validated="validatedFields.password"
+      @update:modelValue="() => handleValidate('password')"
     />
 
     <div class="mb-2"></div>
@@ -35,68 +41,62 @@
   import BaseButton from '@/components/admin/common/BaseButton.vue';
   import BaseForm from '@/components/admin/common/BaseForm.vue';
   import BaseInput from '@/components/admin/common/BaseInput.vue';
+  import { validateField } from '@/utils/fieldValidator';
+  import { validateMessages } from '@/utils/messages';
+  import type { LoginFormData, LoginFormErrors } from '@/utils/types';
   import { reactive, ref, watch } from 'vue';
   import { useToast } from 'vue-toastification';
 
-  const toast = useToast();
-
-  interface FormData {
-    email: string;
-    password: string;
-  }
-
-  interface FormErrors {
-    email?: string;
-    password?: string;
-    message?: string;
-  }
-
-  const props = defineProps<{ form?: FormData }>();
+  const props = defineProps<{ form?: LoginFormData }>();
   const emit = defineEmits<{
     (e: 'success', data: any): void;
-    (e: 'error', errors: FormErrors): void;
+    (e: 'error', errors: LoginFormErrors): void;
   }>();
 
-  const localForm = reactive<FormData>({
+  // Reactive local form
+  const localForm = reactive<LoginFormData>({
     email: props.form?.email || '',
     password: props.form?.password || '',
   });
 
-  const errors = reactive<FormErrors>({
-    email: '',
-    password: '',
+  // Reactive errors and validated fields
+  const errors = reactive<LoginFormErrors>({
+    email: undefined,
+    password: undefined,
+  });
+
+  const validatedFields = reactive({
+    email: false,
+    password: false,
   });
 
   const isLoading = ref(false);
+  const toast = useToast();
 
+  // Sync props.form with localForm safely
   if (props.form) {
     watch(localForm, () => {
-      if (props.form) Object.assign(props.form, localForm);
+      Object.assign(props.form!, localForm); // Non-null assertion
     });
   }
 
+  // Single field validation
+  function handleValidate(field: keyof LoginFormData) {
+    const value = localForm[field];
+    const error = validateField(field, value);
+    errors[field] = error || undefined;
+    validatedFields[field] = !error;
+  }
+
+  // Full form validation
   function validateForm() {
-    Object.keys(errors).forEach((key) => {
-      errors[key as keyof FormErrors] = '';
-    });
-
-    let hasError = false;
-
-    if (!localForm.email) {
-      errors.email = 'ইমেইল অবশ্যই বাধ্যতামূলক।';
-      hasError = true;
-    }
-
-    if (!localForm.password) {
-      errors.password = 'পাসওয়ার্ড অবশ্যই বাধ্যতামূলক।';
-      hasError = true;
-    }
-
-    return !hasError;
+    (Object.keys(localForm) as (keyof LoginFormData)[]).forEach(handleValidate);
+    return Object.values(errors).every((err) => !err);
   }
 
   const { signIn } = useAuth();
 
+  // Submit handler
   async function handleLogin() {
     if (!validateForm()) {
       emit('error', errors);
@@ -113,17 +113,19 @@
       });
 
       if (result?.error) {
-        toast.error('ইমেল বা পাসওয়ার্ড ভুল');
-        emit('error', { message: result.error });
+        const msg = result.error || validateMessages.loginFailed;
+        toast.error(msg);
+        emit('error', { message: msg });
       } else {
-        toast.success('সফলভাবে লগইন হয়েছে');
-        emit('success', { message: 'সফলভাবে লগইন হয়েছে' });
+        toast.success(validateMessages.loginSuccess);
+        emit('success', { message: validateMessages.loginSuccess });
         await navigateTo('/admin/dashboard');
       }
-    } catch (error: any) {
-      console.error('লগইন ত্রুটি (catch):', error);
-      toast.error('লগইন ব্যর্থ হয়েছে। সার্ভার ত্রুটি।');
-      emit('error', { message: 'লগইন ব্যর্থ হয়েছে। সার্ভার ত্রুটি।' });
+    } catch (err: any) {
+      console.error('Login error:', err);
+      const msg = validateMessages.server;
+      toast.error(msg);
+      emit('error', { message: msg });
     } finally {
       isLoading.value = false;
     }

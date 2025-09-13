@@ -64,16 +64,16 @@ export default defineNuxtConfig({
     isEnabled: true,
     disableServerSideAuth: false,
     originEnvKey: 'AUTH_ORIGIN',
-    baseURL: '/api/auth',
+    baseURL: process.env.AUTH_ORIGIN + '/api/auth',
     defaultProvider: 'credentials',
     provider: {
       type: 'authjs',
-      pages: {
-        signIn: '/admin/login',
-      },
+    },
+    pages: {
+      signIn: '/admin/login',
     },
     sessionRefresh: {
-      enablePeriodically: true,
+      enablePeriodically: false,
       enableOnWindowFocus: true,
     },
     globalAppMiddleware: {

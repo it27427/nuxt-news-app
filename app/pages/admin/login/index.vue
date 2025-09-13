@@ -1,14 +1,17 @@
 <template>
-  <div class="mt-10 w-full mx-auto md:w-36.5">
+  <div class="mt-10 w-full max-w-md mx-auto">
     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">
       {{ formTitle }}
     </h1>
+
     <LoginForm :form="form" @success="onSuccess" @error="onError" />
   </div>
 </template>
 
 <script setup lang="ts">
   import LoginForm from '@/components/admin/auth/LoginForm.vue';
+  import { validateMessages } from '@/utils/messages';
+  import type { LoginFormData } from '@/utils/types';
   import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
 
@@ -16,28 +19,24 @@
 
   const formTitle = ref('লগইন করুন');
 
-  interface FormData {
-    email: string;
-    password: string;
-  }
-
-  const form = reactive<FormData>({
+  const form = reactive<LoginFormData>({
     email: '',
     password: '',
   });
 
   const toast = useToast();
 
-  function onSuccess(formData: any) {
-    // শুধু toast দেখাবে, navigation LoginForm.vue-এ handle হবে
-    toast.success('সফলভাবে লগইন হয়েছে...');
+  function onSuccess(payload: any) {
+    toast.success(payload.message || validateMessages.loginSuccess);
   }
 
   function onError(errors: any) {
     console.log('লগইন ত্রুটি:', errors);
-    const errorMessage = errors.message || 'লগইন ব্যর্থ হয়েছে...';
-    toast.error(errorMessage);
-    if (errors.email) toast.error(errors.email);
-    if (errors.password) toast.error(errors.password);
+
+    // centralized messages
+    if (errors.message)
+      toast.error(errors.message || validateMessages.loginFailed);
+    if (errors.email) toast.error(errors.email.required);
+    if (errors.password) toast.error(errors.password.required);
   }
 </script>

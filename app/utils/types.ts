@@ -20,3 +20,14 @@ export interface ApiResponse<T = any> {
   data?: T;
   user?: any;
 }
+
+export interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+export interface LoginFormErrors {
+  email?: string;
+  password?: string;
+  message?: string;
+}
