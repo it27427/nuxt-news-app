@@ -33,6 +33,7 @@
         class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-400 hover:text-gray-600 transition-colors"
         @click="togglePasswordVisibility"
       >
+        <!-- Eye icon -->
         <svg
           v-if="!showPassword"
           xmlns="http://www.w3.org/2000/svg"
@@ -42,9 +43,22 @@
           stroke="currentColor"
           stroke-width="2"
         >
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-          <circle cx="12" cy="12" r="3" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 4.5C7.305 4.5 3.165 7.24 1.5 12c1.665 4.76 5.805 7.5 10.5 7.5s8.835-2.74 10.5-7.5C20.835 7.24 16.695 4.5 12 4.5z"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
+
+        <!-- Eye-off icon -->
+        <!-- Eye-off icon -->
         <svg
           v-else
           xmlns="http://www.w3.org/2000/svg"
@@ -54,8 +68,23 @@
           stroke="currentColor"
           stroke-width="2"
         >
+          <!-- Slash line -->
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" />
+
+          <!-- Eye outline -->
           <path
-            d="M17.94 17.94A5.94 5.94 0 0 1 12 20c-3.1 0-5.88-1.57-7.94-4.06M2.06 6.06a16.51 16.51 0 0 1 4.41-1.39A15.39 15.39 0 0 1 12 4c3.1 0 5.88 1.57 7.94 4.06M12 12a3 3 0 1 0-3 3 3 0 0 0 3-3zM1 1l22 22"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 4.5C7.305 4.5 3.165 7.24 1.5 12c1.665 4.76 5.805 7.5 10.5 7.5s8.835-2.74 10.5-7.5C20.835 7.24 16.695 4.5 12 4.5z"
+          />
+
+          <!-- Pupil (centered circle) -->
+          <circle
+            cx="12"
+            cy="12"
+            r="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           />
         </svg>
       </button>

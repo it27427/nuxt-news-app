@@ -12,12 +12,10 @@
 
 <script setup lang="ts">
   import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
-  import { validateMessages } from '@/utils/messages';
+  import type { RegFormData, RegFormErrors } from '@/utils/types';
   import { reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useToast } from 'vue-toastification';
-
-  import type { RegFormData, RegFormErrors } from '@/utils/types';
 
   definePageMeta({ layout: 'authentication' });
 
@@ -33,8 +31,11 @@
   const router = useRouter();
 
   // Success listener
-  function onSuccess(user: { userName: string }) {
-    toast.success(`${user.userName} ${validateMessages.registrationSuccess}`);
+  function onSuccess(payload: { user: { userName: string }; message: string }) {
+    const { user, message } = payload;
+
+    // Show success toast
+    toast.success(`${user.userName} ${message}`);
 
     // Redirect to login page after short delay
     setTimeout(() => {
