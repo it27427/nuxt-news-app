@@ -38,17 +38,10 @@
 </template>
 
 <script setup lang="ts">
+  import type { BaseButtonProps } from '@/utils/adminPropTypes';
   import { computed } from 'vue';
 
-  interface Props {
-    label: string;
-    type?: 'button' | 'submit' | 'reset';
-    variant?: 'primary' | 'secondary' | 'danger';
-    disabled?: boolean;
-    loading?: boolean;
-  }
-
-  const props = withDefaults(defineProps<Props>(), {
+  const props = withDefaults(defineProps<BaseButtonProps>(), {
     type: 'button',
     variant: 'primary',
     disabled: false,

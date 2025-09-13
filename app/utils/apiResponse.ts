@@ -1,5 +1,6 @@
 // /utils/apiResponse.ts
-import { errorMessages } from './messages';
+
+import { validateMessages } from './messages';
 
 interface ResponseData {
   success: boolean;
@@ -16,7 +17,7 @@ export function apiError(
   return {
     success: false,
     data: data || {},
-    message: message || errorMessages.server,
+    message: message || validateMessages.server,
     statusCode,
   };
 }

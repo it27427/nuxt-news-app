@@ -1,3 +1,5 @@
+// /app/pages/admin/register/index.vue
+
 <template>
   <div class="mt-10 w-full mx-auto md:w-36.5">
     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">
@@ -9,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
-  import { navigateTo } from '#imports';
   import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
-  import { errorMessages } from '@/utils/messages';
+  import { validateMessages } from '@/utils/messages';
   import { reactive, ref } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useToast } from 'vue-toastification';
 
   import type { RegFormData, RegFormErrors } from '@/utils/types';
@@ -28,14 +30,15 @@
   });
 
   const toast = useToast();
+  const router = useRouter();
 
   // Success listener
   function onSuccess(user: { userName: string }) {
-    toast.success(`${user.userName} ${errorMessages.registrationSuccess}`);
+    toast.success(`${user.userName} ${validateMessages.registrationSuccess}`);
 
     // Redirect to login page after short delay
     setTimeout(() => {
-      navigateTo('/admin/login');
+      router.push('/admin/login');
     }, 1000);
   }
 
