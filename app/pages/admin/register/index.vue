@@ -11,26 +11,17 @@
 <script setup lang="ts">
   import { navigateTo } from '#imports';
   import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
+  import { errorMessages } from '@/utils/messages';
   import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
+
+  import type { RegFormData, RegFormErrors } from '@/utils/types';
 
   definePageMeta({ layout: 'authentication' });
 
   const formTitle = ref('নিবন্ধন করুন');
 
-  interface FormData {
-    userName: string;
-    email: string;
-    password: string;
-  }
-
-  interface FormErrors {
-    userName?: string;
-    email?: string;
-    password?: string;
-  }
-
-  const form = reactive<FormData>({
+  const form = reactive<RegFormData>({
     userName: '',
     email: '',
     password: '',
@@ -40,7 +31,7 @@
 
   // Success listener
   function onSuccess(user: { userName: string }) {
-    toast.success(`${user.userName} সফলভাবে নিবন্ধিত হয়েছে।`);
+    toast.success(`${user.userName} ${errorMessages.registrationSuccess}`);
 
     // Redirect to login page after short delay
     setTimeout(() => {
@@ -48,8 +39,8 @@
     }, 1000);
   }
 
-  // Error listener (FormErrors টাইপ ব্যবহার)
-  function onError(errors: FormErrors) {
+  // Error listener
+  function onError(errors: RegFormErrors) {
     console.log('নিবন্ধন ত্রুটি:', errors);
 
     if (errors.userName) toast.error(errors.userName);
