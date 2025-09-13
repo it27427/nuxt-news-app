@@ -52,11 +52,14 @@ export default defineEventHandler(async (event) => {
       password: hashedPassword,
     });
 
+    // Success response: send user inside "user" object
     return apiSuccess(
       {
-        id: user._id.toString(),
-        userName: user.userName,
-        email: user.email,
+        user: {
+          id: user._id.toString(),
+          userName: user.userName,
+          email: user.email,
+        },
       },
       validateMessages.registrationSuccess,
       201

@@ -1,7 +1,5 @@
-// /app/pages/admin/register/index.vue
-
 <template>
-  <div class="mt-10 w-full mx-auto md:w-36.5">
+  <div class="mt-10 w-full max-w-md mx-auto">
     <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">
       {{ formTitle }}
     </h1>
@@ -17,7 +15,9 @@
   import { useRouter } from 'vue-router';
   import { useToast } from 'vue-toastification';
 
-  definePageMeta({ layout: 'authentication' });
+  definePageMeta({
+    layout: 'authentication',
+  });
 
   const formTitle = ref('নিবন্ধন করুন');
 
@@ -32,21 +32,20 @@
 
   // Success listener
   function onSuccess(payload: { user: { userName: string }; message: string }) {
-    const { user, message } = payload;
+    toast.success(`${payload.user.userName} ${payload.message}`);
 
-    // Show success toast
-    toast.success(`${user.userName} ${message}`);
-
-    // Redirect to login page after short delay
+    // Redirect to login page after 1 second
     setTimeout(() => {
       router.push('/admin/login');
     }, 1000);
+
+    // Reset form fields (also done inside RegisterForm.vue, but safe here)
+    Object.keys(form).forEach((key) => (form[key as keyof RegFormData] = ''));
   }
 
   // Error listener
   function onError(errors: RegFormErrors) {
     console.log('নিবন্ধন ত্রুটি:', errors);
-
     if (errors.userName) toast.error(errors.userName);
     if (errors.email) toast.error(errors.email);
     if (errors.password) toast.error(errors.password);

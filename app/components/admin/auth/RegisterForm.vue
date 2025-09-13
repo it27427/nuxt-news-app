@@ -1,5 +1,3 @@
-// /app/components/admin/auth/RegisterForm.vue
-
 <template>
   <BaseForm @submit="handleRegister" class="animated-form">
     <!-- User Name -->
@@ -54,11 +52,12 @@
   import BaseForm from '@/components/admin/common/BaseForm.vue';
   import BaseInput from '@/components/admin/common/BaseInput.vue';
   import { validateField } from '@/utils/fieldValidator';
-  import type { ApiResponse, RegFormData, RegFormErrors } from '@/utils/types';
+  import type { RegFormData, RegFormErrors } from '@/utils/types';
   import { reactive, ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useToast } from 'vue-toastification';
 
   const props = defineProps<{ form?: RegFormData }>();
-
   const emit = defineEmits<{
     (e: 'success', data: any): void;
     (e: 'error', errors: RegFormErrors): void;
@@ -83,8 +82,10 @@
   });
 
   const isLoading = ref(false);
+  const toast = useToast();
+  const router = useRouter();
 
-  // Handle single field validation
+  // Single field validation
   function handleValidate(field: keyof RegFormData) {
     const value = localForm[field];
     const error = validateField(field, value);
@@ -98,6 +99,18 @@
     return Object.values(errors).every((err) => !err);
   }
 
+  // Correct API response typing
+  interface RegisterApiResponse {
+    success: boolean;
+    message?: string;
+    data?:
+      | {
+          user?: { id: string; userName: string; email: string };
+          [key: string]: any;
+        }
+      | RegFormErrors;
+  }
+
   // Submit handler
   async function handleRegister() {
     if (!validateForm()) {
@@ -107,27 +120,37 @@
 
     try {
       isLoading.value = true;
-      const response = await $fetch<ApiResponse<RegFormErrors>>(
-        '/api/auth/register',
-        {
-          method: 'POST',
-          body: { ...localForm },
-        }
-      );
 
+      const response = await $fetch<RegisterApiResponse>('/api/auth/register', {
+        method: 'POST',
+        body: { ...localForm },
+      });
+
+      // Handle validation errors
       if (response?.success === false && response.data) {
-        Object.assign(errors, response.data);
+        Object.assign(errors, response.data as RegFormErrors);
         Object.keys(validatedFields).forEach((key) => {
           validatedFields[key as keyof typeof validatedFields] = !(
-            response.data && response.data[key as keyof RegFormErrors]
-          );
+            response.data as RegFormErrors
+          )[key as keyof RegFormErrors];
         });
-        emit('error', response.data);
+        emit('error', response.data as RegFormErrors);
         return;
       }
 
-      if (response?.success && response.user) {
-        emit('success', response.user);
+      // Handle success
+      if (
+        response?.success &&
+        response.data &&
+        'user' in response.data &&
+        response.data.user
+      ) {
+        emit('success', {
+          user: response.data.user,
+          message: response.message,
+        });
+
+        // Reset form fields
         Object.keys(localForm).forEach(
           (key) => (localForm[key as keyof RegFormData] = '')
         );
@@ -135,6 +158,11 @@
           (key) =>
             (validatedFields[key as keyof typeof validatedFields] = false)
         );
+
+        // Redirect after 1 second
+        setTimeout(() => {
+          router.push('/admin/login');
+        }, 1000);
       }
     } catch (err: any) {
       console.error('API error:', err);
