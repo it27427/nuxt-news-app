@@ -1,4 +1,3 @@
-// server/api/auth/[...].ts
 import { NuxtAuthHandler } from '#auth';
 import { compare } from 'bcryptjs';
 import { Model } from 'mongoose';
@@ -45,14 +44,15 @@ export default NuxtAuthHandler({
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 60 * 60,
   },
   callbacks: {
     async session({ session, token }: { session: any; token: any }) {
       return {
         ...session,
         user: {
+          email: token.email || session.user?.email,
           id: token.id,
-          email: session.user?.email,
           admin: token.admin || false,
         },
       };
@@ -61,8 +61,12 @@ export default NuxtAuthHandler({
       if (user) {
         token.admin = user.admin || false;
         token.id = user.id;
+        token.email = user.email;
       }
       return token;
+    },
+    async redirect({ url, baseUrl }) {
+      return '/admin/dashboard';
     },
   },
 });

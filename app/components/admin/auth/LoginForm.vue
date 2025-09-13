@@ -1,6 +1,5 @@
 <template>
   <BaseForm @submit="handleLogin" class="animated-form">
-    <!-- Email -->
     <BaseInput
       id="email"
       label="Email Address"
@@ -12,7 +11,6 @@
       @update:modelValue="() => handleValidate('email')"
     />
 
-    <!-- Password -->
     <BaseInput
       id="password"
       label="Password"
@@ -36,30 +34,21 @@
 </template>
 
 <script setup lang="ts">
-  import { navigateTo } from '#app';
-  import { useAuth } from '#imports';
+  import { navigateTo, useAuth } from '#imports';
   import BaseButton from '@/components/admin/common/BaseButton.vue';
   import BaseForm from '@/components/admin/common/BaseForm.vue';
   import BaseInput from '@/components/admin/common/BaseInput.vue';
   import { validateField } from '@/utils/fieldValidator';
   import { validateMessages } from '@/utils/messages';
   import type { LoginFormData, LoginFormErrors } from '@/utils/types';
-  import { reactive, ref, watch } from 'vue';
+  import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
 
-  const props = defineProps<{ form?: LoginFormData }>();
-  const emit = defineEmits<{
-    (e: 'success', data: any): void;
-    (e: 'error', errors: LoginFormErrors): void;
-  }>();
-
-  // Reactive local form
   const localForm = reactive<LoginFormData>({
-    email: props.form?.email || '',
-    password: props.form?.password || '',
+    email: '',
+    password: '',
   });
 
-  // Reactive errors and validated fields
   const errors = reactive<LoginFormErrors>({
     email: undefined,
     password: undefined,
@@ -73,14 +62,6 @@
   const isLoading = ref(false);
   const toast = useToast();
 
-  // Sync props.form with localForm safely
-  if (props.form) {
-    watch(localForm, () => {
-      Object.assign(props.form!, localForm); // Non-null assertion
-    });
-  }
-
-  // Single field validation
   function handleValidate(field: keyof LoginFormData) {
     const value = localForm[field];
     const error = validateField(field, value);
@@ -88,7 +69,6 @@
     validatedFields[field] = !error;
   }
 
-  // Full form validation
   function validateForm() {
     (Object.keys(localForm) as (keyof LoginFormData)[]).forEach(handleValidate);
     return Object.values(errors).every((err) => !err);
@@ -96,12 +76,8 @@
 
   const { signIn } = useAuth();
 
-  // Submit handler
   async function handleLogin() {
-    if (!validateForm()) {
-      emit('error', errors);
-      return;
-    }
+    if (!validateForm()) return toast.error('ইমেল এবং পাসওয়ার্ড যাচাই করুন।');
 
     isLoading.value = true;
 
@@ -113,19 +89,16 @@
       });
 
       if (result?.error) {
-        const msg = result.error || validateMessages.loginFailed;
+        let msg = 'ইমেল বা পাসওয়ার্ড ভুল হয়েছে।';
         toast.error(msg);
-        emit('error', { message: msg });
       } else {
         toast.success(validateMessages.loginSuccess);
-        emit('success', { message: validateMessages.loginSuccess });
-        await navigateTo('/admin/dashboard');
+
+        navigateTo('/admin/dashboard');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Login error:', err);
-      const msg = validateMessages.server;
-      toast.error(msg);
-      emit('error', { message: msg });
+      toast.error(validateMessages.server);
     } finally {
       isLoading.value = false;
     }

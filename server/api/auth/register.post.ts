@@ -1,14 +1,12 @@
 // /server/api/register.post.ts
 
+import { validateField } from '@/utils/fieldValidator';
+import { validateMessages } from '@/utils/messages';
+import type { RegFormKeys } from '@/utils/types';
 import bcrypt from 'bcryptjs';
 import { defineEventHandler, readBody } from 'h3';
 import { connectDB } from '~~/server/db/db';
 import { User } from '~~/server/models/User';
-
-import { apiError, apiSuccess } from '@/utils/apiResponse';
-import { validateField } from '@/utils/fieldValidator';
-import { validateMessages } from '@/utils/messages';
-import type { RegFormKeys } from '@/utils/types';
 
 export default defineEventHandler(async (event) => {
   try {
@@ -21,30 +19,30 @@ export default defineEventHandler(async (event) => {
 
     const errors: Record<string, string> = {};
 
-    // Centralized validation using validateField
-    const formFields: RegFormKeys[] = ['userName', 'email', 'password'];
-    formFields.forEach((field) => {
-      const value = body[field] ?? '';
-      const error = validateField(field, value);
+    // centralized validation
+    ['userName', 'email', 'password'].forEach((field) => {
+      const value = body[field as RegFormKeys] ?? '';
+      const error = validateField(field as RegFormKeys, value);
       if (error) errors[field] = error;
     });
 
-    // Validation failed
-    if (Object.keys(errors).length > 0) {
-      return apiError(errors, validateMessages.validationFailed, 422);
+    if (Object.keys(errors).length) {
+      return {
+        success: false,
+        message: validateMessages.validationFailed,
+        data: errors,
+      };
     }
 
-    // Check if email already exists
     const existing = await User.findOne({ email });
     if (existing) {
-      return apiError(
-        { email: validateMessages.email.exists },
-        validateMessages.emailAlreadyUsed,
-        409
-      );
+      return {
+        success: false,
+        message: validateMessages.emailAlreadyUsed,
+        data: { email: validateMessages.email.exists },
+      };
     }
 
-    // Hash password and create user
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       userName,
@@ -52,20 +50,23 @@ export default defineEventHandler(async (event) => {
       password: hashedPassword,
     });
 
-    // Success response: send user inside "user" object
-    return apiSuccess(
-      {
+    return {
+      success: true,
+      message: validateMessages.registrationSuccess,
+      data: {
         user: {
           id: user._id.toString(),
           userName: user.userName,
           email: user.email,
         },
       },
-      validateMessages.registrationSuccess,
-      201
-    );
+    };
   } catch (err) {
-    console.error('নিবন্ধনের সময় সার্ভার ত্রুটি:', err);
-    return apiError({}, validateMessages.server, 500);
+    console.error('Registration error:', err);
+    return {
+      success: false,
+      message: validateMessages.server,
+      data: {},
+    };
   }
 });

@@ -5,20 +5,12 @@ export interface RegFormData {
   email: string;
   password: string;
 }
-
-export type RegFormKeys = keyof RegFormData; // 'userName' | 'email' | 'password'
+export type RegFormKeys = keyof RegFormData;
 
 export interface RegFormErrors {
   userName?: string;
   email?: string;
   password?: string;
-}
-
-export interface ApiResponse<T = any> {
-  success: boolean;
-  message?: string;
-  data?: T;
-  user?: any;
 }
 
 export interface LoginFormData {
@@ -30,4 +22,10 @@ export interface LoginFormErrors {
   email?: string;
   password?: string;
   message?: string;
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  message?: string;
+  data?: T;
 }

@@ -29,7 +29,6 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    '@nuxt/content',
     '@nuxt/image',
     '@nuxt/icon',
     '@nuxt/test-utils',
@@ -45,8 +44,8 @@ export default defineNuxtConfig({
   plugins: ['@/plugins/vue-toastification.ts'],
 
   runtimeConfig: {
-    mongodbUri: process.env.MONGODB_URI,
     baseURL: process.env.APP_BASE_URL || 'http://localhost:3000',
+    mongodbUri: process.env.MONGODB_URI,
     auth: {
       secret: process.env.NUXT_AUTH_SECRET,
     },
@@ -55,31 +54,24 @@ export default defineNuxtConfig({
       authBaseURL:
         process.env.NUXT_PUBLIC_AUTH_BASEURL ||
         'http://localhost:3000/api/auth',
-      AUTH_ORIGIN: process.env.AUTH_ORIGIN || 'http://localhost:3000',
     },
   },
 
   // @ts-ignore
   auth: {
+    // @ts-ignore
     isEnabled: true,
-    disableServerSideAuth: false,
-    originEnvKey: 'AUTH_ORIGIN',
-    baseURL: process.env.AUTH_ORIGIN + '/api/auth',
-    defaultProvider: 'credentials',
+    baseURL:
+      process.env.NUXT_PUBLIC_AUTH_BASEURL || 'http://localhost:3000/api/auth',
     provider: {
       type: 'authjs',
+      defaultProvider: 'credentials',
+      addDefaultCallbackUrl: true,
     },
+    //@ts-ignore
     pages: {
       signIn: '/admin/login',
     },
-    sessionRefresh: {
-      enablePeriodically: false,
-      enableOnWindowFocus: true,
-    },
-    globalAppMiddleware: {
-      isEnabled: false,
-    },
-    ignorePaths: ['/admin/login', '/', '/providers', '/**/*.{js,css}'],
   },
 
   routeRules: {
@@ -87,15 +79,11 @@ export default defineNuxtConfig({
     '/popular': { redirect: '/popular/read/' },
     '/admin/auth/': { redirect: '/admin/login/' },
     '/admin/': { redirect: '/admin/dashboard/' },
-    '/session': { redirect: '/api/auth/session' },
     '/api/auth/**': {
       cors: true,
       headers: { 'Access-Control-Allow-Origin': '*' },
     },
   },
-
-  // @ts-ignore
-  content: {},
 
   // @ts-ignore
   colorMode: {
