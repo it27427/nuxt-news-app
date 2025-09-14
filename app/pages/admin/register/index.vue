@@ -12,13 +12,14 @@
 
     <div class="flex items-center justify-center gap-2 mt-8">
       <p class="text-md text-dark dark:text-light">ইতিমধ্যে অ্যাকাউন্ট আছে?</p>
-
-      <BaseLink
-        to="/admin/login"
-        class="text-md text-dark dark:text-white font-medium underline transition-colors hover:text-primary-dark dark:hover:text-primary"
-      >
-        লগইন করুন
-      </BaseLink>
+      <client-only>
+        <BaseLink
+          to="/admin/login"
+          class="text-md text-dark dark:text-white font-medium underline transition-colors hover:text-primary-dark dark:hover:text-primary"
+        >
+          লগইন করুন
+        </BaseLink>
+      </client-only>
     </div>
   </div>
 </template>

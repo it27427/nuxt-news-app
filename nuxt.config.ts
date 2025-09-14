@@ -53,14 +53,12 @@ export default defineNuxtConfig({
     telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
     public: {
       appName: 'জনপথ',
-      authBaseURL:
-        process.env.NUXT_PUBLIC_AUTH_BASEURL ||
-        'http://localhost:3000/api/auth',
-      baseURL: process.env.APP_BASE_URL || 'http://localhost:3000',
+      apiBase:
+        process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000/api/auth',
+      baseURL: process.env.PUBLIC_BASE_URL || 'http://localhost:3000',
       authJs: {
         baseURL:
-          process.env.NUXT_PUBLIC_AUTH_BASEURL ||
-          'http://localhost:3000/api/auth',
+          process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000/api/auth',
       },
     },
   },

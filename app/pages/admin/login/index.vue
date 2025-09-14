@@ -12,13 +12,14 @@
 
     <div class="flex items-center justify-center gap-2 mt-8">
       <p class="text-md text-dark dark:text-light">কোন অ্যাকাউন্ট নেই?</p>
-
-      <BaseLink
-        to="/admin/register"
-        class="text-md text-dark dark:text-white font-medium underline transition-colors hover:text-primary-dark dark:hover:text-primary"
-      >
-        নিবন্ধন করুন
-      </BaseLink>
+      <client-only>
+        <BaseLink
+          to="/admin/register"
+          class="text-md text-dark dark:text-white font-medium underline transition-colors hover:text-primary-dark dark:hover:text-primary"
+        >
+          নিবন্ধন করুন
+        </BaseLink>
+      </client-only>
     </div>
   </div>
 </template>

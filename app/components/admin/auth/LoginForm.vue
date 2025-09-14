@@ -74,7 +74,7 @@
     return Object.values(errors).every((err) => !err);
   }
 
-  const { signIn } = useAuth();
+  const { signIn, getSession } = useAuth();
 
   async function handleLogin() {
     if (!validateForm()) return toast.error('ইমেল এবং পাসওয়ার্ড যাচাই করুন।');
@@ -93,7 +93,7 @@
         toast.error(msg);
       } else {
         toast.success(validateMessages.loginSuccess);
-
+        await getSession();
         navigateTo('/admin/dashboard');
       }
     } catch (err) {

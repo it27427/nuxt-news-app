@@ -24,7 +24,7 @@
   import { computed } from 'vue';
 
   definePageMeta({
-    auth: true,
+    // auth: true,
     middleware: ['auth-admin'],
     layout: 'admin',
   });
