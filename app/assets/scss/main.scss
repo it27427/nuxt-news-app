@@ -9,58 +9,9 @@
 @tailwind utilities;
 
 /*=======================================================
-              🎨 Custom Application Fonts
+              🎨 Application Fonts
 =========================================================*/
-$family: 'Noto Serif Bengali', serif, Helvetica, Arial, sans-serif;
-$font-path: '../fonts/NotoSerifBengali';
-$font-weights: (
-  normal: 400,
-  medium: 500,
-  semibold: 600,
-  bold: 700,
-);
-
-@mixin font-face($family, $weight, $style: normal) {
-  $file: 'NotoSerifBengali-';
-
-  @if $weight == 400 {
-    $file: $file + 'Regular';
-  } @else if $weight == 500 {
-    $file: $file + 'Medium';
-  } @else if $weight == 600 {
-    $file: $file + 'SemiBold';
-  } @else if $weight == 700 {
-    $file: $file + 'Bold';
-  } @else {
-    $file: $file + 'Regular';
-  }
-
-  @font-face {
-    font-family: $family;
-    src:
-      url('#{$font-path}/#{$file}.woff2') format('woff2'),
-      url('#{$font-path}/#{$file}.woff') format('woff');
-    font-display: swap;
-    font-style: $style;
-    font-weight: $weight;
-  }
-}
-
-@mixin customfont($family, $weight) {
-  $numeric-weight: if(
-    map.has-key($font-weights, $weight),
-    map.get($font-weights, $weight),
-    $weight
-  );
-
-  @include font-face($family, $numeric-weight);
-}
-
-/* LOAD FONTS */
-@include customfont($family, normal);
-@include customfont($family, medium);
-@include customfont($family, semibold);
-@include customfont($family, bold);
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400..800&family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@100..900&family=Tiro+Bangla:ital@0;1&display=swap');
 
 /*=======================================================
                         BASE LAYER
@@ -76,7 +27,7 @@ $font-weights: (
   }
 
   body {
-    @apply bg-gray-200 text-dark dark:bg-dark-surface dark:text-white font-bengali text-sizeDefault font-normal;
+    @apply bg-gray-200 text-dark dark:bg-dark-surface dark:text-white font-base text-sizeDefault font-normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

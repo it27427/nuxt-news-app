@@ -5,13 +5,13 @@
         v-if="lightMode"
         class="text-gray-100 text-3xl transition-color hover:text-white"
       >
-        ☀︎
+        <Icon name="line-md:sunny-loop" width="32" height="32" />
       </span>
       <span
         v-else
-        class="text-gray-100 text-3xl inline-block -rotate-90 transition-color hover:text-white"
+        class="text-gray-100 text-3xl inline-block transition-color hover:text-white"
       >
-        ⏾
+        <Icon name="emojione-monotone:crescent-moon" width="32" height="32" />
       </span>
     </button>
   </ClientOnly>

@@ -43,13 +43,18 @@ const config: Config = {
           'linear-gradient(128deg, rgba(64, 175, 255, 1) 0%, rgba(63, 97, 255, 1) 100%)',
       },
       fontFamily: {
-        bengali: [
+        base: [
           '"Noto Serif Bengali"',
-          'serif',
-          'Helvetica',
-          'Arial',
+          '"Tiro Bangla"',
+          '"Hind Siliguri"',
+          '"Baloo Da 2"',
           'sans-serif',
+          'serif',
         ],
+        bengali: ['"Noto Serif Bengali"', 'serif'],
+        baloda: ['"Baloo Da 2"', 'sans-serif'],
+        tino: ['"Tiro Bangla"', 'sans-serif'],
+        hind: ['"Hind Siliguri"', 'sans-serif'],
       },
       fontSize: {
         sizeSmall: ['0.90625rem', { lineHeight: '1.375' }],
