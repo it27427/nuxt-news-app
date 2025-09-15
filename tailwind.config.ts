@@ -81,7 +81,11 @@ const config: Config = {
         63: '63rem', // 1008px
         36.5: '36.5rem', //584px
         hmw: '80rem', //1280px
-        'footer-col': '12.5',
+        'footer-col': '12.5rem', //200px
+        'dash-head-xl': '10.9375rem', //175px
+        'dash-head-sm': '5.0625rem', //81px
+        'screen-minus-xl': 'calc(100% - 10.9375rem)', //100% - 175px
+        'screen-minus-sm': 'calc(100% - 5.0625rem)', //100% - 81px
       },
       maxWidth: {
         '80p': '80%',
