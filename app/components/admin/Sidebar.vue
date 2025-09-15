@@ -35,7 +35,8 @@
       </ul>
     </Header>
 
-    <nav class="flex-1 p-2">
+    <nav class="flex-1 flex flex-col gap-2 p-2">
+      <!-- PUBLISHER-LIST -->
       <ul class="flex flex-col gap-2">
         <li>
           <BaseLink
@@ -82,7 +83,7 @@
             ]"
           >
             <Icon
-              name="clarity:list-line"
+              name="fluent-mdl2:product-list"
               width="32"
               height="32"
               class="text-sizeXXl"
@@ -113,7 +114,7 @@
             ]"
           >
             <Icon
-              name="solar:hashtag-square-outline"
+              name="streamline-freehand:task-list-pin-1"
               width="32"
               height="32"
               class="text-sizeXXl"
@@ -121,18 +122,143 @@
             <span v-show="props.open">ট্যাগ তালিকা</span>
           </BaseLink>
         </li>
+
+        <li>
+          <BaseLink
+            to="/admin/automations"
+            class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base lg:text-lg text-dark-surface dark:text-light hover:border-b-gray-200 hover:rounded-md hover:bg-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white transition-all"
+            :class="[
+              props.open ? 'justify-start' : 'justify-center border-b-0',
+            ]"
+          >
+            <Icon
+              name="carbon:ibm-event-automation"
+              width="32"
+              height="32"
+              class="text-sizeXXl"
+            />
+            <span v-show="props.open">স্বয়ংক্রিয়তা</span>
+          </BaseLink>
+        </li>
       </ul>
+
+      <!-- ADMIN-LIST -->
+      <ul class="flex flex-col gap-2">
+        <li>
+          <BaseLink
+            to="/admin/create-user"
+            class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base lg:text-lg text-dark-surface dark:text-light hover:border-b-gray-200 hover:rounded-md hover:bg-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white transition-all"
+            :class="[
+              props.open ? 'justify-start' : 'justify-center border-b-0',
+            ]"
+          >
+            <Icon
+              name="famicons:create-outline"
+              width="32"
+              height="32"
+              class="text-sizeXXl"
+            />
+            <span v-show="props.open">ব্যবহারকারী তৈরি করুন</span>
+          </BaseLink>
+        </li>
+
+        <li>
+          <BaseLink
+            to="/admin/users-list"
+            class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base lg:text-lg text-dark-surface dark:text-light hover:border-b-gray-200 hover:rounded-md hover:bg-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white transition-all"
+            :class="[
+              props.open ? 'justify-start' : 'justify-center border-b-0',
+            ]"
+          >
+            <Icon
+              name="garden:user-list-stroke-16"
+              width="32"
+              height="32"
+              class="text-sizeXXl"
+            />
+            <span v-show="props.open">ব্যবহারকারীর তালিকা</span>
+          </BaseLink>
+        </li>
+
+        <li>
+          <BaseLink
+            to="/admin/create-tag"
+            class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base lg:text-lg text-dark-surface dark:text-light hover:border-b-gray-200 hover:rounded-md hover:bg-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white transition-all"
+            :class="[
+              props.open ? 'justify-start' : 'justify-center border-b-0',
+            ]"
+          >
+            <Icon name="oui:tag" width="32" height="32" class="text-sizeXXl" />
+            <span v-show="props.open">ট্যাগ তৈরি করুন</span>
+          </BaseLink>
+        </li>
+
+        <li>
+          <BaseLink
+            to="/admin/drafts"
+            class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base lg:text-lg text-dark-surface dark:text-light hover:border-b-gray-200 hover:rounded-md hover:bg-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white transition-all"
+            :class="[
+              props.open ? 'justify-start' : 'justify-center border-b-0',
+            ]"
+          >
+            <Icon
+              name="fluent:drafts-20-regular"
+              width="32"
+              height="32"
+              class="text-sizeXXl"
+            />
+            <span v-show="props.open">সংরক্ষণাগার</span>
+          </BaseLink>
+        </li>
+
+        <li>
+          <BaseLink
+            to="/admin/approval"
+            class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base lg:text-lg text-dark-surface dark:text-light hover:border-b-gray-200 hover:rounded-md hover:bg-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white transition-all"
+            :class="[
+              props.open ? 'justify-start' : 'justify-center border-b-0',
+            ]"
+          >
+            <Icon
+              name="fluent:approvals-app-32-regular"
+              width="32"
+              height="32"
+              class="text-sizeXXl"
+            />
+            <span v-show="props.open">অনুমোদন</span>
+          </BaseLink>
+        </li>
+      </ul>
+
+      <!-- LOG-OUT -->
+      <Button
+        @click="logout"
+        class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base lg:text-lg text-dark-surface dark:text-light hover:border-b-gray-200 hover:rounded-md hover:bg-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white transition-all"
+        :class="[props.open ? 'justify-start' : 'justify-center border-b-0']"
+      >
+        <Icon
+          name="ri:logout-circle-r-line"
+          width="32"
+          height="32"
+          class="text-sizeXXl"
+        />
+        <span v-if="props.open">লগ আউট</span>
+      </Button>
     </nav>
   </aside>
 </template>
 
 <script setup lang="ts">
+  import Button from '@/components/admin/global/Button.vue';
   import CollapseButton from '@/components/admin/global/CollapseButton.vue';
   import BaseLink from '@/components/base/BaseLink.vue';
   import Header from '@/components/global/layouts/Header.vue';
+  import { useCustomAuth } from '@/composables/useCustomAuth';
 
   const props = defineProps<{ open: boolean }>();
   const emit = defineEmits<{ (e: 'toggle'): void }>();
 
   const toggleSidebar = () => emit('toggle');
+
+  const { logout } = useCustomAuth();
 </script>

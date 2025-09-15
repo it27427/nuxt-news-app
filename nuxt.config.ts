@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   srcDir: process.env.NUXT_SRC_DIR || 'app/',
 
   imports: {
-    dirs: ['content', 'composables', 'server', 'shared'],
+    dirs: ['content', 'server', 'shared', 'composables'],
     presets: [
       {
         from: 'vue',
@@ -130,6 +130,9 @@ export default defineNuxtConfig({
         '@': fileURLToPath(new URL('./app/', import.meta.url)),
         '@components': fileURLToPath(
           new URL('./app/components/', import.meta.url)
+        ),
+        '@composables': fileURLToPath(
+          new URL('./app/composables/', import.meta.url)
         ),
         '@layouts': fileURLToPath(new URL('./app/layouts/', import.meta.url)),
         '@assets': fileURLToPath(new URL('./app/assets/', import.meta.url)),
