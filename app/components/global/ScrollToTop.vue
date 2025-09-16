@@ -1,7 +1,10 @@
 <template>
   <div
     ref="scrollTopButton"
-    class="sticky w-10 ml-auto flex justify-end bottom-12 right-5 md:bottom-0 md:right-0 md:pb-1 pr-5 z-modal"
+    :class="[
+      props.customClass,
+      'sticky w-10 ml-auto flex justify-end bottom-12 right-5 md:bottom-0 md:right-0 md:pb-1 lg:pr-5 z-modal',
+    ]"
   >
     <div
       :class="[
@@ -35,10 +38,14 @@
 <script setup lang="ts">
   import { onMounted, onUnmounted, ref } from 'vue';
 
+  const props = defineProps<{
+    customClass?: string;
+  }>();
+
   const isVisible = ref(false);
 
   const handleScroll = () => {
-    isVisible.value = window.scrollY > 200; // show after scrolling 100px
+    isVisible.value = window.scrollY > 200;
   };
 
   const scrollToTop = () => {

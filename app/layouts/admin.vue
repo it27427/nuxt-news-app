@@ -3,11 +3,6 @@
     <!-- Header -->
     <Header />
 
-    <!-- Offcanvas for tablet/mobile -->
-    <div class="lg:hidden">
-      <Offcanvas :menus="adminMenus" />
-    </div>
-
     <div class="flex">
       <!-- Desktop Sidebar -->
       <Sidebar
@@ -26,12 +21,21 @@
           'ml-0': screenWidth < 1024,
         }"
       >
+        <!-- Offcanvas for tablet/mobile -->
+        <div class="lg:hidden">
+          <Offcanvas :menus="adminMenus" />
+        </div>
+        <!-- DASHBOARD-BODY-CONTENT -->
         <main class="p-6 min-h-screen">
           <slot />
         </main>
-        <Footer class="flex-1" />
+        <!-- DASHBOARD-FOOTER -->
+        <Footer class="w-full h-12 flex items-center justify-center" />
       </div>
     </div>
+
+    <!-- ScrollToTop -->
+    <ScrollToTop />
   </div>
 </template>
 
@@ -40,6 +44,7 @@
   import Header from '@/components/admin/Header.vue';
   import Sidebar from '@/components/admin/Sidebar.vue';
   import Offcanvas from '@/components/admin/global/offcanvas/Offcanvas.vue';
+  import ScrollToTop from '@/components/global/ScrollToTop.vue';
   import { adminMenus } from '@/menus/adminMenus';
   import { onBeforeUnmount, onMounted, ref } from 'vue';
 
