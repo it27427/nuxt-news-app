@@ -52,6 +52,7 @@
     open: boolean;
     menus: MenuProps[];
   }>();
+
   const emit = defineEmits<{ (e: 'toggle'): void }>();
 
   const toggleSidebar = () => emit('toggle');

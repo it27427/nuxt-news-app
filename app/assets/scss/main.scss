@@ -107,9 +107,14 @@
     @apply relative after:inline-block after:w-4 after:text-left after:animate-ellipsis;
   }
 
-  .scrollbar-none::-webkit-scrollbar,
   .scrollbar-none {
     scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    scrollbar-width: none;
+    display: none;
   }
 
   /* MAX-WIDTH */
