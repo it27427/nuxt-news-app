@@ -1,13 +1,15 @@
 <template>
   <p class="font-normal">
-    কপিরাইট &copy; <span class="font-sans">{{ currentYear }}</span>
-    <span class="font-bold"> জনপথ.কম</span> &mdash; সর্বস্বত্ব সংরক্ষিত।
+    কপিরাইট &copy;
+    <span class="font-mono">{{ currentYear }}</span>
+    <span class="font-bold">&nbsp;জনপথ.কম</span>
+    &mdash; সর্বস্বত্ব সংরক্ষিত।
   </p>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+  import { ref } from 'vue';
 
-const getCurrentFullYear = new Date().getFullYear();
-const currentYear = ref(getCurrentFullYear);
+  const getCurrentFullYear = new Date().getFullYear();
+  const currentYear = ref(getCurrentFullYear);
 </script>

@@ -30,7 +30,9 @@
           <slot />
         </main>
         <!-- DASHBOARD-FOOTER -->
-        <Footer class="w-full h-12 flex items-center justify-center" />
+        <Footer
+          class="bg-white text-dark dark:bg-slate-800 dark:text-white w-full h-12 flex items-center justify-center"
+        />
       </div>
     </div>
 
