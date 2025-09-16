@@ -28,6 +28,11 @@
 
   body {
     @apply bg-gray-200 text-dark dark:bg-dark-surface dark:text-white font-base text-sizeDefault font-normal;
+    overflow-x: hidden;
+    position: relative;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

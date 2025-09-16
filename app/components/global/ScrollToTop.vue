@@ -2,8 +2,8 @@
   <div
     ref="scrollTopButton"
     :class="[
+      'sticky bottom-12 right-5 w-10 h-10 ml-auto flex items-center justify-center md:bottom-0 md:right-0 md:pb-1 lg:pr-5 z-modal',
       props.customClass,
-      'sticky w-10 ml-auto flex justify-end bottom-12 right-5 md:bottom-0 md:right-0 md:pb-1 lg:pr-5 z-modal',
     ]"
   >
     <div
