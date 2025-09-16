@@ -86,6 +86,7 @@ const config: Config = {
         'dash-head-sm': '5.0625rem', //81px
         'screen-minus-xl': 'calc(100% - 10.9375rem)', //100% - 175px
         'screen-minus-sm': 'calc(100% - 5.0625rem)', //100% - 81px
+        'screen-fit': 'calc(100% - 5rem)', //100% - 80px
       },
       maxWidth: {
         '80p': '80%',

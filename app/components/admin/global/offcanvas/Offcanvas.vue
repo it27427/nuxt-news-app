@@ -15,7 +15,7 @@
         :class="[isCollapsed ? 'h-dash-head-xl' : 'h-dash-head-sm']"
       >
         <div
-          class="flex items-center justify-end w-full absolute z-10 top-0 right-0"
+          class="flex items-center justify-end w-full absolute z-10 top-0 -right-11"
         >
           <CloseButton @close="close" />
         </div>

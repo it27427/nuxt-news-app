@@ -3,8 +3,8 @@
     <transition name="slide">
       <aside
         v-show="props.isOpen"
-        class="bg-light dark:bg-gray-900 dark:text-white h-screen fixed top-20 left-0 z-60 flex flex-col transition-all duration-300"
-        :class="[props.isCollapsed ? 'w-64' : 'w-20']"
+        class="bg-light dark:bg-gray-900 dark:text-white fixed top-20 left-0 z-60 flex flex-col transition-all duration-300"
+        :class="[props.isCollapsed ? 'w-64 h-screen-fit' : 'w-20 h-screen-fit']"
       >
         <slot />
       </aside>
