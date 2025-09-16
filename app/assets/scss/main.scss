@@ -404,10 +404,6 @@
         }
       }
     }
-
-    .main-news-link {
-      // Hover/visited styles moved to parent .main-news-list scope
-    }
   }
 
   /* SELECTED NEWS LIST */
@@ -476,10 +472,6 @@
         @apply row-span-1 col-span-2 ss:row-span-2 ss:col-span-1 lg:row-span-1 lg:col-span-1 border-t border-light-50 dark:border-dark-divider ss:border-0;
       }
     }
-
-    .selected-news-link {
-      // Hover/visited styles moved to parent .selected-news-list scope
-    }
   }
 
   /* OTHERS NEWS LIST */
@@ -509,10 +501,6 @@
           }
         }
       }
-    }
-
-    .others-news-link {
-      // Hover/visited styles moved to parent .others-news-list scope
     }
   }
 
@@ -571,10 +559,6 @@
       time {
         @apply text-xs text-dark-hover dark:text-light inline-block;
       }
-    }
-
-    &-link {
-      // Hover/visited styles moved to parent .topic-list scope
     }
 
     .duration {
