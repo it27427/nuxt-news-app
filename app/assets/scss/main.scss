@@ -46,6 +46,10 @@
     @apply cursor-pointer;
   }
 
+  p {
+    line-height: 1.76;
+  }
+
   /* BRAND-LOGO */
   .logo {
     @apply w-full h-full flex items-center justify-center overflow-hidden; //sm:h-7 md:h-7.5 lg:h-8
