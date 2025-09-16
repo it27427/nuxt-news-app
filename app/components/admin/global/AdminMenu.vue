@@ -33,17 +33,12 @@
 
 <script setup lang="ts">
   import { useCustomAuth } from '@/composables/useCustomAuth';
+  import type { MenuProps } from '@/utils/adminPropTypes';
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
 
   const props = defineProps<{
-    menus: Array<{
-      label: string;
-      to: string;
-      icon: string;
-      action: string;
-      roles: string[];
-    }>;
+    menus: MenuProps[];
     open: boolean;
   }>();
   const route = useRoute();

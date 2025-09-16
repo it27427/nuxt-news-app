@@ -47,16 +47,11 @@
   import CollapseButton from '@/components/admin/global/CollapseButton.vue';
   import Header from '@/components/global/layouts/Header.vue';
   import { useCustomAuth } from '@/composables/useCustomAuth';
+  import type { MenuProps } from '@/utils/adminPropTypes';
 
   const props = defineProps<{
     open: boolean;
-    menus: Array<{
-      label: string;
-      to: string;
-      icon: string;
-      action: string;
-      roles: string[];
-    }>;
+    menus: MenuProps[];
   }>();
   const emit = defineEmits<{ (e: 'toggle'): void }>();
 

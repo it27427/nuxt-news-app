@@ -17,3 +17,11 @@ export interface BaseButtonProps {
   disabled?: boolean;
   loading?: boolean;
 }
+
+export interface MenuProps {
+  label: string;
+  icon: string;
+  roles: string[];
+  to?: string;
+  action?: string;
+}

@@ -23,16 +23,11 @@
   import OffcanvasBody from '@/components/admin/global/offcanvas/OffcanvasBody.vue';
   import OffcanvasSidebar from '@/components/admin/global/offcanvas/OffcanvasSidebar.vue';
   import OpenButton from '@/components/admin/global/offcanvas/OpenButton.vue';
+  import type { MenuProps } from '@/utils/adminPropTypes';
   import { ref } from 'vue';
 
   const props = defineProps<{
-    menus: Array<{
-      label: string;
-      to: string;
-      icon: string;
-      action: string;
-      roles: string[];
-    }>;
+    menus: MenuProps[];
   }>();
 
   const isOpen = ref(false);
