@@ -35,7 +35,11 @@
       </ul>
     </Header>
 
-    <nav class="flex-1 flex flex-col gap-2 p-2">
+    <!-- DESKTOP-ADMIN-MENU -->
+    <nav
+      class="flex flex-col gap-2 p-2 overflow-y-auto scrollbar-none"
+      :class="[props.open ? 'max-h-screen-minus-xl' : 'max-h-screen-minus-sm']"
+    >
       <!-- ADMIN-MENU -->
       <AdminMenu :menus="props.menus" :open="props.open" />
     </nav>
