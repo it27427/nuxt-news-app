@@ -1,23 +1,31 @@
-<!-- layouts/admin.vue -->
 <template>
-  <div :name="layout">
+  <div :name="layout" class="relative">
+    <!-- Header -->
     <Header />
 
+    <!-- Offcanvas for tablet/mobile -->
     <div class="lg:hidden">
       <Offcanvas :menus="adminMenus" />
     </div>
 
-    <!-- Body -->
     <div class="flex">
-      <!-- Sidebar -->
+      <!-- Desktop Sidebar -->
       <Sidebar
         :menus="adminMenus"
         :open="sidebarOpen"
         @toggle="toggleSidebar"
+        class="hidden lg:flex fixed top-20 left-0 h-screen flex-col transition-all duration-300"
       />
 
       <!-- Main Content -->
-      <div class="flex-1 flex flex-col transition-transform duration-300">
+      <div
+        class="flex-1 flex flex-col transition-all duration-300"
+        :class="{
+          'ml-64': sidebarOpen && screenWidth >= 1024,
+          'ml-20': !sidebarOpen && screenWidth >= 1024,
+          'ml-0': screenWidth < 1024,
+        }"
+      >
         <main class="p-6 min-h-screen">
           <slot />
         </main>
@@ -28,19 +36,38 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-
   import Footer from '@/components/admin/Footer.vue';
   import Header from '@/components/admin/Header.vue';
   import Sidebar from '@/components/admin/Sidebar.vue';
   import Offcanvas from '@/components/admin/global/offcanvas/Offcanvas.vue';
   import { adminMenus } from '@/menus/adminMenus';
+  import { onBeforeUnmount, onMounted, ref } from 'vue';
 
+  // Layout name
   const layout = 'admin';
 
+  // Sidebar collapse state
   const sidebarOpen = ref(true);
 
+  // Toggle sidebar
   const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value;
   };
+
+  // Screen width reactive ref
+  const screenWidth = ref(0);
+
+  const updateWidth = () => {
+    screenWidth.value = window.innerWidth;
+  };
+
+  onMounted(() => {
+    // Initialize screen width on client
+    screenWidth.value = window.innerWidth;
+    window.addEventListener('resize', updateWidth);
+  });
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateWidth);
+  });
 </script>

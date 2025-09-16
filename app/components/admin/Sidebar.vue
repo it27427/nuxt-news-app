@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="bg-light text-dark dark:bg-gray-900 dark:text-white min-h-screen transition-all duration-300 hidden lg:flex flex-col"
+    class="bg-light text-dark dark:bg-gray-900 dark:text-white flex-col transition-all duration-300"
     :class="[props.open ? 'w-64' : 'w-20']"
   >
     <Header
