@@ -35,7 +35,7 @@
     </div>
 
     <!-- ScrollToTop -->
-    <ScrollToTop />
+    <ScrollToTop class="bottom-2" />
   </div>
 </template>
 

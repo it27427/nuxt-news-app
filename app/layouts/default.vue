@@ -98,7 +98,7 @@
     <Footer :nav-items="footerNavItems" />
 
     <!-- ScrollToTop -->
-    <ScrollToTop />
+    <ScrollToTop class="bottom-24" />
   </div>
 </template>
 

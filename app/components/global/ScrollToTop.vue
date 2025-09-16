@@ -1,19 +1,19 @@
 <template>
   <div
     ref="scrollTopButton"
-    :class="['absolute bottom-1 right-5', props.customClass]"
+    :class="['fixed md:bottom-1 right-5 z-modal', props.customClass]"
   >
     <div
       :class="[
         'transition-all duration-300 ease-in-out',
         isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-5 pointer-events-none',
+          ? 'opacity-100 translate-y-0' // যখন দৃশ্যমান
+          : 'opacity-0 translate-y-5 pointer-events-none', // যখন অদৃশ্য
       ]"
     >
       <button
         @click="scrollToTop"
-        class="bg-adGradient text-light border-0 cursor-pointer font-bold text-2xl w-10 h-10 rounded-full flex items-center justify-center"
+        class="bg-adGradient text-light border-0 cursor-pointer font-bold text-2xl w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl focus:outline-none"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -41,8 +41,10 @@
 
   const isVisible = ref(false);
 
+  const scrollThreshold = 200;
+
   const handleScroll = () => {
-    isVisible.value = window.scrollY > 200;
+    isVisible.value = window.scrollY > scrollThreshold;
   };
 
   const scrollToTop = () => {
@@ -50,6 +52,7 @@
   };
 
   onMounted(() => {
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
   });
 
