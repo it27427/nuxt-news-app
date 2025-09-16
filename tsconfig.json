@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "~/*": [
-        "./*"
+        "./app/*"
       ],
       "@/*": [
         "./app/*"
@@ -26,8 +26,7 @@
       ]
     },
     "types": [
-      "node",
-      "next-auth"
+      "node"
     ],
     "typeRoots": [
       "./node_modules/@types",

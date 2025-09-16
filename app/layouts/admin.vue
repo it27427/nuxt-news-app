@@ -4,13 +4,17 @@
     <Header />
 
     <div class="lg:hidden">
-      <Offcanvas />
+      <Offcanvas :menus="adminMenus" />
     </div>
 
     <!-- Body -->
     <div class="flex">
       <!-- Sidebar -->
-      <Sidebar :open="sidebarOpen" @toggle="toggleSidebar" />
+      <Sidebar
+        :menus="adminMenus"
+        :open="sidebarOpen"
+        @toggle="toggleSidebar"
+      />
 
       <!-- Main Content -->
       <div class="flex-1 flex flex-col transition-transform duration-300">
@@ -30,6 +34,7 @@
   import Header from '@/components/admin/Header.vue';
   import Sidebar from '@/components/admin/Sidebar.vue';
   import Offcanvas from '@/components/admin/global/offcanvas/Offcanvas.vue';
+  import { adminMenus } from '@/menus/adminMenus';
 
   const layout = 'admin';
 

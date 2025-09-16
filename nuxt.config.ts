@@ -1,5 +1,6 @@
-import { fileURLToPath } from 'node:url';
 import { defineNuxtConfig } from 'nuxt/config';
+import { resolve } from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -91,7 +92,7 @@ export default defineNuxtConfig({
 
   tailwindcss: {
     cssPath: '@/assets/scss/main.scss',
-    configPath: 'tailwind.config.ts',
+    configPath: '~/tailwind.config.ts',
     exposeConfig: false,
     viewer: true,
   },
@@ -125,27 +126,11 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    plugins: [tsconfigPaths()],
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./app/', import.meta.url)),
-        '@components': fileURLToPath(
-          new URL('./app/components/', import.meta.url)
-        ),
-        '@composables': fileURLToPath(
-          new URL('./app/composables/', import.meta.url)
-        ),
-        '@layouts': fileURLToPath(new URL('./app/layouts/', import.meta.url)),
-        '@assets': fileURLToPath(new URL('./app/assets/', import.meta.url)),
-        '@plugins': fileURLToPath(new URL('./app/plugins/', import.meta.url)),
-        '@utils': fileURLToPath(new URL('./app/utils/', import.meta.url)),
-        '@middleware': fileURLToPath(
-          new URL('./app/middleware/', import.meta.url)
-        ),
-        '@content': fileURLToPath(new URL('./content/', import.meta.url)),
-        '@server': fileURLToPath(new URL('./server/', import.meta.url)),
-        '@shared': fileURLToPath(new URL('./shared/', import.meta.url)),
-        '@lib': fileURLToPath(new URL('./lib/', import.meta.url)),
-        '@types': fileURLToPath(new URL('./types/', import.meta.url)),
+        '@': resolve(__dirname, './app'),
+        '~': resolve(__dirname, '.'),
       },
     },
   },
