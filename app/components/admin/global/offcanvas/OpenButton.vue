@@ -1,5 +1,5 @@
 <template>
-  <Button type="button" @click="$emit('open')">✕ Close</Button>
+  <Button type="button" @click="$emit('open')">Open</Button>
 </template>
 
 <script lang="ts" setup>

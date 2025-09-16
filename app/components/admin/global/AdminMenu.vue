@@ -1,18 +1,18 @@
 <template>
   <ul class="flex flex-col gap-2">
     <li v-for="item in filteredMenus" :key="item.to || item.action">
-      <!-- Logout Button -->
       <button
         v-if="item.action === 'logout'"
         @click="logout"
         class="menu-link"
         :class="[open ? 'justify-start' : 'justify-center border-b-0']"
       >
-        <Icon :name="item.icon" width="32" height="32" class="text-sizeXXl" />
-        <span v-show="open">{{ item.label }}</span>
+        <client-only>
+          <Icon :name="item.icon" width="32" height="32" class="text-sizeXXl" />
+        </client-only>
+        <span v-if="open">{{ item.label }}</span>
       </button>
 
-      <!-- Normal Links -->
       <NuxtLink
         v-else
         :to="item.to"
@@ -24,8 +24,10 @@
             : '',
         ]"
       >
-        <Icon :name="item.icon" width="32" height="32" class="text-sizeXXl" />
-        <span v-show="open">{{ item.label }}</span>
+        <client-only>
+          <Icon :name="item.icon" width="32" height="32" class="text-sizeXXl" />
+        </client-only>
+        <span v-if="open">{{ item.label }}</span>
       </NuxtLink>
     </li>
   </ul>
@@ -41,6 +43,7 @@
     menus: MenuProps[];
     open: boolean;
   }>();
+
   const route = useRoute();
   const { logout, user } = useCustomAuth();
 
@@ -53,6 +56,9 @@
 
 <style scoped>
   .menu-link {
-    @apply w-full flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 font-hind text-base text-dark-surface dark:text-light transition-all hover:rounded-md hover:bg-gray-200 hover:border-b-gray-200 dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white;
+    @apply w-full flex items-center gap-2 p-2 border-b border-gray-200 
+    dark:border-gray-700 font-hind text-base text-dark-surface dark:text-light 
+    transition-all hover:rounded-md hover:bg-gray-200 hover:border-b-gray-200 
+    dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white;
   }
 </style>

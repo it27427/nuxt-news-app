@@ -1,22 +1,24 @@
-// File: app/components/global/offcanvas/OffcanvasSidebar.vue
 <template>
-  <transition name="slide">
-    <Teleport to="body">
+  <Teleport to="body">
+    <transition name="slide">
       <aside
         v-show="isOpen"
         class="bg-light dark:bg-gray-900 dark:text-white h-screen fixed top-20 left-0 transition-transform duration-300 z-60"
         :class="[isOpen ? 'translate-x-0 w-64' : 'translate-x-full w-20']"
       >
-        <!-- Content will be added later -->
         <slot />
       </aside>
-    </Teleport>
-  </transition>
+    </transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-  const { isOpen } = defineProps<{
+  const props = defineProps<{
     isOpen: boolean;
+  }>();
+
+  const emit = defineEmits<{
+    (e: 'close'): void;
   }>();
 </script>
 

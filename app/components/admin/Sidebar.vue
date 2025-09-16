@@ -46,7 +46,6 @@
   import AdminMenu from '@/components/admin/global/AdminMenu.vue';
   import CollapseButton from '@/components/admin/global/CollapseButton.vue';
   import Header from '@/components/global/layouts/Header.vue';
-  import { useCustomAuth } from '@/composables/useCustomAuth';
   import type { MenuProps } from '@/utils/adminPropTypes';
 
   const props = defineProps<{
@@ -56,6 +55,4 @@
   const emit = defineEmits<{ (e: 'toggle'): void }>();
 
   const toggleSidebar = () => emit('toggle');
-
-  const { logout } = useCustomAuth();
 </script>
