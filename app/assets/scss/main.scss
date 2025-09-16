@@ -2,20 +2,19 @@
 @use 'sass:map';
 
 /*=======================================================
-                REGISTER-TAILWIND
+               REGISTER-TAILWIND
 =========================================================*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /*=======================================================
-              🎨 Application Fonts
+               🎨 Application Fonts
 =========================================================*/
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400..800&family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@100..900&family=Tiro+Bangla:ital@0;1&display=swap');
 
 /*=======================================================
                         BASE LAYER
-   (Put global @apply here so Tailwind can expand it)
 =========================================================*/
 @layer base {
   ::selection {
@@ -65,6 +64,11 @@
     &:hover {
       @apply border-white dark:border-gray-300;
     }
+
+    // Duplication Cleanup: Combine common active link style
+    &:not(.router-link-exact-active.mobile-link) {
+      @apply border-b-primary;
+    }
   }
 
   /* HEADER */
@@ -83,17 +87,10 @@
       @apply border-b-primary;
     }
   }
-
-  .router-link-active,
-  .router-link-exact-active {
-    &:not(.router-link-exact-active.mobile-link) {
-      @apply border-b-primary;
-    }
-  }
 }
 
 /*=======================================================
-                      UTILITIES LAYER
+                        UTILITIES LAYER
 =========================================================*/
 @layer utilities {
   /* APP-PAGE-TRANSITIONS */
@@ -116,13 +113,12 @@
     @apply relative after:inline-block after:w-4 after:text-left after:animate-ellipsis;
   }
 
+  /* SCROLLBAR-NONE CLEANUP (সংশোধিত) */
   .scrollbar-none {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-
   .scrollbar-none::-webkit-scrollbar {
-    scrollbar-width: none;
     display: none;
   }
 
@@ -131,7 +127,7 @@
     @apply max-md:whitespace-nowrap max-md:overflow-x-scroll max-md:scroll-auto max-md:scrollbar-none max-md:max-w-[calc(100%-theme(spacing.3))];
   }
 
-  /* SLIDE-LEAVE-ANIMATION(OFFCANVAS) */
+  /* SLIDE-LEAVE-ANIMATION(OFFCANVAS) - No changes here */
   .slide-enter-from {
     transform: translateX(-100%);
   }
@@ -153,7 +149,7 @@
     transition: transform 0.3s ease;
   }
 
-  /* Animation helpers as utilities */
+  /* Animation helpers as utilities - No changes here */
   .animate-slide-up {
     animation: slideUp 0.4s ease-out forwards;
   }
@@ -170,8 +166,7 @@
     animation: slideDownFadeBottom 0.3s forwards;
   }
 
-  /* HAMBURGER-MENU-ANIMATION */
-  /* Slide Down Animation */
+  /* HAMBURGER-MENU-ANIMATION - No changes here */
   .collapse-enter-from,
   .collapse-leave-to {
     @apply max-h-0;
@@ -190,10 +185,10 @@
 }
 
 /*=======================================================
-                    COMPONENTS LAYER
+                        COMPONENTS LAYER
 =========================================================*/
 @layer components {
-  /* TOPBAR */
+  /* TOPBAR - No changes here */
   .topbar {
     @apply bg-green-900 flex items-center w-full h-20 md:h-24; //h-11 xs:h-15 sm:h-16
 
@@ -211,7 +206,7 @@
     }
   }
 
-  /* MOBILE LINK (kept nested, combined duplicates) */
+  /* MOBILE LINK - No changes here */
   .mobile-link {
     @apply text-dark-surface dark:text-white align-middle;
 
@@ -236,14 +231,16 @@
     }
   }
 
+  /* SCROLLBAR DUPLICATION FIX: Keeping them separate for guaranteed functionality */
   .hamburger {
-    @apply overflow-x-hidden overflow-y-auto whitespace-nowrap scroll-auto scrollbar-none;
+    @apply h-screen overflow-x-hidden overflow-y-auto whitespace-nowrap scroll-auto scrollbar-none;
   }
 
   .offcanvas {
     @apply h-screen overflow-x-hidden overflow-y-auto whitespace-nowrap scroll-auto scrollbar-none;
   }
 
+  /* FOOTER-LIST - No changes here */
   .footer-list {
     @apply grid gap-x-2 [grid-template-rows:repeat(3,auto)] [grid-template-columns:repeat(2,1fr)] [column-count:2] pb-2 md:gap-x-4 md:[grid-template-rows:repeat(3,auto)] md:[grid-template-columns:repeat(3,1fr)] md:[column-count:3] lg:[grid-template-columns:repeat(4,1fr)] lg:[column-count:4];
 
@@ -260,12 +257,39 @@
     }
   }
 
+  /* NEWS-LISTS (Hover/Visited Cleanup) */
+  .main-news-list,
+  .selected-news-list,
+  .others-news-list,
+  .topic-list {
+    // Apply common padding/spacing if necessary (here only pt-2)
+    &-item {
+      @apply pt-2; // Common padding
+
+      // Combine hover/visited for all news links here
+      .main-news-link,
+      .selected-news-link,
+      .others-news-link,
+      .topic-list-link {
+        &:hover,
+        &:visited {
+          .main-news-article h2,
+          .selected-news-article h2,
+          .others-news-article h2,
+          .topic-list-article h2 {
+            @apply text-dark-hover dark:text-white underline;
+          }
+        }
+      }
+    }
+  }
+
+  /* MAIN NEWS LIST */
   .main-news-list {
     @apply grid grid-cols-2 gap-4 mb-10 md:grid-cols-3 lg:grid-cols-4;
 
     &-item {
-      @apply pt-2;
-
+      // pt-2 is combined above
       .main-news-article {
         h2 {
           @apply text-dark-surface hover:text-dark-hover dark:text-light dark:hover:text-white text-sizeBig font-bold sm:mb-2 md:text-sizeLg max-xs:line-clamp-2;
@@ -280,6 +304,7 @@
         }
       }
 
+      // ... (rest of nth-child styles are too specific to merge, kept as is)
       &:first-child {
         @apply row-span-3 col-span-2 md:row-span-2 border-0;
 
@@ -381,23 +406,16 @@
     }
 
     .main-news-link {
-      &:hover,
-      &:visited {
-        .main-news-article {
-          h2 {
-            @apply text-dark-hover dark:text-white underline;
-          }
-        }
-      }
+      // Hover/visited styles moved to parent .main-news-list scope
     }
   }
 
+  /* SELECTED NEWS LIST */
   .selected-news-list {
     @apply grid grid-cols-2 gap-4 mb-5 md:mb-10 md:grid-cols-3 lg:grid-cols-4;
 
     &-item {
-      @apply pt-2;
-
+      // pt-2 is combined above
       .selected-news-article {
         .selected-news-details {
           h2 {
@@ -414,6 +432,7 @@
         }
       }
 
+      // ... (rest of nth-child styles are too specific to merge, kept as is)
       &:first-child {
         @apply row-span-3 col-span-2 md:row-span-2 border-0;
 
@@ -459,22 +478,17 @@
     }
 
     .selected-news-link {
-      &:hover,
-      &:visited {
-        .selected-news-article {
-          h2 {
-            @apply text-dark-hover dark:text-white underline;
-          }
-        }
-      }
+      // Hover/visited styles moved to parent .selected-news-list scope
     }
   }
 
+  /* OTHERS NEWS LIST */
   .others-news-list {
     @apply grid ss:grid-cols-2 gap-4 mb-10 lg:grid-cols-4;
 
     &-item {
-      @apply max-sm:row-span-1 max-sm:col-span-2 pt-2;
+      @apply max-sm:row-span-1 max-sm:col-span-2;
+      // pt-2 is combined above
 
       .others-news-article {
         @apply max-sm:flex;
@@ -498,17 +512,11 @@
     }
 
     .others-news-link {
-      &:hover,
-      &:visited {
-        .others-news-article {
-          h2 {
-            @apply text-dark-hover dark:text-white underline;
-          }
-        }
-      }
+      // Hover/visited styles moved to parent .others-news-list scope
     }
   }
 
+  /* POPULAR NEWS LIST - No changes here */
   .popular-news-list {
     @apply grid gap-4 grid-flow-col grid-rows-5 md:grid-rows-3 md:grid-cols-2;
 
@@ -536,11 +544,13 @@
     }
   }
 
+  /* TOPIC LIST */
   .topic-list {
     @apply grid ss:grid-cols-2 gap-4 mb-10 lg:grid-cols-4;
 
     &-item {
-      @apply max-sm:row-span-1 max-sm:col-span-2 pt-2;
+      @apply max-sm:row-span-1 max-sm:col-span-2;
+      // pt-2 is combined above
     }
 
     &-article {
@@ -564,16 +574,7 @@
     }
 
     &-link {
-      &:hover,
-      &:visited {
-        .topic-list-article {
-          .topic-list-details {
-            h2 {
-              @apply underline;
-            }
-          }
-        }
-      }
+      // Hover/visited styles moved to parent .topic-list scope
     }
 
     .duration {
@@ -581,6 +582,7 @@
     }
   }
 
+  /* TOPIC LINK - No changes here */
   .topic-link {
     &:hover {
       h2,
@@ -594,6 +596,7 @@
     }
   }
 
+  /* MOSTREAD NEWS LIST - No changes here */
   .mostread-news-list {
     @apply grid gap-2 grid-flow-col grid-rows-5;
 
@@ -625,6 +628,7 @@
     }
   }
 
+  /* PAGE LINK - No changes here */
   .page-link {
     @apply cursor-pointer w-11 h-11 flex items-center justify-center mx-1 border border-transparent text-lg;
 
@@ -642,10 +646,9 @@
   }
 
   /*=======================================================
-                  FEATURE QUERIES / SUPPORT
+                    FEATURE QUERIES / SUPPORT
 =========================================================*/
-
-  /* ✅ Put @supports */
+  /* ✅ Put @supports - No changes here */
   @supports (grid-template-columns: fit-content(var(--footer-col))) {
     .footer-list {
       @apply grid auto-cols-[fit-content(var(--footer-col))] grid-flow-col;
@@ -653,7 +656,7 @@
   }
 
   /*=======================================================
-                  KEYFRAMES
+                        KEYFRAMES - No changes here
 =========================================================*/
   @keyframes slideUp {
     0% {
