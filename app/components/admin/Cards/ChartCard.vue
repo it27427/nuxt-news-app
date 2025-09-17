@@ -2,14 +2,11 @@
   <div
     class="bg-white dark:bg-dark dark:shadow-lg rounded-xl p-5 flex flex-col items-center w-full h-full transition duration-300"
   >
-    <!-- Card Title -->
     <h3
       class="text-light-heading dark:text-slate-400 font-semibold text-lg text-center mb-3"
     >
       {{ toBengaliText(title) }}
     </h3>
-
-    <!-- Chart -->
     <div ref="chartWrapper" class="w-full h-64">
       <client-only>
         <VChart
@@ -19,8 +16,6 @@
         />
       </client-only>
     </div>
-
-    <!-- Value + Suffix -->
     <p
       v-if="showValue && value !== undefined"
       class="mt-2 text-center font-medium text-base text-dark-surface dark:text-slate-300"
@@ -37,13 +32,11 @@
     GaugeChart,
     LineChart,
     PieChart,
-    RadarChart,
     ScatterChart,
   } from 'echarts/charts';
   import {
     GridComponent,
     LegendComponent,
-    RadarComponent,
     TooltipComponent,
   } from 'echarts/components';
   import { use } from 'echarts/core';
@@ -57,7 +50,6 @@
     ref,
   } from 'vue';
 
-  // Register ECharts modules
   use([
     CanvasRenderer,
     LineChart,
@@ -65,16 +57,12 @@
     PieChart,
     GaugeChart,
     ScatterChart,
-    RadarChart,
     GridComponent,
     TooltipComponent,
     LegendComponent,
-    RadarComponent,
   ]);
 
   const VChart = defineAsyncComponent(() => import('vue-echarts'));
-
-  // Props
   const props = defineProps<ChartCardProps>();
   const {
     title,
@@ -87,9 +75,10 @@
     value,
     suffix,
     radius,
+    axisMin,
+    axisMax,
   } = props;
 
-  // Refs
   const chartWrapper = ref<HTMLDivElement | null>(null);
   const windowSize = reactive({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
@@ -97,17 +86,9 @@
   const handleResize = () => {
     if (typeof window !== 'undefined') windowSize.width = window.innerWidth;
   };
+  onMounted(() => window?.addEventListener('resize', handleResize));
+  onBeforeUnmount(() => window?.removeEventListener('resize', handleResize));
 
-  onMounted(() => {
-    if (typeof window !== 'undefined')
-      window.addEventListener('resize', handleResize);
-  });
-  onBeforeUnmount(() => {
-    if (typeof window !== 'undefined')
-      window.removeEventListener('resize', handleResize);
-  });
-
-  // Translation maps
   const translationMap: Record<string, string> = {
     'Per News Per Day View': 'সংবাদ প্রতি দৈনিক দর্শক',
     'Total News Views Today': 'আজকের মোট সংবাদ দর্শক',
@@ -155,13 +136,13 @@
     Dec: 'ডি',
   };
 
-  // Convert text & numbers
   const toBengaliText = (text?: string) =>
     text
-      ? Object.keys(translationMap).reduce((acc, k) => {
-          const replacement: string = translationMap[k] ?? k;
-          return acc.replace(new RegExp(`\\b${k}\\b`, 'gi'), replacement);
-        }, text)
+      ? Object.keys(translationMap).reduce(
+          (acc, k) =>
+            acc.replace(new RegExp(`\\b${k}\\b`, 'gi'), translationMap[k] ?? k),
+          text
+        )
       : '';
 
   const toBengaliNumber = (num: string | number) =>
@@ -171,7 +152,6 @@
       .map((d) => (/[0-9]/.test(d) ? '০১২৩৪৫৬৭৮৯'[parseInt(d)] : d))
       .join('');
 
-  // Chart Option
   const chartOption = computed(() => {
     const width = windowSize.width;
     const translatedLabels = labels.map((label) =>
@@ -179,6 +159,7 @@
         ? shortMonthMap[label]
         : (translationMap[label] ?? label)
     );
+
     const series: any[] = [];
 
     if (type === 'pie') {
@@ -190,65 +171,85 @@
           (item, idx) => ({
             ...item,
             name: toBengaliText(item.name),
-            value: item.value,
             itemStyle: { color: color[idx % color.length] },
           })
         ),
-        emphasis: { focus: 'series' },
         label: {
-          formatter: (params: any) =>
-            `${toBengaliText(params.name)}: ${toBengaliNumber(params.value)}`,
+          formatter: (p: any) =>
+            `${toBengaliText(p.name)}: ${toBengaliNumber(p.value)}`,
         },
-      });
-    } else if (type === 'radar') {
-      const dataArray = chartData as number[];
-      series.push({
-        name: toBengaliText(title),
-        type: 'radar',
-        data: [
-          {
-            value: dataArray,
-            lineStyle: { color: color[0] },
-            areaStyle: { color: color[0], opacity: 0.2 },
-          },
-        ],
       });
     } else {
       const dataArray = chartData as number[];
       series.push({
         name: toBengaliText(title),
-        type: type,
+        type: type === 'radar' ? 'line' : type, // radar → line (area chart)
         data: dataArray.map((v, idx) => ({
-          value: v,
+          value: v ?? 0,
           itemStyle: { color: color[idx % color.length] },
         })),
         smooth: type === 'line' && smooth,
+        areaStyle:
+          type === 'radar' || type === 'line' ? { opacity: 0.2 } : undefined,
       });
     }
 
+    const yMin =
+      axisMin ??
+      (type !== 'pie'
+        ? Math.min(...(chartData as number[])) * 0.95
+        : undefined);
+    const yMax =
+      axisMax ??
+      (type !== 'pie'
+        ? Math.max(...(chartData as number[])) * 1.05
+        : undefined);
+    const interval =
+      yMin !== undefined && yMax !== undefined
+        ? Math.ceil((yMax - yMin) / 5)
+        : undefined;
+
     return {
       tooltip: {
-        trigger: type === 'pie' || type === 'radar' ? 'item' : 'axis',
+        trigger: type === 'pie' ? 'item' : 'axis',
+        formatter: (params: any) => {
+          // Pie chart
+          if (type === 'pie') {
+            const p = params as any;
+            return `${toBengaliText(p.name)}: ${toBengaliNumber(p.value ?? 0)}`;
+          }
+
+          // Line, Bar, Scatter, Area (radar→line)
+          if (Array.isArray(params)) {
+            // Axis trigger returns an array
+            return params
+              .map((p) => {
+                const name = p.axisValueLabel ?? p.name ?? '';
+                const val = p.data?.value ?? p.data ?? 0;
+                return `${toBengaliText(name)}: ${toBengaliNumber(val)}`;
+              })
+              .join('<br/>');
+          }
+
+          // Single series (fallback)
+          const name = params.name ?? '';
+          const val = params.value ?? 0;
+          return `${toBengaliText(name)}: ${toBengaliNumber(val)}`;
+        },
       },
       legend: { show: false },
       grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
       xAxis:
-        type !== 'pie' && type !== 'radar'
+        type !== 'pie'
           ? {
               type: 'category',
               data: translatedLabels,
               boundaryGap: type === 'bar',
             }
           : undefined,
-      yAxis: type !== 'pie' && type !== 'radar' ? { type: 'value' } : undefined,
-      radar:
-        type === 'radar'
-          ? {
-              indicator: labels.map((label, idx) => ({
-                name: translatedLabels[idx],
-                max: Math.max(...(chartData as number[])) * 1.2,
-              })),
-            }
+      yAxis:
+        type !== 'pie'
+          ? { type: 'value', min: yMin, max: yMax, interval, alignTicks: false }
           : undefined,
       series,
     };

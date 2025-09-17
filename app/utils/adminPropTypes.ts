@@ -34,13 +34,15 @@ export interface CardType {
 
 export interface ChartCardProps {
   title: string;
-  type: 'line' | 'bar' | 'scatter' | 'radar' | 'pie';
-  chartData: any;
+  chartData: number[] | { name: string; value: number }[];
   labels?: string[];
+  type?: 'line' | 'bar' | 'pie' | 'radar' | 'scatter';
   color?: string[];
   smooth?: boolean;
   showValue?: boolean;
   value?: number;
   suffix?: string;
-  radius?: [string, string];
+  radius?: string | string[];
+  axisMin?: number;
+  axisMax?: number;
 }

@@ -9,14 +9,18 @@
         <li
           v-for="(card, index) in dailyAnalyticsCards"
           :key="'daily-card-' + index"
-          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          class="grid grid-cols-1 md:grid-cols-5 gap-4"
         >
-          <MonitoringCard
-            :title="card.title"
-            :value="card.value"
-            :suffix="card.suffix"
-          />
-          <ChartCard v-if="dailyCharts[index]" v-bind="dailyCharts[index]!" />
+          <div class="col-span-5 md:col-span-2">
+            <MonitoringCard
+              :title="card.title"
+              :value="card.value"
+              :suffix="card.suffix"
+            />
+          </div>
+          <div class="col-span-5 md:col-span-3">
+            <ChartCard v-if="dailyCharts[index]" v-bind="dailyCharts[index]" />
+          </div>
         </li>
       </ul>
     </section>
@@ -30,17 +34,21 @@
         <li
           v-for="(card, index) in allTimeAnalyticsCards"
           :key="'alltime-card-' + index"
-          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          class="grid grid-cols-1 md:grid-cols-5 gap-4"
         >
-          <MonitoringCard
-            :title="card.title"
-            :value="card.value"
-            :suffix="card.suffix"
-          />
-          <ChartCard
-            v-if="allTimeCharts[index]"
-            v-bind="allTimeCharts[index]!"
-          />
+          <div class="col-span-5 md:col-span-2">
+            <MonitoringCard
+              :title="card.title"
+              :value="card.value"
+              :suffix="card.suffix"
+            />
+          </div>
+          <div class="col-span-5 md:col-span-3">
+            <ChartCard
+              v-if="allTimeCharts[index]"
+              v-bind="allTimeCharts[index]"
+            />
+          </div>
         </li>
       </ul>
     </section>
@@ -116,6 +124,7 @@
       showValue: true,
       value: 320,
       suffix: '/ Day',
+      radius: ['40%', '70%'],
     },
   ];
 
@@ -168,10 +177,12 @@
       showValue: true,
       value: 8760,
       suffix: '/ All Time',
+      axisMin: 0,
+      axisMax: 1200,
     },
     {
       title: 'Total Visitors',
-      type: 'radar',
+      type: 'radar', // ChartCard.vue-তে এটি area chart হিসেবে রেন্ডার হবে
       chartData: [
         1200, 1300, 1250, 1400, 1350, 1500, 1450, 1550, 1600, 1650, 1580, 1550,
       ],
@@ -193,6 +204,8 @@
       showValue: true,
       value: 15542,
       suffix: '/ All Time',
+      axisMin: 1000,
+      axisMax: 1700,
     },
     {
       title: 'Total Ads Clicks',
