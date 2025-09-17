@@ -1,17 +1,17 @@
 <template>
   <div
-    class="bg-white dark:bg-dark dark:shadow-lg rounded-xl p-5 flex flex-col items-center justify-center transition duration-300"
+    class="bg-white dark:bg-dark dark:shadow-lg rounded-xl p-5 flex flex-col items-center justify-center w-full h-full transition duration-300"
   >
-    <!-- Title -->
+    <!-- Card Title -->
     <h3
-      class="text-light-heading dark:text-slate-400 font-hind font-semibold text-sizeLg text-center"
+      class="text-light-heading dark:text-slate-400 font-hind font-semibold text-lg text-center"
     >
       {{ toBengaliText(title) }}
     </h3>
 
     <!-- Animated Value with Optional Suffix -->
     <p class="text-primary dark:text-primary mt-2 flex items-baseline gap-1">
-      <span class="font-tino text-size3XXl font-bold">
+      <span class="font-tino text-3xl font-bold">
         {{ toBengaliNumber(displayValue) }}
       </span>
 
@@ -23,11 +23,12 @@
 </template>
 
 <script setup lang="ts">
-  import type { MonitoringCardType as CardType } from '@/utils/adminPropTypes';
+  import type { CardType } from '@/utils/adminPropTypes';
   import { onMounted, ref, watch } from 'vue';
 
   // Props
   const props = defineProps<CardType>();
+  const { title, value, suffix } = props;
 
   // Reactive value for animation
   const displayValue = ref(0);
@@ -47,15 +48,20 @@
     const safeText = text ?? '';
     const map: Record<string, string> = {
       'Per News': 'প্রতি সংবাদ',
+      'Per News Per Day View': 'সংবাদ প্রতি দৈনিক দর্শক',
       'Total Users': 'মোট ব্যবহারকারী',
       'Total News Views': 'মোট সংবাদ ভিউ',
+      'Total Views per News': 'সংবাদ ভিত্তিক মোট দর্শক',
+      'Total News Views Today': 'আজকের মোট সংবাদ দর্শক',
       'Total News Visitors': 'মোট সংবাদ দর্শক',
+      'Ads Clicks Today': 'আজকের বিজ্ঞাপন ক্লিক',
       'Total Ads Clicks': 'মোট বিজ্ঞাপন ক্লিক',
       Views: 'ভিউ',
       Visitors: 'দর্শক',
       Day: 'দিন',
       Month: 'মাস',
       Total: 'মোট',
+      'All Time': 'সর্বকালীন',
     };
 
     // Sort keys by length to prevent partial replacements
@@ -88,13 +94,13 @@
 
   // Animate on mount and whenever props.value changes
   onMounted(() => {
-    animateValue(0, props.value, 2500);
+    animateValue(0, value ?? 0, 2500);
   });
 
   watch(
-    () => props.value,
+    () => value,
     (newVal) => {
-      animateValue(displayValue.value, newVal, 2500);
+      animateValue(displayValue.value, newVal ?? 0, 2500);
     }
   );
 </script>

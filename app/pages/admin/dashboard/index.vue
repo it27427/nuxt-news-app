@@ -1,72 +1,185 @@
 <template>
-  <div class="flex flex-col space-y-8">
-    <div class="flex flex-col gap-3">
-      <h2
-        class="text-2xl font-tino font-semibold text-dark-surface dark:text-slate-300"
-      >
+  <div class="flex flex-col space-y-12">
+    <!-- Daily Metrics -->
+    <section class="flex flex-col gap-3">
+      <h2 class="text-2xl font-semibold text-dark-surface dark:text-slate-300">
         দৈনিক পর্যবেক্ষণ
       </h2>
-
-      <!-- Daily Cards -->
-      <ul
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
-      >
-        <li v-for="(card, index) in dailyCards" :key="index">
+      <ul class="grid grid-cols-1 gap-4">
+        <li
+          v-for="(card, index) in dailyAnalyticsCards"
+          :key="'daily-card-' + index"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <MonitoringCard
             :title="card.title"
             :value="card.value"
             :suffix="card.suffix"
           />
+          <ChartCard v-if="dailyCharts[index]" v-bind="dailyCharts[index]" />
         </li>
       </ul>
-    </div>
+    </section>
 
-    <div class="flex flex-col gap-3">
-      <h2
-        class="text-2xl font-tino font-semibold text-dark-surface dark:text-slate-300"
-      >
-        মাসিক পর্যবেক্ষণ
+    <!-- All Time Metrics -->
+    <section class="flex flex-col gap-3">
+      <h2 class="text-2xl font-semibold text-dark-surface dark:text-slate-300">
+        সর্বকালীন পর্যবেক্ষণ
       </h2>
-      <!-- Monthly Cards -->
-      <ul
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
-      >
-        <li v-for="(card, index) in monthlyCards" :key="index">
+      <ul class="grid grid-cols-1 gap-4">
+        <li
+          v-for="(card, index) in allTimeAnalyticsCards"
+          :key="'alltime-card-' + index"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <MonitoringCard
             :title="card.title"
             :value="card.value"
             :suffix="card.suffix"
           />
+          <ChartCard
+            v-if="allTimeCharts[index]"
+            v-bind="allTimeCharts[index]"
+          />
         </li>
       </ul>
-    </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
+  import ChartCard from '@/components/admin/Cards/ChartCard.vue';
   import MonitoringCard from '@/components/admin/Cards/MonitoringCard.vue';
-  // import ChartCard from '@/components/admin/Cards/ChartCard.vue';
-  import type { MonitoringCardType as CardType } from '@/utils/adminPropTypes';
+  import type { CardType, ChartCardProps } from '@/utils/adminPropTypes';
 
-  definePageMeta({
-    layout: 'admin',
-  });
+  definePageMeta({ layout: 'admin' });
 
-  // Daily statistics
-  const dailyCards: CardType[] = [
-    { title: 'Per News Visitors', value: 1250, suffix: '/ Day' },
-    { title: 'Per News Total Views', value: 8760, suffix: '/ Day' },
-    { title: 'Total Users', value: 542, suffix: '/ Day' },
-    { title: 'Total News Visitors', value: 6520, suffix: '/ Day' },
-    { title: 'Total Ads Clicks', value: 320, suffix: '/ Day' },
+  // --------------------
+  // Daily Metrics
+  // --------------------
+  const dailyAnalyticsCards: CardType[] = [
+    { title: 'Per News Per Day View', value: 1250, suffix: '/ Day' },
+    { title: 'Total News Views Today', value: 6520, suffix: '/ Day' },
+    { title: 'Ads Clicks Today', value: 320, suffix: '/ Day' },
   ];
 
-  // Monthly statistics
-  const monthlyCards: CardType[] = [
-    { title: 'Per News Visitors', value: 45210, suffix: '/ Month' },
-    { title: 'Per News Total Visitors', value: 98760, suffix: '/ Month' },
-    { title: 'Total Users', value: 1542, suffix: '/ Month' },
-    { title: 'Total News Visitors', value: 36520, suffix: '/ Month' },
-    { title: 'Total Ads Clicks', value: 3200, suffix: '/ Month' },
+  const dailyLabels = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+  const dailyCharts: ChartCardProps[] = [
+    {
+      title: 'Per News Per Day View',
+      type: 'line',
+      chartData: [120, 200, 150, 80, 70, 110, 130],
+      labels: dailyLabels,
+      smooth: true,
+      color: ['#3b82f6'],
+      showValue: true,
+      value: 1250,
+      suffix: '/ Day',
+    },
+    {
+      title: 'Total News Views Today',
+      type: 'bar',
+      chartData: [300, 400, 350, 500, 420, 390, 450],
+      labels: dailyLabels,
+      color: [
+        '#f59e0b',
+        '#f97316',
+        '#facc15',
+        '#84cc16',
+        '#22c55e',
+        '#14b8a6',
+        '#0ea5e9',
+      ],
+      showValue: true,
+      value: 6520,
+      suffix: '/ Day',
+    },
+    {
+      title: 'Ads Clicks Today',
+      type: 'pie',
+      chartData: [
+        { name: 'Ad1', value: 120 },
+        { name: 'Ad2', value: 100 },
+        { name: 'Ad3', value: 100 },
+      ],
+      labels: ['Ad1', 'Ad2', 'Ad3'],
+      color: ['#10b981', '#f43f5e', '#8b5cf6'],
+      showValue: true,
+      value: 320,
+      suffix: '/ Day',
+    },
+  ];
+
+  // --------------------
+  // All Time Metrics
+  // --------------------
+  const allTimeAnalyticsCards: CardType[] = [
+    { title: 'Total Views per News', value: 8760, suffix: '/ All Time' },
+    { title: 'Total Visitors', value: 15542, suffix: '/ All Time' },
+    { title: 'Total Ads Clicks', value: 10240, suffix: '/ All Time' },
+  ];
+
+  const monthlyLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  // --------------------
+  // All Time Charts
+  // --------------------
+  const allTimeCharts: ChartCardProps[] = [
+    // 1️⃣ Scatter Chart (Total Views per News)
+    {
+      title: 'Total Views per News',
+      type: 'scatter',
+      chartData: [
+        700, 800, 760, 900, 850, 880, 920, 950, 1000, 1100, 1050, 1100,
+      ],
+      labels: monthlyLabels,
+      color: ['#3b82f6'],
+      showValue: true,
+      value: 8760,
+      suffix: 'All Time',
+    },
+    // 2️⃣ Radar Chart (Total Visitors)
+    {
+      title: 'Total Visitors',
+      type: 'radar',
+      chartData: [
+        1200, 1300, 1250, 1400, 1350, 1500, 1450, 1550, 1600, 1650, 1580, 1550,
+      ],
+      labels: monthlyLabels,
+      color: ['#f59e0b'],
+      showValue: true,
+      value: 15542,
+      suffix: 'All Time',
+    },
+    // 3️⃣ Donut Pie Chart (Total Ads Clicks)
+    {
+      title: 'Total Ads Clicks',
+      type: 'pie',
+      chartData: [
+        { name: 'Ad1', value: 4000 },
+        { name: 'Ad2', value: 3200 },
+        { name: 'Ad3', value: 3040 },
+      ],
+      labels: ['Ad1', 'Ad2', 'Ad3'],
+      color: ['#10b981', '#f43f5e', '#8b5cf6'],
+      showValue: true,
+      value: 10240,
+      suffix: 'All Time',
+      radius: ['40%', '70%'], // Donut shape
+    },
   ];
 </script>

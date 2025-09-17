@@ -26,7 +26,7 @@ export interface MenuProps {
   action?: string;
 }
 
-export interface MonitoringCardType {
+export interface CardType {
   title: string;
   value: number;
   suffix?: string;
@@ -34,31 +34,13 @@ export interface MonitoringCardType {
 
 export interface ChartCardProps {
   title: string;
-  chartData: number[];
+  chartData: number[] | any[] | Record<string, any>;
   labels: string[];
+  type?: 'line' | 'bar' | 'pie' | 'radar' | 'scatter' | 'gauge';
   smooth?: boolean;
-  type?:
-    | 'line'
-    | 'bar'
-    | 'pie'
-    | 'scatter'
-    | 'effectScatter'
-    | 'radar'
-    | 'tree'
-    | 'treemap'
-    | 'sunburst'
-    | 'boxplot'
-    | 'candlestick'
-    | 'heatmap'
-    | 'map'
-    | 'parallel'
-    | 'lines'
-    | 'graph'
-    | 'sankey'
-    | 'funnel'
-    | 'gauge'
-    | 'pictorialBar'
-    | 'themeRiver'
-    | 'custom';
-  color?: string;
+  color?: string[];
+  showValue?: boolean;
+  value?: number;
+  suffix?: string;
+  radius?: string | string[];
 }
