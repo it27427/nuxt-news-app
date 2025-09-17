@@ -21,14 +21,33 @@
               :to="
                 status === 'authenticated' ? '/admin/dashboard' : '/admin/login'
               "
-              class="bg-primary text-white font-bold rounded-sm px-5 h-12 flex items-center justify-center transition-all hover:bg-primary-dark"
+              class="bg-primary text-white rounded-sm px-6 h-14 py-2 flex items-center gap-1 justify-center transition-all hover:bg-primary-dark"
             >
-              <i class="fa-solid mr-1 fa-arrow-left" />
-              {{
-                status === 'authenticated'
-                  ? 'ড্যাসবোর্ড পেজে ফিরে যান'
-                  : 'লগইন পেজে ফিরে যান'
-              }}
+              <client-only>
+                <Icon
+                  v-if="status === 'authenticated'"
+                  name="hugeicons:dashboard-browsing"
+                  width="24"
+                  height="24"
+                  class="text-4xl"
+                />
+
+                <Icon
+                  v-else
+                  name="hugeicons:login-circle-02"
+                  width="24"
+                  height="24"
+                  class="text-4xl"
+                />
+              </client-only>
+
+              <span class="font-hind font-bold inline-block text-xl mt-0.125">
+                {{
+                  status === 'authenticated'
+                    ? 'ড্যাসবোর্ডে যান'
+                    : 'পুনরায় লগইন করুন'
+                }}
+              </span>
             </BaseLink>
           </div>
 
@@ -37,9 +56,10 @@
               <h1 class="text-7xl font-bold text-red-500 font-bengali">
                 ত্রুটি
                 <span class="text-7xl font-bold text-red-500 font-bengali">
-                  {{ error.statusCode }}
+                  {{ toBanglaNumber(error.statusCode) }}
                 </span>
               </h1>
+
               <p class="text-2xl font-medium text-red-500 mb-4">
                 {{ error.message }}
               </p>
@@ -49,14 +69,33 @@
               :to="
                 status === 'authenticated' ? '/admin/dashboard' : '/admin/login'
               "
-              class="bg-primary text-white font-bold rounded-sm px-5 h-12 flex items-center justify-center transition-all hover:bg-primary-dark"
+              class="bg-primary text-white rounded-sm px-6 h-14 py-2 flex items-center gap-1 justify-center transition-all hover:bg-primary-dark"
             >
-              <i class="fa-solid mt-0.5 mr-1 fa-arrow-left" />
-              {{
-                status === 'authenticated'
-                  ? 'ড্যাসবোর্ড পেজে ফিরে যান'
-                  : 'লগইন পেজে ফিরে যান'
-              }}
+              <client-only>
+                <Icon
+                  v-if="status === 'authenticated'"
+                  name="hugeicons:dashboard-square-02"
+                  width="24"
+                  height="24"
+                  class="text-4xl"
+                />
+
+                <Icon
+                  v-else
+                  name="hugeicons:login-circle-02"
+                  width="24"
+                  height="24"
+                  class="text-4xl"
+                />
+              </client-only>
+
+              <span class="font-hind font-bold inline-block text-xl mt-0.125">
+                {{
+                  status === 'authenticated'
+                    ? 'ড্যাসবোর্ডে যান'
+                    : 'পুনরায় লগইন করুন'
+                }}
+              </span>
             </BaseLink>
           </div>
         </div>
@@ -72,7 +111,10 @@
       <div class="flex flex-col items-center justify-center text-center">
         <div class="flex flex-col items-center gap-4">
           <h1 class="text-7xl font-bold text-red-500">
-            ত্রুটি {{ error.statusCode }}
+            ত্রুটি
+            <span class="font-tino font-bold">
+              {{ toBanglaNumber(error.statusCode) }}
+            </span>
           </h1>
           <p class="text-2xl font-medium text-red-500 mb-4">
             {{
@@ -84,10 +126,14 @@
 
           <BaseLink
             to="/"
-            class="bg-primary text-white font-bold rounded-sm px-5 h-12 flex items-center justify-center transition-all hover:bg-primary-dark"
+            class="bg-primary text-white rounded-sm px-6 h-14 py-2 flex items-center justify-center transition-all hover:bg-primary-dark"
           >
-            <i class="fa-solid mr-1 fa-arrow-left" />
-            হোম পেজে ফিরে যান
+            <client-only>
+              <Icon name="mi:home" width="24" height="24" class="text-4xl" />
+            </client-only>
+            <span class="font-hind font-bold inline-block text-xl mt-0.125">
+              মূল পাতায় যান
+            </span>
           </BaseLink>
         </div>
       </div>
@@ -99,6 +145,7 @@
   import type { NuxtError } from '#app';
   import { useRoute } from '#imports';
   import BaseLink from '@/components/base/BaseLink.vue';
+  import { toBanglaNumber } from '@/utils/number';
 
   declare const useErrorAuth: () => {
     status: 'authenticated' | 'unauthenticated';
