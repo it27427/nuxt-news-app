@@ -16,7 +16,7 @@
             :value="card.value"
             :suffix="card.suffix"
           />
-          <ChartCard v-if="dailyCharts[index]" v-bind="dailyCharts[index]" />
+          <ChartCard v-if="dailyCharts[index]" v-bind="dailyCharts[index]!" />
         </li>
       </ul>
     </section>
@@ -39,7 +39,7 @@
           />
           <ChartCard
             v-if="allTimeCharts[index]"
-            v-bind="allTimeCharts[index]"
+            v-bind="allTimeCharts[index]!"
           />
         </li>
       </ul>
@@ -72,7 +72,15 @@
       chartData: [120, 200, 150, 80, 70, 110, 130],
       labels: dailyLabels,
       smooth: true,
-      color: ['#3b82f6'],
+      color: [
+        '#3b82f6',
+        '#f59e0b',
+        '#f97316',
+        '#facc15',
+        '#84cc16',
+        '#22c55e',
+        '#14b8a6',
+      ],
       showValue: true,
       value: 1250,
       suffix: '/ Day',
@@ -135,11 +143,7 @@
     'Dec',
   ];
 
-  // --------------------
-  // All Time Charts
-  // --------------------
   const allTimeCharts: ChartCardProps[] = [
-    // 1️⃣ Scatter Chart (Total Views per News)
     {
       title: 'Total Views per News',
       type: 'scatter',
@@ -147,12 +151,24 @@
         700, 800, 760, 900, 850, 880, 920, 950, 1000, 1100, 1050, 1100,
       ],
       labels: monthlyLabels,
-      color: ['#3b82f6'],
+      color: [
+        '#3b82f6',
+        '#f59e0b',
+        '#f97316',
+        '#facc15',
+        '#84cc16',
+        '#22c55e',
+        '#14b8a6',
+        '#0ea5e9',
+        '#8b5cf6',
+        '#ec4899',
+        '#db2777',
+        '#be185d',
+      ],
       showValue: true,
       value: 8760,
-      suffix: 'All Time',
+      suffix: '/ All Time',
     },
-    // 2️⃣ Radar Chart (Total Visitors)
     {
       title: 'Total Visitors',
       type: 'radar',
@@ -160,12 +176,24 @@
         1200, 1300, 1250, 1400, 1350, 1500, 1450, 1550, 1600, 1650, 1580, 1550,
       ],
       labels: monthlyLabels,
-      color: ['#f59e0b'],
+      color: [
+        '#3b82f6',
+        '#f59e0b',
+        '#f97316',
+        '#facc15',
+        '#84cc16',
+        '#22c55e',
+        '#14b8a6',
+        '#0ea5e9',
+        '#8b5cf6',
+        '#ec4899',
+        '#db2777',
+        '#be185d',
+      ],
       showValue: true,
       value: 15542,
-      suffix: 'All Time',
+      suffix: '/ All Time',
     },
-    // 3️⃣ Donut Pie Chart (Total Ads Clicks)
     {
       title: 'Total Ads Clicks',
       type: 'pie',
@@ -178,8 +206,8 @@
       color: ['#10b981', '#f43f5e', '#8b5cf6'],
       showValue: true,
       value: 10240,
-      suffix: 'All Time',
-      radius: ['40%', '70%'], // Donut shape
+      suffix: '/ All Time',
+      radius: ['40%', '70%'],
     },
   ];
 </script>
