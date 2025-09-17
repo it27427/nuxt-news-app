@@ -31,3 +31,34 @@ export interface MonitoringCardType {
   value: number;
   suffix?: string;
 }
+
+export interface ChartCardProps {
+  title: string;
+  chartData: number[];
+  labels: string[];
+  smooth?: boolean;
+  type?:
+    | 'line'
+    | 'bar'
+    | 'pie'
+    | 'scatter'
+    | 'effectScatter'
+    | 'radar'
+    | 'tree'
+    | 'treemap'
+    | 'sunburst'
+    | 'boxplot'
+    | 'candlestick'
+    | 'heatmap'
+    | 'map'
+    | 'parallel'
+    | 'lines'
+    | 'graph'
+    | 'sankey'
+    | 'funnel'
+    | 'gauge'
+    | 'pictorialBar'
+    | 'themeRiver'
+    | 'custom';
+  color?: string;
+}

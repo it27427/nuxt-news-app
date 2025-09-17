@@ -44,7 +44,8 @@
 </template>
 
 <script setup lang="ts">
-  import MonitoringCard from '@/components/admin/MonitoringCard.vue';
+  import MonitoringCard from '@/components/admin/Cards/MonitoringCard.vue';
+  // import ChartCard from '@/components/admin/Cards/ChartCard.vue';
   import type { MonitoringCardType as CardType } from '@/utils/adminPropTypes';
 
   definePageMeta({
