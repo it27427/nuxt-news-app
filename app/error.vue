@@ -2,9 +2,10 @@
   <div v-if="route.path?.startsWith('/admin')">
     <!-- ERROR-PAGE(ADMIN) -->
     <NuxtLayout name="authentication">
-      <div
-        class="flex items-center justify-center w-full min-h-screen bg-red-200 dark:bg-slate-950 p-4"
+      <section
+        class="flex items-center justify-center w-full min-h-screen bg-red-50 dark:bg-slate-950 p-4"
       >
+        <SvgIcon />
         <div class="flex flex-col items-center justify-center text-center">
           <div
             v-if="error.statusCode === 404"
@@ -99,15 +100,16 @@
             </BaseLink>
           </div>
         </div>
-      </div>
+      </section>
     </NuxtLayout>
   </div>
 
   <!-- GLOBAL-ERROR-PAGE(PUBLIC) -->
   <div v-else>
-    <div
-      class="flex items-center justify-center w-full min-h-screen bg-gray-100 dark:bg-slate-900 p-4"
+    <section
+      class="flex items-center justify-center w-full min-h-screen bg-red-50 dark:bg-slate-900 p-4"
     >
+      <SvgIcon />
       <div class="flex flex-col items-center justify-center text-center">
         <div class="flex flex-col items-center gap-4">
           <h1 class="text-7xl font-bold text-red-500">
@@ -137,7 +139,7 @@
           </BaseLink>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -145,6 +147,7 @@
   import type { NuxtError } from '#app';
   import { useRoute } from '#imports';
   import BaseLink from '@/components/base/BaseLink.vue';
+  import SvgIcon from '@/components/global/SvgIcon.vue';
   import { toBanglaNumber } from '@/utils/number';
 
   declare const useErrorAuth: () => {
