@@ -1,25 +1,71 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-2xl p-8 rounded-xl shadow-lg">
-      <h1
-        class="text-4xl font-extrabold text-center text-gray-900 dark:text-white"
+  <div class="flex flex-col space-y-8">
+    <div class="flex flex-col gap-3">
+      <h2
+        class="text-2xl font-tino font-semibold text-dark-surface dark:text-slate-300"
       >
-        ড্যাসবোর্ডে স্বাগতম 🎉
-      </h1>
+        দৈনিক পর্যবেক্ষণ
+      </h2>
+
+      <!-- Daily Cards -->
+      <ul
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+      >
+        <li v-for="(card, index) in dailyCards" :key="index">
+          <MonitoringCard
+            :title="card.title"
+            :value="card.value"
+            :suffix="card.suffix"
+          />
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <h2
+        class="text-2xl font-tino font-semibold text-dark-surface dark:text-slate-300"
+      >
+        মাসিক পর্যবেক্ষণ
+      </h2>
+      <!-- Monthly Cards -->
+      <ul
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+      >
+        <li v-for="(card, index) in monthlyCards" :key="index">
+          <MonitoringCard
+            :title="card.title"
+            :value="card.value"
+            :suffix="card.suffix"
+          />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  // import { useAuth } from '#imports';
-  // import { computed } from 'vue';
+  import MonitoringCard from '@/components/admin/MonitoringCard.vue';
+  import type { MonitoringCardType as CardType } from '@/utils/adminPropTypes';
 
   definePageMeta({
-    // auth: true,
-    // middleware: ['auth-admin'],
     layout: 'admin',
   });
 
-  // const { data: sessionData } = useAuth();
-  // const user = computed(() => sessionData.value?.user);
+  // Daily statistics
+  const dailyCards: CardType[] = [
+    { title: 'Per News Visitors', value: 1250, suffix: '/ Day' },
+    { title: 'Per News Total Views', value: 8760, suffix: '/ Day' },
+    { title: 'Total Users', value: 542, suffix: '/ Day' },
+    { title: 'Total News Visitors', value: 6520, suffix: '/ Day' },
+    { title: 'Total Ads Clicks', value: 320, suffix: '/ Day' },
+  ];
+
+  // Monthly statistics
+  const monthlyCards: CardType[] = [
+    { title: 'Per News Visitors', value: 45210, suffix: '/ Month' },
+    { title: 'Per News Total Visitors', value: 98760, suffix: '/ Month' },
+    { title: 'Total Users', value: 1542, suffix: '/ Month' },
+    { title: 'Total News Visitors', value: 36520, suffix: '/ Month' },
+    { title: 'Total Ads Clicks', value: 3200, suffix: '/ Month' },
+  ];
 </script>

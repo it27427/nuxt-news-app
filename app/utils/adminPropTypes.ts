@@ -25,3 +25,9 @@ export interface MenuProps {
   to?: string;
   action?: string;
 }
+
+export interface MonitoringCardType {
+  title: string;
+  value: number;
+  suffix?: string;
+}

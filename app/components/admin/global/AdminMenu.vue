@@ -20,7 +20,7 @@
         :class="[
           open ? 'justify-start' : 'justify-center border-b-0',
           route.path === item.to
-            ? 'bg-gray-200 dark:bg-slate-800 rounded-md'
+            ? 'bg-gray-200 dark:bg-slate-800 rounded-md font-bold'
             : '',
         ]"
       >
@@ -54,7 +54,7 @@
   );
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .menu-link {
     @apply w-full flex items-center gap-2 p-2 border-b border-gray-200 
     dark:border-gray-700 font-hind text-base text-dark-surface dark:text-light 

@@ -21,10 +21,14 @@
           'ml-0': screenWidth < 1024,
         }"
       >
-        <!-- Offcanvas for tablet/mobile -->
-        <div class="lg:hidden">
-          <Offcanvas :menus="adminMenus" />
-        </div>
+        <!-- Breadcrumbs -->
+        <Breadcrumb class="flex items-center w-full h-12">
+          <!-- Offcanvas for tablet/mobile -->
+          <div class="lg:hidden">
+            <Offcanvas :menus="adminMenus" />
+          </div>
+        </Breadcrumb>
+
         <!-- DASHBOARD-BODY-CONTENT -->
         <main class="p-6 min-h-screen">
           <slot />
@@ -45,6 +49,7 @@
   import Footer from '@/components/admin/Footer.vue';
   import Header from '@/components/admin/Header.vue';
   import Sidebar from '@/components/admin/Sidebar.vue';
+  import Breadcrumb from '@/components/admin/global/Breadcrumb.vue';
   import Offcanvas from '@/components/admin/global/offcanvas/Offcanvas.vue';
   import ScrollToTop from '@/components/global/ScrollToTop.vue';
   import { adminMenus } from '@/menus/adminMenus';
