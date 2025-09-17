@@ -1,6 +1,7 @@
 <template>
   <div v-if="route.path?.startsWith('/admin')">
-    <NuxtLayout name="admin">
+    <!-- ERROR-PAGE(ADMIN) -->
+    <NuxtLayout name="authentication">
       <div
         class="flex items-center justify-center w-full min-h-screen bg-red-200 dark:bg-slate-950 p-4"
       >
@@ -63,6 +64,7 @@
     </NuxtLayout>
   </div>
 
+  <!-- GLOBAL-ERROR-PAGE(PUBLIC) -->
   <div v-else>
     <div
       class="flex items-center justify-center w-full min-h-screen bg-gray-100 dark:bg-slate-900 p-4"
