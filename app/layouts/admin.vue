@@ -1,5 +1,5 @@
 <template>
-  <div :name="layout" class="relative">
+  <div class="relative">
     <!-- Header -->
     <Header />
 
@@ -54,9 +54,6 @@
   import ScrollToTop from '@/components/global/ScrollToTop.vue';
   import { adminMenus } from '@/menus/adminMenus';
   import { onBeforeUnmount, onMounted, ref } from 'vue';
-
-  // Layout name
-  const layout = 'admin';
 
   // Sidebar collapse state
   const sidebarOpen = ref(true);

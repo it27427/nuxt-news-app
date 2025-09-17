@@ -1,5 +1,5 @@
 <template>
-  <div class="-mt-12 md:-mt-24 w-full max-w-md mx-auto">
+  <section class="w-full max-w-md mx-auto">
     <div class="flex items-center justify-center w-32 h-25 mx-auto mb-4">
       <AuthLogo />
     </div>
@@ -21,7 +21,7 @@
         </BaseLink>
       </client-only>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

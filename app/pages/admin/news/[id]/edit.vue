@@ -15,7 +15,9 @@
   import { useRoute } from 'vue-router';
   import { useToast } from 'vue-toastification';
 
-  definePageMeta({ layout: 'admin' });
+  definePageMeta({
+    layout: 'admin',
+  });
 
   const route = useRoute();
   const toast = useToast();

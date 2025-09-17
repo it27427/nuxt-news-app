@@ -15,7 +15,9 @@
   import Form from '@/components/admin/forms/Form.vue';
   import { useToast } from 'vue-toastification';
 
-  definePageMeta({ layout: 'admin' });
+  definePageMeta({
+    layout: 'admin',
+  });
 
   const toast = useToast();
 

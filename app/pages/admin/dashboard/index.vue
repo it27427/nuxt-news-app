@@ -60,7 +60,9 @@
   import MonitoringCard from '@/components/admin/Cards/MonitoringCard.vue';
   import type { CardType, ChartCardProps } from '@/utils/adminPropTypes';
 
-  definePageMeta({ layout: 'admin' });
+  definePageMeta({
+    layout: 'admin',
+  });
 
   // --------------------
   // Daily Metrics
