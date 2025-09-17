@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Tag List</h1>
+    <h1>User List</h1>
   </div>
 </template>
 

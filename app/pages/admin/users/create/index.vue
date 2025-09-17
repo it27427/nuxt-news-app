@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>View Publisher List</h1>
+    <h1>User Create</h1>
   </div>
 </template>
 
