@@ -20,6 +20,7 @@
     "@unhead/vue": "^2.0.14",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
+    "echarts": "^5.6.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
     "next-auth": "4.21.1",
@@ -28,6 +29,7 @@
     "openai": "^5.19.1",
     "telegram": "^2.26.22",
     "vue": "^3.5.21",
+    "vue-echarts": "^7.0.3",
     "vue-router": "^4.5.1",
     "vue-toastification": "^2.0.0-rc.5"
   },
