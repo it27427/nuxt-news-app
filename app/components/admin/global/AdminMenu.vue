@@ -1,6 +1,4 @@
 <template>
-  <!-- <MenuSkeleton v-if="loading" :open="open" /> -->
-
   <ul class="flex flex-col gap-2">
     <li v-for="item in filteredMenus" :key="item.to || item.action">
       <button
@@ -36,18 +34,10 @@
 </template>
 
 <script setup lang="ts">
-  // import MenuSkeleton from '@/components/admin/skeletons/MenuSkeleton.vue';
   import { useCustomAuth } from '@/composables/useCustomAuth';
   import type { MenuProps } from '@/utils/adminPropTypes';
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
-
-  // const loading = ref(true);
-
-  // // simulate API loading
-  // setTimeout(() => {
-  //   loading.value = false;
-  // }, 1000);
 
   const props = defineProps<{
     menus: MenuProps[];
