@@ -1,5 +1,7 @@
 <template>
+  <HeaderSkeleton v-if="loading" />
   <Header
+    v-else
     class="sticky top-0 left-0 w-full bg-green-900 flex flex-col px-6 z-50"
   >
     <nav class="flex items-center justify-between w-full h-20">
@@ -15,6 +17,14 @@
 <script lang="ts" setup>
   import AdminLogo from '@/components/admin/AdminLogo.vue';
   import Notifications from '@/components/admin/Notifications.vue';
+  import HeaderSkeleton from '@/components/admin/skeletons/HeaderSkeleton.vue';
   import DarkMode from '@/components/global/DarkMode.vue';
   import Header from '@/components/global/layouts/Header.vue';
+  import { onMounted, ref } from 'vue';
+
+  const loading = ref(true);
+  onMounted(async () => {
+    // simulate fetch
+    setTimeout(() => (loading.value = false), 1200);
+  });
 </script>
