@@ -5,7 +5,10 @@
       props.className,
     ]"
   >
+    <BreadcrumbSkeleton v-if="loading" />
+
     <div
+      v-else
       class="flex items-center justify-between gap-2 lg:justify-start lg:gap-0"
     >
       <!-- Slot for other content -->
@@ -46,15 +49,25 @@
 </template>
 
 <script setup lang="ts">
+  import BreadcrumbSkeleton from '@/components/admin/skeletons/BreadcrumbSkeleton.vue';
   import BaseLink from '@/components/base/BaseLink.vue';
   import { adminMenus } from '@/menus/adminMenus';
   import { toBanglaNumber } from '@/utils/number';
-  import { computed } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
   const props = defineProps<{
     className?: string;
   }>();
+
+  const loading = ref(true);
+
+  // Simulate data loading
+  onMounted(() => {
+    setTimeout(() => {
+      loading.value = false;
+    }, 2500);
+  });
 
   const route = useRoute();
 

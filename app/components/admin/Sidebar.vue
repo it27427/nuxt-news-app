@@ -1,5 +1,12 @@
 <template>
+  <SidebarSkeleton
+    v-if="loading"
+    :open="open"
+    :itemCount="props.menus.length"
+  />
+
   <aside
+    v-else
     class="bg-light text-dark dark:bg-gray-900 dark:text-white flex-col transition-all duration-300"
     :class="[props.open ? 'w-64' : 'w-20']"
   >
@@ -49,15 +56,25 @@
 <script setup lang="ts">
   import AdminMenu from '@/components/admin/global/AdminMenu.vue';
   import CollapseButton from '@/components/admin/global/CollapseButton.vue';
+  import SidebarSkeleton from '@/components/admin/skeletons/SidebarSkeleton.vue.vue';
   import Header from '@/components/global/layouts/Header.vue';
   import type { MenuProps } from '@/utils/adminPropTypes';
+  import { onMounted, ref } from 'vue';
 
   const props = defineProps<{
     open: boolean;
     menus: MenuProps[];
   }>();
 
+  const loading = ref(true);
   const emit = defineEmits<{ (e: 'toggle'): void }>();
 
   const toggleSidebar = () => emit('toggle');
+
+  // Simulate menu/data loading
+  onMounted(() => {
+    setTimeout(() => {
+      loading.value = false;
+    }, 2500);
+  });
 </script>
