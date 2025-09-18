@@ -6,97 +6,121 @@
       ট্যাগ তালিকা
     </h2>
 
-    <!-- TAG-LIST-RESPONSIVE-TABLE -->
-    <div class="overflex-x-auto scroll-none">
-      <table
-        class="w-full bg-gray-50 dark:bg-dark-divider text-center border border-gray-200 dark:border-slate-800 border-collapse"
-      >
-        <thead
-          class="text-dark dark:bg-gray-900 dark:text-gray-100 dark:shadow-lg"
+    <!-- TAG-LIST-DATATABLE -->
+    <client-only>
+      <div class="card">
+        <!-- Skeleton Table (Loading State) -->
+        <DataTable
+          v-if="loading"
+          :value="skeletonRows"
+          showGridlines
+          tableStyle="min-width: 40rem"
+          class="bg-gray-50 dark:bg-dark-divider border border-gray-300 dark:border-slate-700 text-lg text-center"
         >
-          <tr>
-            <th
-              class="px-4 py-2 font-bold border border-gray-200 dark:border-slate-800"
-            >
-              ক্রমিক নম্বর
-            </th>
-            <th
-              class="px-4 py-2 font-bold border border-gray-200 dark:border-slate-800"
-            >
-              ট্যাগ নাম
-            </th>
-            <th
-              class="px-4 py-2 font-bold border border-gray-200 dark:border-slate-800"
-            >
-              প্রক্রিয়া
-            </th>
-          </tr>
-        </thead>
+          <Column header="ক্রমিক নম্বর">
+            <template #body>
+              <Skeleton width="60%" height="1.5rem" />
+            </template>
+          </Column>
+          <Column header="ট্যাগ নাম">
+            <template #body>
+              <Skeleton width="70%" height="1.5rem" />
+            </template>
+          </Column>
+          <Column header="কার্যক্রম">
+            <template #body>
+              <div class="flex justify-center gap-2">
+                <Skeleton shape="circle" size="2.5rem" />
+                <Skeleton shape="circle" size="2.5rem" />
+              </div>
+            </template>
+          </Column>
+        </DataTable>
 
-        <tbody>
-          <!--TAG-EMPTY-SCREEN -->
-          <tr v-if="tags.length === 0">
-            <td colspan="3" class="py-4">
-              <!-- Empty Icon -->
-              <h3 class="text-6xl lg:text-7xl text-gray-400 my-4">🏷️</h3>
+        <!-- Actual DataTable -->
+        <DataTable
+          v-else
+          :value="tags"
+          dataKey="id"
+          showGridlines
+          resizableColumns
+          columnResizeMode="fit"
+          paginator
+          :rows="10"
+          filterDisplay="row"
+          removableSort
+          v-model:filters="filters"
+          tableStyle="min-width: 40rem"
+          class="bg-gray-50 dark:bg-dark-divider border border-gray-300 dark:border-slate-700 text-lg text-center"
+        >
+          <!-- Search bar -->
+          <template #header>
+            <div class="flex justify-end">
+              <IconField>
+                <InputIcon>
+                  <i class="pi pi-search" />
+                </InputIcon>
+                <InputText
+                  v-model="filters['global'].value"
+                  placeholder="ট্যাগ খুঁজুন..."
+                />
+              </IconField>
+            </div>
+          </template>
 
-              <p
-                class="text-lg font-baloda font-normalf text-gray-400 dark:text-gray-200"
-              >
-                কোন ট্যাগ নেই! নতুন ট্যাগ তৈরি করুন।
-              </p>
-            </td>
-          </tr>
+          <!-- Empty state (conditional) -->
+          <template v-if="tags.length === 0" #empty>
+            🏷️ কোন ট্যাগ নেই! নতুন ট্যাগ তৈরি করুন।
+          </template>
 
-          <!--TAG-DATA -->
-          <tr v-for="tag in tags" :key="tag.id">
-            <td
-              class="px-4 py-2 text-2xl border border-gray-200 dark:border-slate-700"
-            >
-              {{ toBanglaNumber(tag.id) }}
-            </td>
-            <td
-              class="px-4 py-2 text-lg border border-gray-200 dark:border-slate-700"
-            >
-              {{ tag.name }}
-            </td>
-            <td
-              class="px-4 py-2 border border-gray-200 dark:border-slate-700 flex justify-center gap-2"
-            >
-              <client-only>
+          <!-- Index Column -->
+          <Column header="ক্রমিক নম্বর" sortable filter>
+            <template #body="slotProps">
+              {{ toBanglaNumber(slotProps.data.id) }}
+            </template>
+          </Column>
+
+          <!-- Tag Name Column -->
+          <Column field="name" header="ট্যাগ নাম" sortable filter></Column>
+
+          <!-- Action Column -->
+          <Column header="কার্যক্রম">
+            <template #body="slotProps">
+              <div class="flex justify-center gap-2">
+                <!-- Edit Button -->
                 <Button
-                  v-tooltip.top="'This is a tooltip!'"
-                  label="Hover Me"
-                  class="text-yellow-500 hover:text-yellow-700 w-12 h-12 flex items-center justify-center transition-colors duration-400"
-                  @click="goToEdit(tag.id)"
+                  v-tooltip.top="'ট্যাগ সংযোজন করুন'"
+                  unstyled
+                  class="text-yellow-500 hover:text-yellow-700 w-10 h-10 flex items-center justify-center transition-colors duration-400"
+                  @click="goToEdit(slotProps.data.id)"
                 >
                   <Icon
                     name="carbon:tag-edit"
-                    width="32"
-                    height="32"
-                    class="text-2xl"
-                  />
-                </Button>
-              </client-only>
-
-              <button
-                class="text-red-500 hover:text-red-800 w-12 h-12 flex items-center justify-center transition-colors duration-400"
-                @click="openDeleteModal(tag)"
-              >
-                <client-only>
-                  <Icon
-                    name="streamline-freehand:delete-bin-2"
                     width="24"
                     height="24"
                     class="text-2xl"
                   />
-                </client-only>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                </Button>
+
+                <!-- Delete Button -->
+                <button
+                  v-tooltip.top="'ট্যাগ মুছে ফেলুন'"
+                  class="text-red-500 hover:text-red-800 w-10 h-10 flex items-center justify-center transition-colors duration-400"
+                  @click="openDeleteModal(slotProps.data)"
+                >
+                  <Icon
+                    name="streamline-freehand:delete-bin-2"
+                    width="20"
+                    height="20"
+                    class="text-2xl"
+                  />
+                </button>
+              </div>
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+    </client-only>
 
     <!-- Delete Confirmation Modal -->
     <VueFinalModal
@@ -113,7 +137,7 @@
       }"
     >
       <div
-        class="p-12 px-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
+        class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
       >
         <h4 class="text-lg font-hind font-medium mb-6">
           আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?
@@ -141,10 +165,14 @@
 
 <script setup lang="ts">
   import { toBanglaNumber } from '@/utils/number';
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { VueFinalModal } from 'vue-final-modal';
   import { useRouter } from 'vue-router';
   import { useToast } from 'vue-toastification';
+
+  // PrimeVue
+  import { FilterMatchMode } from '@primevue/core/api';
+  import Skeleton from 'primevue/skeleton';
 
   definePageMeta({
     layout: 'admin',
@@ -154,11 +182,30 @@
   const router = useRouter();
 
   // Dummy tag list
-  const tags = ref([
-    { id: 1, name: 'Vue' },
-    { id: 2, name: 'Nuxt' },
-    { id: 3, name: 'Tailwind' },
-  ]);
+  const tags = ref<{ id: number; name: string }[]>([]);
+
+  // Skeleton rows
+  const skeletonRows = ref(new Array(5));
+
+  // Filters for search
+  const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  });
+
+  const loading = ref(true);
+
+  // Simulate loading
+  onMounted(() => {
+    setTimeout(() => {
+      tags.value = [
+        { id: 1, name: 'Vue' },
+        { id: 2, name: 'Nuxt' },
+        { id: 3, name: 'Tailwind' },
+      ];
+      loading.value = false;
+    }, 2000);
+  });
 
   const showModal = ref(false);
   let selectedTag: { id: number; name: string } | null = null;

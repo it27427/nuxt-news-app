@@ -44,6 +44,7 @@ export default defineNuxtConfig({
     '@primevue/nuxt-module',
   ],
 
+  //@ts-ignore
   primevue: {
     autoImport: true,
     options: {
@@ -64,7 +65,11 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['@/assets/scss/main.scss'],
+  css: ['primeicons/primeicons.css', '@/assets/scss/main.scss'],
+
+  // build: {
+  //   transpile: ['primevue', '@primeuix/themes'],
+  // },
 
   plugins: ['@/plugins/vue-toastification.ts'],
 

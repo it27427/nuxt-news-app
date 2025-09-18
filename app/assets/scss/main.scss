@@ -1,12 +1,55 @@
-@use 'sass:math';
-@use 'sass:map';
-
 /*=======================================================
                REGISTER-TAILWIND
 =========================================================*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ✅ PrimeVue → Tailwind overrides */
+
+/* Light mode */
+:root {
+  /* Backgrounds */
+  --p-surface-ground: theme('colors.light.surface'); /* outer app bg */
+  --p-surface-card: theme('colors.light.divider'); /* card / table bg */
+  --p-surface-overlay: theme('colors.light.DEFAULT'); /* overlay surfaces */
+  --p-content-border-color: theme('colors.light.50'); /* borders */
+
+  /* Text */
+  --p-text-color: theme('colors.light.heading'); /* primary text */
+  --p-text-muted-color: theme('colors.light.50'); /* muted/secondary */
+
+  /* Primary / highlight */
+  --p-primary-color: theme('colors.blue.600'); /* pick your brand color */
+  --p-primary-hover-color: theme('colors.blue.700');
+  --p-primary-active-color: theme('colors.blue.800');
+
+  /* States */
+  --p-highlight-bg: theme('colors.light.50'); /* row hover/active bg */
+  --p-highlight-text-color: theme('colors.light.heading');
+}
+
+/* Dark mode */
+.dark {
+  /* Backgrounds */
+  --p-surface-ground: theme('colors.dark.surface'); /* outer app bg */
+  --p-surface-card: theme('colors.dark.divider'); /* card / table bg */
+  --p-surface-overlay: theme('colors.dark.knight'); /* overlay surfaces */
+  --p-content-border-color: theme('colors.dark.hover'); /* borders */
+
+  /* Text */
+  --p-text-color: theme('colors.light.DEFAULT'); /* light text */
+  --p-text-muted-color: theme('colors.dark.hover'); /* muted text */
+
+  /* Primary / highlight */
+  --p-primary-color: theme('colors.blue.400'); /* lighter for dark mode */
+  --p-primary-hover-color: theme('colors.blue.300');
+  --p-primary-active-color: theme('colors.blue.200');
+
+  /* States */
+  --p-highlight-bg: theme('colors.dark.knight'); /* row hover/active bg */
+  --p-highlight-text-color: theme('colors.light.DEFAULT');
+}
 
 /*=======================================================
                🎨 Application Fonts
