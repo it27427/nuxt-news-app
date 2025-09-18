@@ -1,10 +1,12 @@
 <template>
-  <div class="flex flex-col space-y-12">
+  <DashboardSkeleton v-if="loading" />
+  <div class="flex flex-col space-y-12" v-else>
     <!-- Daily Metrics -->
     <section class="flex flex-col gap-3">
       <h2 class="text-2xl font-semibold text-dark-surface dark:text-slate-300">
         দৈনিক পর্যবেক্ষণ
       </h2>
+
       <ul class="grid grid-cols-1 gap-4">
         <li
           v-for="(card, index) in dailyAnalyticsCards"
@@ -18,6 +20,7 @@
               :suffix="card.suffix"
             />
           </div>
+
           <div class="col-span-5 md:col-span-3">
             <ChartCard v-if="dailyCharts[index]" v-bind="dailyCharts[index]" />
           </div>
@@ -30,6 +33,7 @@
       <h2 class="text-2xl font-semibold text-dark-surface dark:text-slate-300">
         সর্বকালীন পর্যবেক্ষণ
       </h2>
+
       <ul class="grid grid-cols-1 gap-4">
         <li
           v-for="(card, index) in allTimeAnalyticsCards"
@@ -43,6 +47,7 @@
               :suffix="card.suffix"
             />
           </div>
+
           <div class="col-span-5 md:col-span-3">
             <ChartCard
               v-if="allTimeCharts[index]"
@@ -58,7 +63,19 @@
 <script setup lang="ts">
   import ChartCard from '@/components/admin/Cards/ChartCard.vue';
   import MonitoringCard from '@/components/admin/Cards/MonitoringCard.vue';
+  import DashboardSkeleton from '@/components/admin/skeletons/DashboardSkeleton.vue';
   import type { CardType, ChartCardProps } from '@/utils/adminPropTypes';
+  import { onMounted, ref } from 'vue';
+
+  // Loading state
+  const loading = ref(true);
+
+  // Example: simulate API loading delay
+  onMounted(() => {
+    setTimeout(() => {
+      loading.value = false;
+    }, 2000); // 2 seconds delay
+  });
 
   definePageMeta({
     layout: 'admin',
