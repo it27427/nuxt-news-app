@@ -6,93 +6,83 @@
       ট্যাগ তালিকা
     </h2>
 
-    <!-- TAG-LIST-DATATABLE -->
+    <!-- TAG-LIST-TABLE -->
     <client-only>
-      <div class="card">
-        <!-- Skeleton Table (Loading State) -->
-        <DataTable
-          v-if="loading"
-          :value="skeletonRows"
-          showGridlines
-          tableStyle="min-width: 40rem"
-          class="bg-gray-50 dark:bg-dark-divider border border-gray-300 dark:border-slate-700 text-lg text-center"
-        >
-          <Column header="ক্রমিক নম্বর">
-            <template #body>
-              <Skeleton width="60%" height="1.5rem" />
-            </template>
-          </Column>
-          <Column header="ট্যাগ নাম">
-            <template #body>
-              <Skeleton width="70%" height="1.5rem" />
-            </template>
-          </Column>
-          <Column header="কার্যক্রম">
-            <template #body>
-              <div class="flex justify-center gap-2">
-                <Skeleton shape="circle" size="2.5rem" />
-                <Skeleton shape="circle" size="2.5rem" />
+      <!-- Normal Table -->
+      <table
+        class="bg-gray-50 dark:bg-dark border border-gray-300 dark:border-slate-700 text-lg text-center w-full"
+      >
+        <!-- Header -->
+        <thead class="bg-gray-100 dark:bg-dark">
+          <tr>
+            <th class="px-4 py-2 border border-gray-300 dark:border-slate-700">
+              ক্রমিক নম্বর
+            </th>
+            <th class="px-4 py-2 border border-gray-300 dark:border-slate-700">
+              ট্যাগ নাম
+            </th>
+            <th class="px-4 py-2 border border-gray-300 dark:border-slate-700">
+              কার্যক্রম
+            </th>
+          </tr>
+        </thead>
+
+        <!-- Body -->
+        <tbody>
+          <!-- Loading Skeleton -->
+          <tr v-if="loading" v-for="n in 5" :key="'skeleton-' + n">
+            <td class="px-4 py-3 border border-gray-300 dark:border-slate-700">
+              <div
+                class="h-6 w-10 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
+              ></div>
+            </td>
+            <td class="px-4 py-3 border border-gray-300 dark:border-slate-700">
+              <div
+                class="h-6 w-24 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
+              ></div>
+            </td>
+            <td class="px-4 py-3 border border-gray-300 dark:border-slate-700">
+              <div class="flex justify-center gap-3">
+                <div
+                  class="h-8 w-8 bg-gray-200 dark:bg-slate-700 animate-pulse rounded-full"
+                ></div>
+                <div
+                  class="h-8 w-8 bg-gray-200 dark:bg-slate-700 animate-pulse rounded-full"
+                ></div>
               </div>
-            </template>
-          </Column>
-        </DataTable>
+            </td>
+          </tr>
 
-        <!-- Actual DataTable -->
-        <DataTable
-          v-else
-          :value="tags"
-          dataKey="id"
-          showGridlines
-          resizableColumns
-          columnResizeMode="fit"
-          paginator
-          :rows="10"
-          filterDisplay="row"
-          removableSort
-          v-model:filters="filters"
-          tableStyle="min-width: 40rem"
-          class="bg-gray-50 dark:bg-dark-divider border border-gray-300 dark:border-slate-700 text-lg text-center"
-        >
-          <!-- Search bar -->
-          <template #header>
-            <div class="flex justify-end">
-              <IconField>
-                <InputIcon>
-                  <i class="pi pi-search" />
-                </InputIcon>
-                <InputText
-                  v-model="filters['global'].value"
-                  placeholder="ট্যাগ খুঁজুন..."
-                />
-              </IconField>
-            </div>
-          </template>
+          <!-- Empty State -->
+          <tr v-else-if="tags.length === 0">
+            <td colspan="3" class="py-6 text-gray-400">
+              <span class="text-6xl">🏷️</span>
+              <p class="text-xl">কোন ট্যাগ নেই! নতুন ট্যাগ তৈরি করুন।</p>
+            </td>
+          </tr>
 
-          <!-- Empty state (conditional) -->
-          <template v-if="tags.length === 0" #empty>
-            🏷️ কোন ট্যাগ নেই! নতুন ট্যাগ তৈরি করুন।
-          </template>
+          <!-- Data Rows -->
+          <tr v-else v-for="(tag, index) in tags" :key="tag.id">
+            <!-- Index -->
+            <td
+              class="px-4 py-2 border border-gray-300 dark:border-slate-700 text-xl"
+            >
+              {{ toBanglaNumber(index + 1) }}
+            </td>
 
-          <!-- Index Column -->
-          <Column header="ক্রমিক নম্বর" sortable filter>
-            <template #body="slotProps">
-              {{ toBanglaNumber(slotProps.data.id) }}
-            </template>
-          </Column>
+            <!-- Tag Name -->
+            <td class="px-4 py-2 border border-gray-300 dark:border-slate-700">
+              {{ tag.name }}
+            </td>
 
-          <!-- Tag Name Column -->
-          <Column field="name" header="ট্যাগ নাম" sortable filter></Column>
-
-          <!-- Action Column -->
-          <Column header="কার্যক্রম">
-            <template #body="slotProps">
+            <!-- Actions -->
+            <td class="px-4 py-2 border border-gray-300 dark:border-slate-700">
               <div class="flex justify-center gap-2">
                 <!-- Edit Button -->
-                <Button
-                  v-tooltip.top="'ট্যাগ সংযোজন করুন'"
-                  unstyled
-                  class="text-yellow-500 hover:text-yellow-700 w-10 h-10 flex items-center justify-center transition-colors duration-400"
-                  @click="goToEdit(slotProps.data.id)"
+                <button
+                  title="ট্যাগ সংযোজন করুন"
+                  class="text-yellow-500 hover:text-yellow-700 w-10 h-10 flex items-center justify-center transition-colors duration-300"
+                  @click="goToEdit(tag.id)"
                 >
                   <Icon
                     name="carbon:tag-edit"
@@ -100,13 +90,13 @@
                     height="24"
                     class="text-2xl"
                   />
-                </Button>
+                </button>
 
                 <!-- Delete Button -->
                 <button
-                  v-tooltip.top="'ট্যাগ মুছে ফেলুন'"
-                  class="text-red-500 hover:text-red-800 w-10 h-10 flex items-center justify-center transition-colors duration-400"
-                  @click="openDeleteModal(slotProps.data)"
+                  title="ট্যাগ মুছে ফেলুন"
+                  class="text-red-500 hover:text-red-800 w-10 h-10 flex items-center justify-center transition-colors duration-300"
+                  @click="openDeleteModal(tag)"
                 >
                   <Icon
                     name="streamline-freehand:delete-bin-2"
@@ -116,50 +106,50 @@
                   />
                 </button>
               </div>
-            </template>
-          </Column>
-        </DataTable>
-      </div>
-    </client-only>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <!-- Delete Confirmation Modal -->
-    <VueFinalModal
-      v-model="showModal"
-      :clickToClose="false"
-      class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
-      :transition="{
-        enterActiveClass: 'ease-out duration-300',
-        enterFromClass: 'opacity-0 scale-90',
-        enterToClass: 'opacity-100 scale-100',
-        leaveActiveClass: 'ease-in duration-200',
-        leaveFromClass: 'opacity-100 scale-100',
-        leaveToClass: 'opacity-0 scale-90',
-      }"
-    >
-      <div
-        class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
+      <!-- Delete Confirmation Modal -->
+      <VueFinalModal
+        v-model="showModal"
+        :clickToClose="false"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
+        :transition="{
+          enterActiveClass: 'ease-out duration-300',
+          enterFromClass: 'opacity-0 scale-90',
+          enterToClass: 'opacity-100 scale-100',
+          leaveActiveClass: 'ease-in duration-200',
+          leaveFromClass: 'opacity-100 scale-100',
+          leaveToClass: 'opacity-0 scale-90',
+        }"
       >
-        <h4 class="text-lg font-hind font-medium mb-6">
-          আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?
-        </h4>
+        <div
+          class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
+        >
+          <h4 class="text-lg font-hind font-medium mb-6">
+            আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?
+          </h4>
 
-        <div class="flex justify-center gap-3">
-          <button
-            @click="confirmDelete"
-            class="px-4 py-2 w-10 h-10 font-hind text-base flex items-center justify-center bg-primary text-white rounded hover:bg-primary-dark dark:bg-primary-dark dark:hover:bg-primary transition duration-400"
-          >
-            হ্যাঁ
-          </button>
+          <div class="flex justify-center gap-3">
+            <button
+              @click="confirmDelete"
+              class="px-4 py-2 w-10 h-10 font-hind text-base flex items-center justify-center bg-primary text-white rounded hover:bg-primary-dark dark:bg-primary-dark dark:hover:bg-primary transition duration-400"
+            >
+              হ্যাঁ
+            </button>
 
-          <button
-            @click="showModal = false"
-            class="px-4 py-2 w-10 h-10 font-hind text-base flex items-center justify-center bg-red-500 text-white rounded hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-500 transition duration-400"
-          >
-            না
-          </button>
+            <button
+              @click="showModal = false"
+              class="px-4 py-2 w-10 h-10 font-hind text-base flex items-center justify-center bg-red-500 text-white rounded hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-500 transition duration-400"
+            >
+              না
+            </button>
+          </div>
         </div>
-      </div>
-    </VueFinalModal>
+      </VueFinalModal>
+    </client-only>
   </section>
 </template>
 
@@ -169,10 +159,6 @@
   import { VueFinalModal } from 'vue-final-modal';
   import { useRouter } from 'vue-router';
   import { useToast } from 'vue-toastification';
-
-  // PrimeVue
-  import { FilterMatchMode } from '@primevue/core/api';
-  import Skeleton from 'primevue/skeleton';
 
   definePageMeta({
     layout: 'admin',
@@ -184,18 +170,8 @@
   // Dummy tag list
   const tags = ref<{ id: number; name: string }[]>([]);
 
-  // Skeleton rows
-  const skeletonRows = ref(new Array(5));
-
-  // Filters for search
-  const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  });
-
+  // Loading simulation
   const loading = ref(true);
-
-  // Simulate loading
   onMounted(() => {
     setTimeout(() => {
       tags.value = [
