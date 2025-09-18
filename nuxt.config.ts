@@ -1,3 +1,4 @@
+import Aura from '@primeuix/themes/aura';
 import { defineNuxtConfig } from 'nuxt/config';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -40,7 +41,30 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
     '@pinia/nuxt',
     'nuxt-tiptap-editor',
+    '@primevue/nuxt-module',
   ],
+
+  primevue: {
+    autoImport: true,
+    options: {
+      ripple: true,
+      theme: {
+        preset: Aura,
+        options: {
+          darkModeSelector: 'system',
+          cssLayer: false,
+        },
+        components: {
+          include: '*',
+        },
+      },
+    },
+    directives: {
+      include: '*',
+    },
+  },
+
+  css: ['@/assets/scss/main.scss'],
 
   plugins: ['@/plugins/vue-toastification.ts'],
 
@@ -128,6 +152,4 @@ export default defineNuxtConfig({
       },
     },
   },
-
-  css: ['@/assets/scss/main.scss'],
 });

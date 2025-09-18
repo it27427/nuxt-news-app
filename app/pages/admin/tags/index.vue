@@ -6,26 +6,27 @@
       ট্যাগ তালিকা
     </h2>
 
+    <!-- TAG-LIST-RESPONSIVE-TABLE -->
     <div class="overflex-x-auto scroll-none">
       <table
-        class="w-full bg-gray-50 dark:bg-dark-divider border border-gray-200 dark:border-slate-800 text-center"
+        class="w-full bg-gray-50 dark:bg-dark-divider text-center border border-gray-200 dark:border-slate-800 border-collapse"
       >
         <thead
           class="text-dark dark:bg-gray-900 dark:text-gray-100 dark:shadow-lg"
         >
           <tr>
             <th
-              class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
+              class="px-4 py-2 font-bold border border-gray-200 dark:border-slate-800"
             >
               ক্রমিক নম্বর
             </th>
             <th
-              class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
+              class="px-4 py-2 font-bold border border-gray-200 dark:border-slate-800"
             >
               ট্যাগ নাম
             </th>
             <th
-              class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
+              class="px-4 py-2 font-bold border border-gray-200 dark:border-slate-800"
             >
               প্রক্রিয়া
             </th>
@@ -33,35 +34,50 @@
         </thead>
 
         <tbody>
+          <!--TAG-EMPTY-SCREEN -->
+          <tr v-if="tags.length === 0">
+            <td colspan="3" class="py-4">
+              <!-- Empty Icon -->
+              <h3 class="text-6xl lg:text-7xl text-gray-400 my-4">🏷️</h3>
+
+              <p
+                class="text-lg font-baloda font-normalf text-gray-400 dark:text-gray-200"
+              >
+                কোন ট্যাগ নেই! নতুন ট্যাগ তৈরি করুন।
+              </p>
+            </td>
+          </tr>
+
+          <!--TAG-DATA -->
           <tr v-for="tag in tags" :key="tag.id">
             <td
-              class="px-4 py-2 border-b border-r-0 border-gray-200 dark:border-slate-700 text-2xl"
+              class="px-4 py-2 text-2xl border border-gray-200 dark:border-slate-700"
             >
               {{ toBanglaNumber(tag.id) }}
             </td>
-
             <td
-              class="px-4 py-2 border border-gray-200 dark:border-slate-700 text-lg"
+              class="px-4 py-2 text-lg border border-gray-200 dark:border-slate-700"
             >
               {{ tag.name }}
             </td>
-
             <td
-              class="px-4 py-2 border border-b border-l-0 border-gray-200 dark:border-slate-700 flex justify-center"
+              class="px-4 py-2 border border-gray-200 dark:border-slate-700 flex justify-center gap-2"
             >
-              <button
-                class="text-yellow-500 hover:text-yellow-700 w-12 h-12 flex items-center justify-center transition-colors duration-400"
-                @click="goToEdit(tag.id)"
-              >
-                <client-only>
+              <client-only>
+                <Button
+                  v-tooltip.top="'This is a tooltip!'"
+                  label="Hover Me"
+                  class="text-yellow-500 hover:text-yellow-700 w-12 h-12 flex items-center justify-center transition-colors duration-400"
+                  @click="goToEdit(tag.id)"
+                >
                   <Icon
                     name="carbon:tag-edit"
                     width="32"
                     height="32"
                     class="text-2xl"
                   />
-                </client-only>
-              </button>
+                </Button>
+              </client-only>
 
               <button
                 class="text-red-500 hover:text-red-800 w-12 h-12 flex items-center justify-center transition-colors duration-400"
@@ -97,7 +113,7 @@
       }"
     >
       <div
-        class="p-12 px-8 bg-white dark:bg-dark rounded-lg shadow-lg max-w-96 text-center"
+        class="p-12 px-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
       >
         <h4 class="text-lg font-hind font-medium mb-6">
           আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?
@@ -106,14 +122,14 @@
         <div class="flex justify-center gap-3">
           <button
             @click="confirmDelete"
-            class="px-4 py-2 w-10 h-10 font-medium flex items-center justify-center bg-primary text-white rounded hover:bg-primary-dark transition duration-400"
+            class="px-4 py-2 w-10 h-10 font-hind text-base flex items-center justify-center bg-primary text-white rounded hover:bg-primary-dark dark:bg-primary-dark dark:hover:bg-primary transition duration-400"
           >
             হ্যাঁ
           </button>
 
           <button
             @click="showModal = false"
-            class="px-4 py-2 w-10 h-10 font-medium flex items-center justify-center bg-red-500 text-white rounded hover:bg-red-700 transition duration-400"
+            class="px-4 py-2 w-10 h-10 font-hind text-base flex items-center justify-center bg-red-500 text-white rounded hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-500 transition duration-400"
           >
             না
           </button>
