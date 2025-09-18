@@ -8,7 +8,7 @@
       {{ formTitle }}
     </h1>
 
-    <LoginForm :form="form" @success="onSuccess" @error="onError" />
+    <!-- <LoginForm :form="form" @success="onSuccess" @error="onError" /> -->
 
     <div class="flex items-center justify-center gap-2 mt-8">
       <p class="text-md text-dark dark:text-light">কোন অ্যাকাউন্ট নেই?</p>
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-  import LoginForm from '@/components/admin/auth/LoginForm.vue';
+  // import LoginForm from '@/components/admin/auth/LoginForm.vue';
   import AuthLogo from '@/components/admin/AuthLogo.vue';
   import BaseLink from '@/components/base/BaseLink.vue';
   import { validateMessages } from '@/utils/messages';

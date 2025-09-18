@@ -8,7 +8,7 @@
       {{ formTitle }}
     </h1>
 
-    <RegisterForm :form="form" @success="onSuccess" @error="onError" />
+    <!-- <RegisterForm :form="form" @success="onSuccess" @error="onError" /> -->
 
     <div class="flex items-center justify-center gap-2 mt-8">
       <p class="text-md text-dark dark:text-light">ইতিমধ্যে অ্যাকাউন্ট আছে?</p>
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-  import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
+  // import RegisterForm from '@/components/admin/auth/RegisterForm.vue';
   import AuthLogo from '@/components/admin/AuthLogo.vue';
   import BaseLink from '@/components/base/BaseLink.vue';
   import type { RegFormData, RegFormErrors } from '@/utils/types';

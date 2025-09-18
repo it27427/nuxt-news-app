@@ -1,4 +1,3 @@
-import Aura from '@primeuix/themes/aura';
 import { defineNuxtConfig } from 'nuxt/config';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -38,38 +37,16 @@ export default defineNuxtConfig({
     '@nuxtjs/mdc',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    '@sidebase/nuxt-auth',
     '@pinia/nuxt',
     'nuxt-tiptap-editor',
-    '@primevue/nuxt-module',
   ],
 
   //@ts-ignore
-  primevue: {
-    autoImport: true,
-    options: {
-      ripple: true,
-      theme: {
-        preset: Aura,
-        options: {
-          darkModeSelector: 'system',
-          cssLayer: false,
-        },
-        components: {
-          include: '*',
-        },
-      },
-    },
-    directives: {
-      include: '*',
-    },
+  tiptap: {
+    prefix: 'Tiptap',
   },
 
-  css: ['primeicons/primeicons.css', '@/assets/scss/main.scss'],
-
-  // build: {
-  //   transpile: ['primevue', '@primeuix/themes'],
-  // },
+  css: ['@/assets/scss/main.scss'],
 
   plugins: ['@/plugins/vue-toastification.ts'],
 
@@ -90,13 +67,6 @@ export default defineNuxtConfig({
         baseURL:
           process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000/api/auth',
       },
-    },
-  },
-
-  // @ts-ignore
-  auth: {
-    provider: {
-      type: 'authjs',
     },
   },
 
