@@ -1,68 +1,86 @@
 <template>
-  <section class="p-5 flex flex-col gap-6">
+  <section class="md:p-5 flex flex-col gap-6">
     <h2
       class="font-hind font-bold text-2xl lg:text-3xl text-center text-dark-surface dark:text-white"
     >
       ট্যাগ তালিকা
     </h2>
 
-    <table
-      class="w-full bg-gray-50 border border-gray-200 dark:border-slate-800 text-center"
-    >
-      <thead
-        class="text-dark dark:bg-gray-900 dark:text-gray-100 dark:shadow-lg"
+    <div class="overflex-x-auto scroll-none">
+      <table
+        class="w-full bg-gray-50 dark:bg-dark-divider border border-gray-200 dark:border-slate-800 text-center"
       >
-        <tr>
-          <th
-            class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
-          >
-            ক্রমিক নম্বর
-          </th>
-          <th
-            class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
-          >
-            ট্যাগ নাম
-          </th>
-          <th
-            class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
-          >
-            প্রক্রিয়া
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="tag in tags" :key="tag.id">
-          <td
-            class="px-4 py-2 border border-gray-200 dark:border-slate-800 text-2xl"
-          >
-            {{ toBanglaNumber(tag.id) }}
-          </td>
-          <td
-            class="px-4 py-2 border border-gray-200 dark:border-slate-800 text-lg"
-          >
-            {{ tag.name }}
-          </td>
-          <td
-            class="px-4 py-2 border border-gray-200 dark:border-slate-800 flex gap-2 justify-center"
-          >
-            <button
-              class="bg-yellow-500 text-white hover:bg-yellow-700 px-3 py-1 rounded duration-400"
-              @click="goToEdit(tag.id)"
+        <thead
+          class="text-dark dark:bg-gray-900 dark:text-gray-100 dark:shadow-lg"
+        >
+          <tr>
+            <th
+              class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
             >
-              Edit
-            </button>
-
-            <button
-              class="bg-red-500 text-white hover:bg-red-700 px-3 py-1 rounded duration-400"
-              @click="openDeleteModal(tag)"
+              ক্রমিক নম্বর
+            </th>
+            <th
+              class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
             >
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              ট্যাগ নাম
+            </th>
+            <th
+              class="px-4 py-2 border border-gray-200 dark:border-slate-800 font-bold"
+            >
+              প্রক্রিয়া
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="tag in tags" :key="tag.id">
+            <td
+              class="px-4 py-2 border-b border-r-0 border-gray-200 dark:border-slate-700 text-2xl"
+            >
+              {{ toBanglaNumber(tag.id) }}
+            </td>
+
+            <td
+              class="px-4 py-2 border border-gray-200 dark:border-slate-700 text-lg"
+            >
+              {{ tag.name }}
+            </td>
+
+            <td
+              class="px-4 py-2 border border-b border-l-0 border-gray-200 dark:border-slate-700 flex justify-center"
+            >
+              <button
+                class="text-yellow-500 hover:text-yellow-700 w-12 h-12 flex items-center justify-center transition-colors duration-400"
+                @click="goToEdit(tag.id)"
+              >
+                <client-only>
+                  <Icon
+                    name="carbon:tag-edit"
+                    width="32"
+                    height="32"
+                    class="text-2xl"
+                  />
+                </client-only>
+              </button>
+
+              <button
+                class="text-red-500 hover:text-red-800 w-12 h-12 flex items-center justify-center transition-colors duration-400"
+                @click="openDeleteModal(tag)"
+              >
+                <client-only>
+                  <Icon
+                    name="streamline-freehand:delete-bin-2"
+                    width="24"
+                    height="24"
+                    class="text-2xl"
+                  />
+                </client-only>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Delete Confirmation Modal -->
     <VueFinalModal
@@ -85,7 +103,7 @@
           আপনি কি নিশ্চিতভাবে মুছে ফেলতে চান?
         </h4>
 
-        <div class="flex justify-center gap-2">
+        <div class="flex justify-center gap-3">
           <button
             @click="confirmDelete"
             class="px-4 py-2 w-10 h-10 font-medium flex items-center justify-center bg-primary text-white rounded hover:bg-primary-dark transition duration-400"
