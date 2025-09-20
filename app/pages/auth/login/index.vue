@@ -8,34 +8,38 @@
       {{ formTitle }}
     </h1>
 
-    <BaseForm @submit="handleLogin">
+    <BaseForm @submit="handleLogin" class="animated-form">
       <BaseInput
         id="email"
         label="Email"
         placeholder="Enter your email"
         v-model="form.email"
         :error="errors.email"
+        :validated="!!form.email && !errors.email"
         type="email"
       />
+
       <BaseInput
         id="password"
         label="Password"
         placeholder="Enter your password"
         v-model="form.password"
         :error="errors.password"
+        :validated="!!form.password && !errors.password"
         type="password"
       />
+
       <BaseButton type="submit" :loading="loading" label="Login" />
     </BaseForm>
 
     <div class="flex items-center justify-center gap-2 mt-8">
-      <p class="text-md text-dark dark:text-light">Already have an account?</p>
+      <p class="text-md text-dark dark:text-light">Don't have an account?</p>
       <client-only>
         <BaseLink
-          to="/auth/login"
+          to="/auth/register"
           class="text-md text-dark dark:text-white font-medium underline transition-colors hover:text-primary-dark dark:hover:text-primary"
         >
-          Login
+          Register
         </BaseLink>
       </client-only>
     </div>
@@ -56,27 +60,89 @@
 
   const toast = useToast();
   const router = useRouter();
-  const formTitle = ref('Register');
+  const formTitle = ref('Login');
 
-  const form = reactive({
+  interface LoginForm {
+    email: string;
+    password: string;
+  }
+
+  interface LoginFormErrors {
+    email?: string;
+    password?: string;
+  }
+
+  const form = reactive<LoginForm>({
     email: '',
     password: '',
   });
 
-  const errors = reactive({
-    email: '',
-    password: '',
+  const errors = reactive<LoginFormErrors>({
+    email: undefined,
+    password: undefined,
   });
 
   const loading = ref(false);
 
   async function handleLogin() {
     loading.value = true;
+
+    // Reset errors
+    Object.keys(errors).forEach(
+      (key) => (errors[key as keyof LoginFormErrors] = undefined)
+    );
+
+    // FRONTEND VALIDATION
+    let hasError = false;
+    if (!form.email) {
+      errors.email = 'Email is required';
+      hasError = true;
+    }
+    if (!form.password) {
+      errors.password = 'Password is required';
+      hasError = true;
+    }
+
+    if (hasError) {
+      loading.value = false;
+      return;
+    }
+
     try {
-      // Call your API endpoint
-      console.log('Login request', form);
-    } catch (err) {
-      console.error(err);
+      const res = await $fetch<{ success: boolean; message: string }>(
+        '/api/auth/login',
+        {
+          method: 'POST',
+          body: { ...form },
+        }
+      );
+
+      // Success
+      toast.success(res.message);
+
+      // Reset form
+      Object.keys(form).forEach((key) => (form[key as keyof LoginForm] = ''));
+
+      // Redirect after success
+      setTimeout(() => router.push('/admin/dashboard'), 1000);
+    } catch (err: any) {
+      // Handle validation errors from backend
+      if (err?.data?.fields) {
+        Object.assign(errors, err.data.fields);
+
+        // Show toast only for user not exists
+        if (err?.statusCode === 404) {
+          toast.error(
+            err?.message ||
+              "This user doesn't exist. Please register first then try again."
+          );
+        }
+      } else if (err?.statusCode === 401 && err?.data?.fields?.password) {
+        // Password incorrect only under input
+        errors.password = err.data.fields.password;
+      } else {
+        toast.error(err?.statusMessage || 'Something went wrong');
+      }
     } finally {
       loading.value = false;
     }

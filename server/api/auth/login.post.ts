@@ -1,5 +1,3 @@
-// server/api/auth/login.ts
-
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import * as jose from 'jose';
@@ -11,11 +9,10 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { email, password } = body;
 
-  // Multi-field validation
+  // Validation
   const fields: Record<string, string> = {};
   if (!email) fields.email = 'Email is required';
   if (!password) fields.password = 'Password is required';
-
   if (Object.keys(fields).length > 0) {
     throwError(400, 'Validation failed', fields);
   }
@@ -23,17 +20,25 @@ export default defineEventHandler(async (event) => {
   // Find user
   const user = await db.select().from(users).where(eq(users.email, email));
   if (user.length === 0) {
-    throwError(401, 'Invalid credentials', {
-      email: 'Invalid email or password',
-    });
+    throwError(
+      404,
+      "This user doesn't exist. Please register first then try again.",
+      {
+        email: 'User not found! Please register first then try again.',
+      }
+    );
   }
 
   // Verify password
   const validPassword = await bcrypt.compare(password, user[0].password);
   if (!validPassword) {
-    throwError(401, 'Invalid credentials', {
-      password: 'Invalid email or password',
-    });
+    throwError(
+      401,
+      'Password is incorrect, please provide the correct password.',
+      {
+        password: 'Password is incorrect, please provide the correct password.',
+      }
+    );
   }
 
   // Create JWT
@@ -43,5 +48,5 @@ export default defineEventHandler(async (event) => {
     .setExpirationTime('1h')
     .sign(secret);
 
-  return { success: true, token };
+  return { success: true, message: 'Login successful', token };
 });

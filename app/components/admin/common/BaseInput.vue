@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col gap-2">
+    <!-- Label -->
     <label
       v-if="label"
       :for="id"
@@ -8,6 +9,7 @@
       {{ label }}
     </label>
 
+    <!-- Input -->
     <div class="relative w-full">
       <input
         :id="id"
@@ -28,7 +30,7 @@
         :disabled="disabled"
       />
 
-      <!-- Password toggle -->
+      <!-- Password toggle button -->
       <button
         v-if="type === 'password'"
         type="button"
@@ -72,7 +74,10 @@
       </button>
     </div>
 
-    <p v-if="error" class="font-sans text-sm text-red-500">{{ error }}</p>
+    <!-- Error message -->
+    <p v-if="error" class="font-sans text-sm text-red-500">
+      {{ error }}
+    </p>
   </div>
 </template>
 
@@ -84,6 +89,7 @@
   const emit = defineEmits(['update:modelValue', 'blur']);
 
   const showPassword = ref(false);
+
   const inputType = computed(() =>
     props.type === 'password' && showPassword.value
       ? 'text'
