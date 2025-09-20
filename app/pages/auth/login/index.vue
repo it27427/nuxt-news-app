@@ -8,7 +8,7 @@
       {{ formTitle }}
     </h1>
 
-    <BaseForm @submit="handleLogin" class="animated-form">
+    <BaseForm @submit.prevent="handleLogin" class="animated-form">
       <BaseInput
         id="email"
         label="Email"
@@ -109,16 +109,16 @@
     }
 
     try {
-      const res = await $fetch<{ success: boolean; message: string }>(
-        '/api/auth/login',
-        {
-          method: 'POST',
-          body: { ...form },
-        }
-      );
+      const res = await $fetch<{
+        success: boolean;
+        token?: string;
+        message?: string;
+      }>('/api/auth/login', {
+        method: 'POST',
+        body: { ...form },
+      });
 
-      // Success
-      toast.success(res.message);
+      toast.success(res.message || 'Login successful!');
 
       // Reset form
       Object.keys(form).forEach((key) => (form[key as keyof LoginForm] = ''));
@@ -126,20 +126,20 @@
       // Redirect after success
       setTimeout(() => router.push('/admin/dashboard'), 1000);
     } catch (err: any) {
-      // Handle validation errors from backend
+      // If API returns field errors
       if (err?.data?.fields) {
         Object.assign(errors, err.data.fields);
 
-        // Show toast only for user not exists
-        if (err?.statusCode === 404) {
+        // Show toast only if user doesn't exist
+        if (
+          err?.statusCode === 404 ||
+          err?.data?.fields.email === "User doesn't exist!"
+        ) {
           toast.error(
             err?.message ||
               "This user doesn't exist. Please register first then try again."
           );
         }
-      } else if (err?.statusCode === 401 && err?.data?.fields?.password) {
-        // Password incorrect only under input
-        errors.password = err.data.fields.password;
       } else {
         toast.error(err?.statusMessage || 'Something went wrong');
       }
