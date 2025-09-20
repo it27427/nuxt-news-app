@@ -8,7 +8,7 @@
       {{ formTitle }}
     </h1>
 
-    <BaseForm @submit.prevent="handleLogin" class="animated-form">
+    <BaseForm @submit="handleLogin" class="animated-form">
       <BaseInput
         id="email"
         label="Email"
@@ -72,16 +72,18 @@
     password?: string;
   }
 
+  interface LoginResponse {
+    success: boolean;
+    token?: string;
+    message?: string;
+  }
+
   const form = reactive<LoginForm>({
     email: '',
     password: '',
   });
 
-  const errors = reactive<LoginFormErrors>({
-    email: undefined,
-    password: undefined,
-  });
-
+  const errors = reactive<LoginFormErrors>({});
   const loading = ref(false);
 
   async function handleLogin() {
@@ -92,57 +94,32 @@
       (key) => (errors[key as keyof LoginFormErrors] = undefined)
     );
 
-    // FRONTEND VALIDATION
-    let hasError = false;
-    if (!form.email) {
-      errors.email = 'Email is required';
-      hasError = true;
-    }
-    if (!form.password) {
-      errors.password = 'Password is required';
-      hasError = true;
-    }
-
-    if (hasError) {
+    // Frontend validation
+    if (!form.email) errors.email = 'Email is required';
+    if (!form.password) errors.password = 'Password is required';
+    if (errors.email || errors.password) {
       loading.value = false;
       return;
     }
 
     try {
-      const res = await $fetch<{
-        success: boolean;
-        token?: string;
-        message?: string;
-      }>('/api/auth/login', {
+      const res = await $fetch<LoginResponse>('/api/auth/login', {
         method: 'POST',
-        body: { ...form },
+        body: form,
       });
 
       toast.success(res.message || 'Login successful!');
 
+      if (res.token) localStorage.setItem('token', res.token);
+
       // Reset form
       Object.keys(form).forEach((key) => (form[key as keyof LoginForm] = ''));
 
-      // Redirect after success
-      setTimeout(() => router.push('/admin/dashboard'), 1000);
+      // Redirect to dashboard
+      router.push('/admin/dashboard');
     } catch (err: any) {
-      // If API returns field errors
-      if (err?.data?.fields) {
-        Object.assign(errors, err.data.fields);
-
-        // Show toast only if user doesn't exist
-        if (
-          err?.statusCode === 404 ||
-          err?.data?.fields.email === "User doesn't exist!"
-        ) {
-          toast.error(
-            err?.message ||
-              "This user doesn't exist. Please register first then try again."
-          );
-        }
-      } else {
-        toast.error(err?.statusMessage || 'Something went wrong');
-      }
+      if (err?.data?.fields) Object.assign(errors, err.data.fields);
+      toast.error(err?.message || 'Something went wrong');
     } finally {
       loading.value = false;
     }

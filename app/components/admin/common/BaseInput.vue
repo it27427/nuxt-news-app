@@ -51,7 +51,6 @@
           />
           <circle cx="12" cy="12" r="3" />
         </svg>
-
         <svg
           v-else
           xmlns="http://www.w3.org/2000/svg"
