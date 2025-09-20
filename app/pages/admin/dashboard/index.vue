@@ -1,6 +1,6 @@
 <template>
   <DashboardSkeleton v-if="loading" />
-  <div class="flex flex-col space-y-12" v-else>
+  <div v-else class="flex flex-col space-y-12">
     <!-- Daily Metrics -->
     <section class="flex flex-col gap-3">
       <h2 class="text-2xl font-semibold text-dark-surface dark:text-slate-300">
@@ -67,6 +67,11 @@
   import type { CardType, ChartCardProps } from '@/utils/adminPropTypes';
   import { onMounted, ref } from 'vue';
 
+  definePageMeta({
+    layout: 'admin',
+    middleware: ['auth'],
+  });
+
   // Loading state
   const loading = ref(true);
 
@@ -75,10 +80,6 @@
     setTimeout(() => {
       loading.value = false;
     }, 2000); // 2 seconds delay
-  });
-
-  definePageMeta({
-    layout: 'admin',
   });
 
   // --------------------
