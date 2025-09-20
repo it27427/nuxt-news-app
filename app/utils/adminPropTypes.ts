@@ -5,9 +5,9 @@ export interface BaseInputProps {
   type?: string;
   label?: string;
   placeholder?: string;
-  error?: string;
   validated?: boolean;
   modelValue: string;
+  error?: string;
 }
 
 export interface BaseButtonProps {
