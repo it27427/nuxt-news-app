@@ -9,7 +9,6 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { name, email, password } = body;
 
-  // Multi-field validation
   const fields: Record<string, string> = {};
   if (!name) fields.name = 'Name is required';
   if (!email) fields.email = 'Email is required';
@@ -19,7 +18,6 @@ export default defineEventHandler(async (event) => {
     throwError(400, 'Validation failed', fields);
   }
 
-  // Check if user already exists
   let existing = [];
   try {
     existing = await db.select().from(users).where(eq(users.email, email));
@@ -34,10 +32,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Insert user
   await db.insert(users).values({
     name,
     email,

@@ -1,12 +1,6 @@
 // server/utils/error.ts
-import { createError, H3Error } from 'h3';
 
-/**
- * Throw a formatted error
- * @param statusCode - HTTP status code
- * @param statusMessage - General error message
- * @param field - (Optional) single field string or multiple fields as key-value pair
- */
+import { createError, H3Error } from 'h3';
 
 export interface ErrorMessage {
   statusCode: number;
