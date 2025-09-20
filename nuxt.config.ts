@@ -40,39 +40,13 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
-  //@ts-ignore
-  tiptap: {
-    prefix: 'Tiptap',
-  },
-
   css: ['@/assets/scss/main.scss'],
 
   plugins: ['@/plugins/vue-toastification.ts'],
 
-  runtimeConfig: {
-    mongodbUri: process.env.MONGODB_URI,
-    dbName: process.env.DB_NAME,
-    auth: {
-      secret: process.env.NUXT_AUTH_SECRET,
-    },
-    openaiApiKey: process.env.OPENAI_API_KEY,
-    telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
-    public: {
-      appName: 'জনপথ',
-      apiBase:
-        process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000/api/auth',
-      baseURL: process.env.PUBLIC_BASE_URL || 'http://localhost:3000',
-      authJs: {
-        baseURL:
-          process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000/api/auth',
-      },
-    },
-  },
-
   routeRules: {
     '/institutional': { redirect: '/institutional/about/' },
     '/popular': { redirect: '/popular/read/' },
-    '/admin/auth/': { redirect: '/admin/login/' },
     '/admin/': { redirect: '/admin/dashboard/' },
     '/api/auth/**': {
       cors: true,

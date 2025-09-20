@@ -8,38 +8,24 @@
       {{ formTitle }}
     </h1>
 
-    <BaseForm @submit="handleRegister" class="animated-form">
-      <BaseInput
-        id="name"
-        label="Name"
-        placeholder="Enter your name"
-        v-model="form.name"
-        :error="errors.name"
-        :validated="!!form.name && !errors.name"
-        type="text"
-      />
-
+    <BaseForm @submit="handleLogin">
       <BaseInput
         id="email"
         label="Email"
         placeholder="Enter your email"
         v-model="form.email"
         :error="errors.email"
-        :validated="!!form.email && !errors.email"
         type="email"
       />
-
       <BaseInput
         id="password"
         label="Password"
         placeholder="Enter your password"
         v-model="form.password"
         :error="errors.password"
-        :validated="!!form.password && !errors.password"
         type="password"
       />
-
-      <BaseButton type="submit" :loading="loading" label="Register" />
+      <BaseButton type="submit" :loading="loading" label="Login" />
     </BaseForm>
 
     <div class="flex items-center justify-center gap-2 mt-8">
@@ -72,83 +58,25 @@
   const router = useRouter();
   const formTitle = ref('Register');
 
-  interface RegisterForm {
-    name: string;
-    email: string;
-    password: string;
-  }
-
-  interface RegisterFormErrors {
-    name?: string;
-    email?: string;
-    password?: string;
-  }
-
-  const form = reactive<RegisterForm>({
-    name: '',
+  const form = reactive({
     email: '',
     password: '',
   });
 
-  const errors = reactive<RegisterFormErrors>({
-    name: undefined,
-    email: undefined,
-    password: undefined,
+  const errors = reactive({
+    email: '',
+    password: '',
   });
 
   const loading = ref(false);
 
-  async function handleRegister() {
+  async function handleLogin() {
     loading.value = true;
-
-    // Reset errors
-    Object.keys(errors).forEach(
-      (key) => (errors[key as keyof RegisterFormErrors] = undefined)
-    );
-
-    // FRONTEND VALIDATION
-    let hasError = false;
-    if (!form.name) {
-      errors.name = 'Name is required';
-      hasError = true;
-    }
-    if (!form.email) {
-      errors.email = 'Email is required';
-      hasError = true;
-    }
-    if (!form.password) {
-      errors.password = 'Password is required';
-      hasError = true;
-    }
-
-    if (hasError) {
-      loading.value = false;
-      return;
-    }
-
     try {
-      const res = await $fetch<{ success: boolean; message: string }>(
-        '/api/auth/register',
-        {
-          method: 'POST',
-          body: { ...form },
-        }
-      );
-
-      toast.success(res.message);
-
-      // Reset form
-      Object.keys(form).forEach(
-        (key) => (form[key as keyof RegisterForm] = '')
-      );
-
-      setTimeout(() => router.push('/auth/login'), 1000);
-    } catch (err: any) {
-      if (err?.data?.fields) {
-        Object.assign(errors, err.data.fields);
-      } else {
-        toast.error(err?.statusMessage || 'Something went wrong');
-      }
+      // Call your API endpoint
+      console.log('Login request', form);
+    } catch (err) {
+      console.error(err);
     } finally {
       loading.value = false;
     }

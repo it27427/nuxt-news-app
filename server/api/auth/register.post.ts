@@ -1,5 +1,4 @@
-// server/api/auth/register.ts
-
+// server/api/auth/register.post.ts
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import { users } from '~~/server/db/schema';
@@ -11,21 +10,27 @@ export default defineEventHandler(async (event) => {
   const { name, email, password } = body;
 
   // Multi-field validation
-  const errors: Record<string, string> = {};
-  if (!name) errors.name = 'Name is required';
-  if (!email) errors.email = 'Email is required';
-  if (!password) errors.password = 'Password is required';
+  const fields: Record<string, string> = {};
+  if (!name) fields.name = 'Name is required';
+  if (!email) fields.email = 'Email is required';
+  if (!password) fields.password = 'Password is required';
 
-  if (Object.keys(errors).length > 0) {
-    throwError(400, 'Validation failed', errors);
+  if (Object.keys(fields).length > 0) {
+    throwError(400, 'Validation failed', fields);
   }
 
   // Check if user already exists
-  const existing = await db.select().from(users).where(eq(users.email, email));
+  let existing = [];
+  try {
+    existing = await db.select().from(users).where(eq(users.email, email));
+  } catch (err) {
+    console.error('Database query failed:', err);
+    throwError(500, 'Database connection error');
+  }
 
   if (existing.length > 0) {
-    throwError(400, 'User already exists with this email', {
-      email: 'Already exists',
+    throwError(400, 'User already exists', {
+      email: 'Email already registered',
     });
   }
 

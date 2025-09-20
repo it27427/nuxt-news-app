@@ -1,7 +1,7 @@
+// server/utils/db.ts
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 
-// PostgreSQL-CONNECTION
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });

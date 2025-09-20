@@ -2,12 +2,14 @@
 
 export interface BaseInputProps {
   id?: string;
-  type?: string;
+  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
   label?: string;
   placeholder?: string;
-  validated?: boolean;
   modelValue: string;
   error?: string;
+  validated?: boolean;
+  autocomplete?: string;
+  disabled?: boolean;
 }
 
 export interface BaseButtonProps {

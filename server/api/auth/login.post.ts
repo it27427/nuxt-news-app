@@ -12,19 +12,19 @@ export default defineEventHandler(async (event) => {
   const { email, password } = body;
 
   // Multi-field validation
-  const errors: Record<string, string> = {};
-  if (!email) errors.email = 'Email is required';
-  if (!password) errors.password = 'Password is required';
-  if (Object.keys(errors).length > 0) {
-    throwError(400, 'Validation failed', errors);
+  const fields: Record<string, string> = {};
+  if (!email) fields.email = 'Email is required';
+  if (!password) fields.password = 'Password is required';
+
+  if (Object.keys(fields).length > 0) {
+    throwError(400, 'Validation failed', fields);
   }
 
   // Find user
   const user = await db.select().from(users).where(eq(users.email, email));
   if (user.length === 0) {
     throwError(401, 'Invalid credentials', {
-      email: 'Invalid',
-      password: 'Invalid',
+      email: 'Invalid email or password',
     });
   }
 
@@ -32,8 +32,7 @@ export default defineEventHandler(async (event) => {
   const validPassword = await bcrypt.compare(password, user[0].password);
   if (!validPassword) {
     throwError(401, 'Invalid credentials', {
-      email: 'Invalid',
-      password: 'Invalid',
+      password: 'Invalid email or password',
     });
   }
 

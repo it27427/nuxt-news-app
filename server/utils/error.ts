@@ -1,17 +1,17 @@
 // server/utils/error.ts
-import { createError } from 'h3';
+import { createError, H3Error } from 'h3';
 
 /**
  * Throw a formatted error
  * @param statusCode - HTTP status code
- * @param statusMessage - Error message
- * @param field - (Optional) field or multiple fields that caused the error
+ * @param statusMessage - General error message
+ * @param field - (Optional) single field string or multiple fields as key-value pair
  */
 
 export interface ErrorMessage {
   statusCode: number;
   statusMessage: string;
-  field?: string | Record<string, string>;
+  field?: Record<string, string>;
 }
 
 export const throwError = (
@@ -19,9 +19,16 @@ export const throwError = (
   statusMessage: string = 'Bad Request',
   field?: string | Record<string, string>
 ) => {
+  const data =
+    typeof field === 'string'
+      ? { field: { general: field } }
+      : field
+        ? { field }
+        : undefined;
+
   throw createError({
     statusCode,
     statusMessage,
-    data: field ? { field } : undefined, // frontend can read which field failed
-  });
+    data,
+  }) as H3Error;
 };

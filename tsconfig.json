@@ -29,7 +29,7 @@
     },
     "types": [
       "node",
-      "echarts"
+      "echarts",
     ],
     "typeRoots": [
       "./node_modules/@types",
