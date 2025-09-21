@@ -1,52 +1,70 @@
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
-import * as jose from 'jose';
-import { users } from '~~/server/db/schema';
-import { db } from '~~/server/utils/db';
-import { throwError } from '~~/server/utils/error';
+import { defineEventHandler, readBody } from 'h3';
+import jwt from 'jsonwebtoken';
+import { db } from '~/server/db/db';
+import { users } from '~/server/db/schema';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { email, password } = body;
 
-  // Validation
-  const fields: Record<string, string> = {};
-  if (!email) fields.email = 'Email is required';
-  if (!password) fields.password = 'Password is required';
-  if (Object.keys(fields).length > 0) {
-    throwError(400, 'Validation failed', fields);
+  // Store errors per field
+  const errors: Record<string, string> = {};
+
+  // 1. Empty validation
+  if (!email) {
+    errors.email = 'Email is required';
+  }
+  if (!password) {
+    errors.password = 'Password is required';
+  }
+  if (Object.keys(errors).length > 0) {
+    return { success: false, errors };
   }
 
-  // Find user
-  const user = await db.select().from(users).where(eq(users.email, email));
-  if (user.length === 0) {
-    throwError(
-      404,
-      "This user doesn't exist. Please register first then try again.",
-      {
-        email: 'User not found! Please register first then try again.',
-      }
-    );
+  // 2. Regex email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    errors.email = 'Invalid email format';
+    return { success: false, errors };
   }
 
-  // Verify password
-  const validPassword = await bcrypt.compare(password, user[0].password);
-  if (!validPassword) {
-    throwError(
-      401,
-      'Password is incorrect, please provide the correct password.',
-      {
-        password: 'Password is incorrect, please provide the correct password.',
-      }
-    );
+  // 3. Check user exists
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email));
+  if (!existingUser || existingUser.length === 0) {
+    errors.email = 'User not found! Please register first then try again.';
+    return { success: false, errors };
   }
 
-  // Create JWT
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-  const token = await new jose.SignJWT({ id: user[0].id, email: user[0].email })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('1h')
-    .sign(secret);
+  const user = existingUser[0];
 
-  return { success: true, message: 'Login successful', token };
+  // 4. Validate password
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    errors.password =
+      'Incorrect password. Please provide the correct password.';
+    return { success: false, errors };
+  }
+
+  // 5. Create JWT Token
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.JWT_SECRET || 'secret',
+    { expiresIn: '1d' }
+  );
+
+  return {
+    success: true,
+    message: 'Login successful',
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    },
+  };
 });

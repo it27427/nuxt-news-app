@@ -1,3 +1,5 @@
+// /app/middleware/auth.ts
+
 import { defineNuxtRouteMiddleware, navigateTo } from '#app';
 import * as jose from 'jose';
 

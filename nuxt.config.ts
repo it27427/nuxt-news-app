@@ -12,7 +12,7 @@ export default defineNuxtConfig({
 
   ssr: true,
 
-  srcDir: process.env.NUXT_SRC_DIR || 'app/',
+  srcDir: 'app/',
 
   imports: {
     dirs: ['content', 'server', 'shared', 'composables'],
@@ -26,7 +26,7 @@ export default defineNuxtConfig({
 
   components: {
     global: true,
-    dirs: ['~/components'],
+    dirs: ['@/components'],
   },
 
   modules: [
@@ -97,6 +97,7 @@ export default defineNuxtConfig({
       alias: {
         '@': resolve(__dirname, './app'),
         '~': resolve(__dirname, '.'),
+        '~/server': resolve(__dirname, './server'),
       },
     },
   },

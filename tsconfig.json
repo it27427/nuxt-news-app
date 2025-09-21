@@ -6,16 +6,16 @@
     "baseUrl": ".",
     "paths": {
       "~/*": [
-        "./app/*"
+        "./*"
       ],
       "@/*": [
         "./app/*"
       ],
-      "~~/*": [
-        "./*"
-      ],
       "@@/*": [
         "./*"
+      ],
+      "~/server/*": [
+        "./server/*"
       ],
       "#app": [
         "./node_modules/nuxt/dist/app/index"
@@ -37,11 +37,11 @@
     ]
   },
   "include": [
-    "types/**/*.d.ts",
+    "server/**/*.ts",
     "app/**/*.ts",
     "app/**/*.vue",
-    "server/**/*.ts",
-    "components/**/*.vue"
+    "components/**/*.vue",
+    "types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",

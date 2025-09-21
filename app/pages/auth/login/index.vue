@@ -15,7 +15,6 @@
         placeholder="Enter your email"
         v-model="form.email"
         :error="errors.email"
-        :validated="!!form.email && !errors.email"
         type="email"
       />
 
@@ -25,7 +24,6 @@
         placeholder="Enter your password"
         v-model="form.password"
         :error="errors.password"
-        :validated="!!form.password && !errors.password"
         type="password"
       />
 
@@ -66,30 +64,25 @@
     email: string;
     password: string;
   }
-
   interface LoginFormErrors {
     email?: string;
     password?: string;
   }
-
   interface LoginResponse {
     success: boolean;
     token?: string;
     message?: string;
+    fields?: LoginFormErrors;
   }
 
-  const form = reactive<LoginForm>({
-    email: '',
-    password: '',
-  });
-
+  const form = reactive<LoginForm>({ email: '', password: '' });
   const errors = reactive<LoginFormErrors>({});
   const loading = ref(false);
 
   async function handleLogin() {
     loading.value = true;
 
-    // Reset errors
+    // Reset previous errors
     Object.keys(errors).forEach(
       (key) => (errors[key as keyof LoginFormErrors] = undefined)
     );
@@ -97,6 +90,7 @@
     // Frontend validation
     if (!form.email) errors.email = 'Email is required';
     if (!form.password) errors.password = 'Password is required';
+
     if (errors.email || errors.password) {
       loading.value = false;
       return;
@@ -108,18 +102,31 @@
         body: form,
       });
 
+      // Successful login
       toast.success(res.message || 'Login successful!');
-
       if (res.token) localStorage.setItem('token', res.token);
 
-      // Reset form
-      Object.keys(form).forEach((key) => (form[key as keyof LoginForm] = ''));
-
-      // Redirect to dashboard
+      Object.keys(form).forEach((k) => (form[k as keyof LoginForm] = ''));
       router.push('/admin/dashboard');
     } catch (err: any) {
-      if (err?.data?.fields) Object.assign(errors, err.data.fields);
-      toast.error(err?.message || 'Something went wrong');
+      if (err?.data?.fields) {
+        Object.assign(errors, err.data.fields);
+
+        // Email not found → show toast
+        if (err.statusCode === 404 && errors.email) {
+          toast.error(
+            err.message ||
+              'User not found! Please register first then try again.'
+          );
+        }
+
+        // Password incorrect → only show below input
+        if (err.statusCode === 401 && errors.password) {
+          // nothing for toast
+        }
+      } else {
+        toast.error(err?.message || 'Something went wrong');
+      }
     } finally {
       loading.value = false;
     }

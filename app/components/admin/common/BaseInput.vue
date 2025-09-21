@@ -20,7 +20,7 @@
           'relative w-full font-sans text-dark dark:text-light bg-transparent h-12 px-4 py-2 rounded-lg border-2 transition-colors focus:outline-none',
           error
             ? 'border-red-500 focus:border-red-500'
-            : validated
+            : modelValue && !error
               ? 'border-green-500 focus:border-green-500'
               : 'border-gray-300 dark:border-dark-divider focus:border-primary dark:focus:border-primary',
         ]"
