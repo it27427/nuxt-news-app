@@ -11,9 +11,6 @@
       "~~/*": [
         "./*"
       ],
-      "#shared/*": [
-        "./shared/*"
-      ],
       "#app": [
         "./node_modules/nuxt/dist/app/index"
       ],

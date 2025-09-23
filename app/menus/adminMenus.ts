@@ -1,5 +1,8 @@
-// menus/adminMenus.ts
-export const adminMenus = [
+// components/menus/adminMenus.ts
+
+import type { AdminMenu } from '~~/types/admin';
+
+export const adminMenus: AdminMenu[] = [
   {
     label: 'ড্যাশবোর্ড',
     to: '/admin/dashboard',

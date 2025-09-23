@@ -1,12 +1,9 @@
-// nuxt.config.ts
-
 import { defineNuxtConfig } from 'nuxt/config';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  // @ts-ignore
   devtools: {
     enabled: true,
     splashScreen: false,
@@ -19,14 +16,17 @@ export default defineNuxtConfig({
   imports: {
     dirs: [
       'composables',
-      'composables/*/index.{ts,js,mjs,mts}',
       'composables/**',
       'utils',
-      'utils/*/index.{ts,js,mjs,mts}',
       'utils/**',
-      'server/utils',
-      'server/utils/*/index.{ts,js,mjs,mts}',
-      'server/utils/**',
+      'menus',
+      'menus/**',
+      'middleware',
+      'middleware/**',
+      // '../server/utils',
+      // '../server/utils/**',
+      // '../shared',
+      // '../shared/**',
     ],
     presets: [
       {
@@ -36,12 +36,24 @@ export default defineNuxtConfig({
     ],
   },
 
+  nitro: {
+    imports: {
+      dirs: [
+        '~~/server/utils',
+        '~~/server/utils/**',
+        '~~/server/middleware',
+        '~~/server/middleware/**',
+        '~~/shared',
+        '~~/shared/**',
+      ],
+    },
+  },
+
   components: [
     {
       path: '~/components',
       pathPrefix: false,
       global: true,
-      extensions: ['vue'],
     },
   ],
 
@@ -70,16 +82,14 @@ export default defineNuxtConfig({
     },
   },
 
-  // @ts-ignore
   colorMode: {
     preference: 'system',
     fallback: 'light',
     classSuffix: '',
     storageKey: 'theme',
-  } as any,
+  },
 
   tailwindcss: {
-    cssPath: '~/assets/scss/main.scss',
     configPath: '~/tailwind.config.ts',
     exposeConfig: false,
     viewer: true,
@@ -113,7 +123,6 @@ export default defineNuxtConfig({
       alias: {
         '~': resolve(__dirname, './app'),
         '~~': resolve(__dirname, '.'),
-        '#shared': resolve(__dirname, './shared'),
       },
     },
   },

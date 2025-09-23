@@ -4,7 +4,7 @@
     <OpenButton @open="open" />
 
     <!-- Offcanvas -->
-    <OffcanvasSidebar
+    <AdminOffcanvasSidebar
       :is-open="isOpen"
       :is-collapsed="isCollapsed"
       @close="close"
@@ -63,7 +63,7 @@
       >
         <AdminMenu :menus="props.menus" :open="isCollapsed" />
       </OffcanvasBody>
-    </OffcanvasSidebar>
+    </AdminOffcanvasSidebar>
   </div>
 </template>
 
@@ -73,7 +73,7 @@
   import CollapseButton from '~/components/admin/global/CollapseButton.vue';
   import CloseButton from '~/components/admin/global/offcanvas/CloseButton.vue';
   import OffcanvasBody from '~/components/admin/global/offcanvas/OffcanvasBody.vue';
-  import OffcanvasSidebar from '~/components/admin/global/offcanvas/OffcanvasSidebar.vue';
+  import AdminOffcanvasSidebar from '~/components/admin/global/offcanvas/AdminOffcanvasSidebar.vue';
   import OpenButton from '~/components/admin/global/offcanvas/OpenButton.vue';
   import Header from '~/components/global/layouts/Header.vue';
   import type { MenuProps } from '~/utils/adminPropTypes';

@@ -1,4 +1,8 @@
-export const headerMenu = [
+// components/menus/jonopathMenus.ts
+
+import type { NavItem } from '~~/types/global';
+
+export const headerMenu: NavItem[] = [
   { label: 'মূলপাতা', to: '/' },
   { label: 'রাজনীতি', to: '/topics/politics' },
   { label: 'সর্বাধিক পঠিত', to: '/popular/read' },
@@ -10,7 +14,7 @@ export const headerMenu = [
   { label: 'ভিডিও', to: '/topics/video' },
 ];
 
-export const footerMenu = [
+export const footerMenu: NavItem[] = [
   {
     label: 'জনপথের ওপর কেন আপনি আস্থা রাখতে পারেন',
     to: '/institutional/trust-and-transparency',

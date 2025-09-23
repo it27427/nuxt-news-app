@@ -1,12 +1,12 @@
 <template>
   <div class="relative">
     <!-- Header -->
-    <Header />
+    <AdminHeader />
 
     <div class="flex">
       <!-- Desktop Sidebar -->
       <Sidebar
-        :menus="adminMenus"
+        :menus="menus"
         :open="sidebarOpen"
         @toggle="toggleSidebar"
         class="hidden lg:flex fixed top-20 left-0 h-screen flex-col transition-all duration-300"
@@ -25,7 +25,7 @@
         <Breadcrumb class="flex items-center w-full h-12">
           <!-- Offcanvas for tablet/mobile -->
           <div class="lg:hidden">
-            <Offcanvas :menus="adminMenus" />
+            <AdminOffcanvas :menus="menus" />
           </div>
         </Breadcrumb>
 
@@ -35,7 +35,7 @@
         </main>
 
         <!-- DASHBOARD-FOOTER -->
-        <Footer
+        <AdminFooter
           class="bg-white text-dark dark:bg-slate-800 dark:text-white w-full h-12 flex items-center justify-center"
         />
       </div>
@@ -47,14 +47,7 @@
 </template>
 
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref } from 'vue';
-  import Footer from '~/components/admin/Footer.vue';
-  import Header from '~/components/admin/Header.vue';
-  import Sidebar from '~/components/admin/Sidebar.vue';
-  import Breadcrumb from '~/components/admin/global/Breadcrumb.vue';
-  import Offcanvas from '~/components/admin/global/offcanvas/Offcanvas.vue';
-  import ScrollToTop from '~/components/global/ScrollToTop.vue';
-  import { adminMenus } from '~/menus/adminMenus';
+  const menus = ref<AdminMenu[]>(adminMenus);
 
   // Sidebar collapse state
   const sidebarOpen = ref(true);
