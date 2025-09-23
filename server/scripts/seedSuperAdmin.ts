@@ -1,5 +1,6 @@
 // server/utils/seedSuperAdmin.ts
 
+import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import { db } from '~~/server/db/db';
 import { users } from '~~/server/db/schema';

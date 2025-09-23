@@ -97,6 +97,7 @@ export default defineNuxtConfig({
     },
   },
 
+  // @ts-ignore
   colorMode: {
     preference: 'system',
     fallback: 'light',
@@ -133,7 +134,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    plugins: [tsconfigPaths()],
+    // plugins: [tsconfigPaths()],
     resolve: {
       alias: {
         '~': resolve(__dirname, './app'),
