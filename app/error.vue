@@ -20,7 +20,7 @@
 
             <BaseLink
               :to="
-                status === 'authenticated' ? '/admin/dashboard' : '/admin/login'
+                status === 'authenticated' ? '/admin/dashboard' : '/auth/login'
               "
               class="bg-primary text-white rounded-sm px-6 h-14 py-2 flex items-center gap-1 justify-center transition-all hover:bg-primary-dark"
             >
@@ -68,7 +68,7 @@
 
             <BaseLink
               :to="
-                status === 'authenticated' ? '/admin/dashboard' : '/admin/login'
+                status === 'authenticated' ? '/admin/dashboard' : '/auth/login'
               "
               class="bg-primary text-white rounded-sm px-6 h-14 py-2 flex items-center gap-1 justify-center transition-all hover:bg-primary-dark"
             >

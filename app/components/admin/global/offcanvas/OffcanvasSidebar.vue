@@ -23,7 +23,7 @@
   }>();
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .slide-enter-from,
   .slide-leave-to {
     transform: translateX(-100%);
