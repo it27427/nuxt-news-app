@@ -19,9 +19,6 @@
 </template>
 
 <script setup lang="ts">
-  import Copyright from '~/components/global/Copyright.vue';
-  import FooterMenu from '~/components/global/menus/FooterMenu.vue';
-  import TopBar from '~/components/global/TopBar.vue';
   import type { NavItem } from '~~/types/global';
 
   // Define Props

@@ -19,10 +19,6 @@
 </template>
 
 <script setup lang="ts">
-  import TopicNews from '~/components/sections/TopicNews.vue';
-  /** DATA-LOADING-SKELETON  */
-  import { computed, onMounted, ref } from 'vue';
-  import TopicNewsSkeleton from '~/components/skeletons/TopicNewsSkeleton.vue';
   import type { VideoItem } from '~~/types/news';
 
   definePageMeta({ auth: false });

@@ -54,11 +54,6 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
-  import AdminMenu from '~/components/admin/global/AdminMenu.vue';
-  import CollapseButton from '~/components/admin/global/CollapseButton.vue';
-  import SidebarSkeleton from '~/components/admin/skeletons/SidebarSkeleton.vue.vue';
-  import Header from '~/components/global/layouts/Header.vue';
   import type { MenuProps } from '~/utils/adminPropTypes';
 
   const props = defineProps<{

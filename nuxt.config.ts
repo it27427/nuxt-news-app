@@ -23,15 +23,30 @@ export default defineNuxtConfig({
       'menus/**',
       'middleware',
       'middleware/**',
-      // '../server/utils',
-      // '../server/utils/**',
-      // '../shared',
-      // '../shared/**',
     ],
     presets: [
       {
         from: 'vue',
-        imports: ['ref', 'computed', 'watch', 'onMounted', 'onUnmounted'],
+        imports: [
+          'ref',
+          'reactive',
+          'computed',
+          'watch',
+          'onMounted',
+          'onUnmounted',
+        ],
+      },
+      {
+        from: 'vue-toastification',
+        imports: ['useToast'],
+      },
+      {
+        from: 'vue-final-modal',
+        imports: ['VueFinalModal'],
+      },
+      {
+        from: 'axios',
+        imports: ['default as axios'],
       },
     ],
   },

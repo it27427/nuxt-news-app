@@ -29,11 +29,6 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, onUnmounted, ref } from 'vue';
-  import Hamburger from '~/components/global/hamburger/Hamburger.vue';
-  import Header from '~/components/global/layouts/Header.vue';
-  import DesktopMenu from '~/components/global/menus/DesktopMenu.vue';
-
   import type { NavItem } from '~~/types/global';
 
   // Props

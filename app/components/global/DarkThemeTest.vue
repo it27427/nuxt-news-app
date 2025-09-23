@@ -19,7 +19,6 @@
 
 <script setup lang="ts">
   import { useColorMode } from '#imports';
-  import { computed, onMounted } from 'vue';
 
   type Theme = 'light' | 'dark';
 

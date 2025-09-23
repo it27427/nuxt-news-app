@@ -1,6 +1,4 @@
 // composables/useCustomAuth.ts
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 export const useCustomAuth = () => {
   const router = useRouter();

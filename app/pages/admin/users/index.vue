@@ -70,12 +70,6 @@
 </template>
 
 <script setup lang="ts">
-  import axios from 'axios';
-  import { onMounted, ref } from 'vue';
-  import { VueFinalModal } from 'vue-final-modal';
-  import { useRouter } from 'vue-router';
-  import BaseButton from '~/components/admin/common/BaseButton.vue';
-
   definePageMeta({ layout: 'admin' });
 
   const router = useRouter();

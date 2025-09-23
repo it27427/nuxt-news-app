@@ -38,7 +38,6 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
   import type { BaseButtonProps } from '~/utils/adminPropTypes';
 
   const props = withDefaults(defineProps<BaseButtonProps>(), {

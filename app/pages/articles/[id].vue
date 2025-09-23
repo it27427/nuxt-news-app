@@ -9,5 +9,3 @@
 
   definePageMeta({ auth: false });
 </script>
-
-/** /topics/articles/${news._id} */

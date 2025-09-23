@@ -13,8 +13,6 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-
   const title = ref('জনপথের বিজ্ঞাপন');
 
   const { sectionClass = '' } = defineProps<{

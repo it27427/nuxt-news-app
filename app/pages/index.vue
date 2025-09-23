@@ -117,23 +117,6 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
-
-  import AdSection from '~/components/sections/AdSection.vue';
-  import MainNews from '~/components/sections/MainNews.vue';
-  import OthersNews from '~/components/sections/OthersNews.vue';
-  import PopularNews from '~/components/sections/PopularNews.vue';
-  import SelectedNews from '~/components/sections/SelectedNews.vue';
-  import SocialSection from '~/components/sections/SocialSection.vue';
-  import TopicNews from '~/components/sections/TopicNews.vue';
-
-  /** DATA-LOADING-SKELETON  */
-  import MainNewsSkeleton from '~/components/skeletons/MainNewsSkeleton.vue';
-  import OthersNewsSkeleton from '~/components/skeletons/OthersNewsSkeleton.vue';
-  import PopularNewsSkeleton from '~/components/skeletons/PopularNewsSkeleton.vue';
-  import SelectedNewsSkeleton from '~/components/skeletons/SelectedNewsSkeleton.vue';
-  import TopicNewsSkeleton from '~/components/skeletons/TopicNewsSkeleton.vue';
-
   definePageMeta({ auth: false });
 
   import type {

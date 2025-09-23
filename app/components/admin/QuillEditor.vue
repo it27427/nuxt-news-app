@@ -5,7 +5,6 @@
 <script lang="ts" setup>
   import { QuillEditor } from '@vueup/vue-quill';
   import '@vueup/vue-quill/dist/vue-quill.snow.css';
-  import { ref } from 'vue';
 
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],

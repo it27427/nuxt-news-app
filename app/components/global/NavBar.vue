@@ -20,9 +20,6 @@
 </template>
 
 <script setup lang="ts">
-  import DesktopMenu from '~/components/global/menus/DesktopMenu.vue';
-  import OffcanvasButton from '~/components/global/offcanvas/OffcanvasButton.vue';
-
   // Props (collapseMenu optional for bottom header)
   const { navItems, offcanvasIsOpen } = defineProps<{
     navItems: { label: string; to: string }[];

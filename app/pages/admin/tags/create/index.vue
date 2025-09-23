@@ -11,10 +11,6 @@
 </template>
 
 <script setup lang="ts">
-  import { definePageMeta } from '#imports';
-  import { useToast } from 'vue-toastification';
-  import Form from '~/components/admin/forms/Form.vue';
-
   definePageMeta({
     layout: 'admin',
   });

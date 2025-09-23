@@ -14,7 +14,6 @@
 </template>
 
 <script lang="ts" setup>
-  import Button from '~/components/admin/global/Button.vue';
   defineEmits<{
     (e: 'close'): void;
   }>();

@@ -49,10 +49,6 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, onMounted, ref } from 'vue';
-  import { useRoute } from 'vue-router';
-  import BreadcrumbSkeleton from '~/components/admin/skeletons/BreadcrumbSkeleton.vue';
-  import BaseLink from '~/components/base/BaseLink.vue';
   import { adminMenus } from '~/menus/adminMenus';
   import { toBanglaNumber } from '~/utils/number';
 

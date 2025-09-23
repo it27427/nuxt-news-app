@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-  import MobileMenu from '~/components/global/menus/MobileMenu.vue';
   import type { NavItem } from '~~/types/global';
 
   const { isOpen, navItems, close } = defineProps<{

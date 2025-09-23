@@ -43,12 +43,6 @@
 </template>
 
 <script setup lang="ts">
-  import axios from 'axios';
-  import { reactive, ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import BaseButton from '~/components/admin/common/BaseButton.vue';
-  import BaseInput from '~/components/admin/common/BaseInput.vue';
-
   definePageMeta({ layout: 'admin' });
 
   interface Form {

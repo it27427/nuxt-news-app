@@ -145,7 +145,6 @@
 
 <script setup lang="ts">
   import type { NuxtError } from '#app';
-  import { useRoute } from '#imports';
 
   declare const useErrorAuth: () => {
     status: 'authenticated' | 'unauthenticated';

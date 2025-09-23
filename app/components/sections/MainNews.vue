@@ -28,9 +28,6 @@
 </template>
 
 <script setup lang="ts">
-  import BaseImage from '~/components/base/BaseImage.vue';
-  import BaseLink from '~/components/base/BaseLink.vue';
-  import BasePicture from '~/components/base/BasePicture.vue';
   import type { NewsItem } from '~~/types/news';
 
   const { mainNews } = defineProps<{ mainNews: NewsItem[] }>();

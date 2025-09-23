@@ -45,15 +45,6 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import AuthLogo from '~/components/admin/AuthLogo.vue';
-  import BaseButton from '~/components/admin/common/BaseButton.vue';
-  import BaseForm from '~/components/admin/common/BaseForm.vue';
-  import BaseInput from '~/components/admin/common/BaseInput.vue';
-  import BaseLink from '~/components/base/BaseLink.vue';
-
   definePageMeta({ layout: 'authentication' });
 
   const toast = useToast();

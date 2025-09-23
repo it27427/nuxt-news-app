@@ -77,7 +77,6 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ref } from 'vue';
   import type { BaseInputProps } from '~/utils/adminPropTypes';
 
   const props = defineProps<BaseInputProps>();

@@ -68,14 +68,6 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import AdminMenu from '~/components/admin/global/AdminMenu.vue';
-  import CollapseButton from '~/components/admin/global/CollapseButton.vue';
-  import CloseButton from '~/components/admin/global/offcanvas/CloseButton.vue';
-  import OffcanvasBody from '~/components/admin/global/offcanvas/OffcanvasBody.vue';
-  import AdminOffcanvasSidebar from '~/components/admin/global/offcanvas/AdminOffcanvasSidebar.vue';
-  import OpenButton from '~/components/admin/global/offcanvas/OpenButton.vue';
-  import Header from '~/components/global/layouts/Header.vue';
   import type { MenuProps } from '~/utils/adminPropTypes';
 
   const props = defineProps<{ menus: MenuProps[] }>();
