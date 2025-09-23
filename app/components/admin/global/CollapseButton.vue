@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-  import Button from '@/components/admin/global/Button.vue';
+  import Button from '~/components/admin/global/Button.vue';
 
   const { open } = defineProps<{ open: boolean }>();
   const emit = defineEmits<{ (e: 'toggle'): void }>();

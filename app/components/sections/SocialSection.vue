@@ -8,9 +8,9 @@
 </template>
 
 <script lang="ts" setup>
-  import SocialMenu from '@/components/global/menus/SocialMenu.vue';
-  import SocialMenuSkeleton from '@/components/skeletons/SocialMenuSkeleton.vue';
   import { onMounted, ref } from 'vue';
+  import SocialMenu from '~/components/global/menus/SocialMenu.vue';
+  import SocialMenuSkeleton from '~/components/skeletons/SocialMenuSkeleton.vue';
   import type { SocialItem } from '~~/types/news';
 
   const loading = ref(true);

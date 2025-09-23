@@ -26,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-  import type { ChartCardProps } from '@/utils/adminPropTypes';
   import {
     BarChart,
     GaugeChart,
@@ -49,6 +48,7 @@
     reactive,
     ref,
   } from 'vue';
+  import type { ChartCardProps } from '~/utils/adminPropTypes';
 
   use([
     CanvasRenderer,

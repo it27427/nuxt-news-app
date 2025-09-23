@@ -1,9 +1,10 @@
 // server/api/auth/register.post.ts
-import { db } from '@@/server/db/db';
-import { users } from '@@/server/db/schema';
-import { throwError } from '@@/server/utils/error';
+
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
+import { db } from '~~/server/db/db';
+import { users } from '~~/server/db/schema';
+import { throwError } from '~~/server/utils/error';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);

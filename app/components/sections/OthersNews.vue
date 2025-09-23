@@ -33,10 +33,10 @@
 </template>
 
 <script lang="ts" setup>
-  import BaseImage from '@/components/base/BaseImage.vue';
-  import BaseLink from '@/components/base/BaseLink.vue';
-  import BasePicture from '@/components/base/BasePicture.vue';
   import { ref } from 'vue';
+  import BaseImage from '~/components/base/BaseImage.vue';
+  import BaseLink from '~/components/base/BaseLink.vue';
+  import BasePicture from '~/components/base/BasePicture.vue';
   import type { OthersNewsItem } from '~~/types/news';
 
   const title = ref('অন্যান্য খবর');

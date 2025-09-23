@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-  import QuillEditor from '@/components/admin/QuillEditor.vue';
   import { ref } from 'vue';
+  import QuillEditor from '~/components/admin/QuillEditor.vue';
 
   definePageMeta({
     layout: 'admin',

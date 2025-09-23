@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-  import BaseButton from '@/components/admin/common/BaseButton.vue';
-  import BaseForm from '@/components/admin/common/BaseForm.vue';
-  import FormInput from '@/components/admin/forms/FormInput.vue';
   import { reactive, ref } from 'vue';
   import { useToast } from 'vue-toastification';
+  import BaseButton from '~/components/admin/common/BaseButton.vue';
+  import BaseForm from '~/components/admin/common/BaseForm.vue';
+  import FormInput from '~/components/admin/forms/FormInput.vue';
 
   interface Field {
     name: string;

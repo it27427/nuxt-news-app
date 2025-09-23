@@ -22,10 +22,10 @@
 </template>
 
 <script setup lang="ts">
-  import MostRead from '@/components/sections/MostRead.vue';
+  import MostRead from '~/components/sections/MostRead.vue';
   /** DATA-LOADING-SKELETON  */
-  import MostReadNewsSkeleton from '@/components/skeletons/MostReadNewsSkeleton.vue';
   import { onMounted, ref } from 'vue';
+  import MostReadNewsSkeleton from '~/components/skeletons/MostReadNewsSkeleton.vue';
   import type { MostReadItem } from '~~/types/news';
 
   definePageMeta({ auth: false });

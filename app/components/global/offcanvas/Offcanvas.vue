@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-  import OffcanvasSidebar from '@/components/global/offcanvas/OffcanvasSidebar.vue';
+  import OffcanvasSidebar from '~/components/global/offcanvas/OffcanvasSidebar.vue';
 
   type NavItem = { label: string; to: string };
 

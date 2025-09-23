@@ -93,12 +93,12 @@
 </template>
 
 <script setup lang="ts">
-  import BaseImage from '@/components/base/BaseImage.vue';
-  import BaseLink from '@/components/base/BaseLink.vue';
-  import BasePicture from '@/components/base/BasePicture.vue';
-  import Pagination from '@/components/global/Pagination.vue';
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
+  import BaseImage from '~/components/base/BaseImage.vue';
+  import BaseLink from '~/components/base/BaseLink.vue';
+  import BasePicture from '~/components/base/BasePicture.vue';
+  import Pagination from '~/components/global/Pagination.vue';
   import type { TopicItem, VideoItem } from '~~/types/news';
 
   const props = defineProps<{

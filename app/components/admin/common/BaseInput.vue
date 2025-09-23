@@ -77,8 +77,8 @@
 </template>
 
 <script setup lang="ts">
-  import type { BaseInputProps } from '@/utils/adminPropTypes';
   import { computed, ref } from 'vue';
+  import type { BaseInputProps } from '~/utils/adminPropTypes';
 
   const props = defineProps<BaseInputProps>();
   const emit = defineEmits(['update:modelValue', 'blur']);

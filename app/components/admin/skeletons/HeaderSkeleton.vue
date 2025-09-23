@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-  import Header from '@/components/global/layouts/Header.vue';
+  import Header from '~/components/global/layouts/Header.vue';
 </script>
 
 <style scoped lang="scss">

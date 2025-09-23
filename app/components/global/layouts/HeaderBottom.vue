@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-  import Header from '@/components/global/layouts/Header.vue';
-  import NavBar from '@/components/global/NavBar.vue';
-  import SvgIcon from '@/components/global/SvgIcon.vue';
+  import Header from '~/components/global/layouts/Header.vue';
+  import NavBar from '~/components/global/NavBar.vue';
+  import SvgIcon from '~/components/global/SvgIcon.vue';
   import type { NavItem } from '~~/types/global';
 
   // Props

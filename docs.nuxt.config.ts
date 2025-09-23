@@ -76,7 +76,7 @@ export default defineNuxtConfig({
    * =========================================*/
   // @ts-ignore => to skip unsupported options.
   tailwindcss: {
-    cssPath: '@/assets/scss/main.scss',
+    cssPath: '~/assets/scss/main.scss',
     configPath: 'tailwind.config.ts',
     exposeConfig: false,
     config: {},
@@ -169,5 +169,5 @@ export default defineNuxtConfig({
    * 🎨 Application Stylesheets
    * ✍️ Global theme setup goes here.
    * ===========================================*/
-  css: ['@/assets/scss/main.scss'],
+  css: ['~/assets/scss/main.scss'],
 });

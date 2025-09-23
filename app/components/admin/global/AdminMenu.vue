@@ -34,10 +34,10 @@
 </template>
 
 <script setup lang="ts">
-  import { useCustomAuth } from '@/composables/useCustomAuth';
-  import type { MenuProps } from '@/utils/adminPropTypes';
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
+  import { useCustomAuth } from '~/composables/useCustomAuth';
+  import type { MenuProps } from '~/utils/adminPropTypes';
 
   const props = defineProps<{
     menus: MenuProps[];

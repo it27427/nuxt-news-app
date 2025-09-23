@@ -154,11 +154,11 @@
 </template>
 
 <script setup lang="ts">
-  import { toBanglaNumber } from '@/utils/number';
   import { onMounted, ref } from 'vue';
   import { VueFinalModal } from 'vue-final-modal';
   import { useRouter } from 'vue-router';
   import { useToast } from 'vue-toastification';
+  import { toBanglaNumber } from '~/utils/number';
 
   definePageMeta({
     layout: 'admin',

@@ -1,7 +1,7 @@
 // server/api/admin/users.get.ts
 
-import { db } from '@@/server/db/db';
-import { users } from '@@/server/db/schema';
+import { db } from '~~/server/db/db';
+import { users } from '~~/server/db/schema';
 
 export default defineEventHandler(async () => {
   const userList = await db.select().from(users);

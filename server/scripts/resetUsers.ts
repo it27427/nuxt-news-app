@@ -1,8 +1,8 @@
 // server/scripts/resetUsers.ts
 
-import { sql } from 'drizzle-orm'; // sql ব্যবহার করে custom condition
-import { db } from '../db/db';
-import { users } from '../db/schema';
+import { sql } from 'drizzle-orm';
+import { db } from '~~/server/db/db';
+import { users } from '~~/server/db/schema';
 
 export default async function resetUsers() {
   const superAdminEmail = process.env.SUPER_ADMIN_EMAIL!;

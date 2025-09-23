@@ -103,16 +103,16 @@
 </template>
 
 <script setup lang="ts">
-  import DarkMode from '@/components/global/DarkMode.vue';
-  import HamburgerMenu from '@/components/global/hamburger/HamburgerMenu.vue';
-  import Footer from '@/components/global/layouts/Footer.vue';
-  import HeaderBottom from '@/components/global/layouts/HeaderBottom.vue';
-  import HeaderTop from '@/components/global/layouts/HeaderTop.vue';
-  import Offcanvas from '@/components/global/offcanvas/Offcanvas.vue';
-  import ScrollToTop from '@/components/global/ScrollToTop.vue';
-  import TopBar from '@/components/global/TopBar.vue';
-  import type { NavItem } from '@@/types/global';
   import { onMounted, onUnmounted, ref } from 'vue';
+  import DarkMode from '~/components/global/DarkMode.vue';
+  import HamburgerMenu from '~/components/global/hamburger/HamburgerMenu.vue';
+  import Footer from '~/components/global/layouts/Footer.vue';
+  import HeaderBottom from '~/components/global/layouts/HeaderBottom.vue';
+  import HeaderTop from '~/components/global/layouts/HeaderTop.vue';
+  import Offcanvas from '~/components/global/offcanvas/Offcanvas.vue';
+  import ScrollToTop from '~/components/global/ScrollToTop.vue';
+  import TopBar from '~/components/global/TopBar.vue';
+  import type { NavItem } from '~~/types/global';
 
   const navItems = ref<NavItem[]>([
     { label: 'মূলপাতা', to: '/' },

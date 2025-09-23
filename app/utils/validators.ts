@@ -1,6 +1,6 @@
 // utils/validators.ts
 
-import { validateMessages } from '@/utils/messages';
+import { validateMessages } from '~/utils/messages';
 
 // RFC 5322 practical regex
 export const rfcRegex = new RegExp(
@@ -14,7 +14,7 @@ export function validateEmailPatternRFC(value: string): string {
   if (!/^[a-zA-Z]/.test(value)) return validateMessages.email.startWithText;
 
   // ২) @ চেক
-  const atCount = (value.match(/@/g) || []).length;
+  const atCount = (value.match(/~/g) || []).length;
   if (atCount === 0) return validateMessages.email.missingAt;
   if (atCount > 1) return validateMessages.email.multipleAt;
 

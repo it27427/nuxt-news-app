@@ -1,7 +1,9 @@
-import { db } from '@@/server/db/db';
-import { users } from '@@/server/db/schema';
+// server/api/auth/check-email.post.ts
+
 import { eq } from 'drizzle-orm';
 import { defineEventHandler, readBody } from 'h3';
+import { db } from '~~/server/db/db';
+import { users } from '~~/server/db/schema';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);

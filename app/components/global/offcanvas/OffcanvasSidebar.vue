@@ -18,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-  import MobileMenu from '@/components/global/menus/MobileMenu.vue';
-  import OffcanvasCloseButton from '@/components/global/offcanvas/OffcanvasCloseButton.vue';
+  import MobileMenu from '~/components/global/menus/MobileMenu.vue';
+  import OffcanvasCloseButton from '~/components/global/offcanvas/OffcanvasCloseButton.vue';
 
   type NavItem = { label: string; to: string };
 

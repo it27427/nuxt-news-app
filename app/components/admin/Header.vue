@@ -15,12 +15,12 @@
 </template>
 
 <script lang="ts" setup>
-  import AdminLogo from '@/components/admin/AdminLogo.vue';
-  import Notifications from '@/components/admin/Notifications.vue';
-  import HeaderSkeleton from '@/components/admin/skeletons/HeaderSkeleton.vue';
-  import DarkMode from '@/components/global/DarkMode.vue';
-  import Header from '@/components/global/layouts/Header.vue';
   import { onMounted, ref } from 'vue';
+  import AdminLogo from '~/components/admin/AdminLogo.vue';
+  import Notifications from '~/components/admin/Notifications.vue';
+  import HeaderSkeleton from '~/components/admin/skeletons/HeaderSkeleton.vue';
+  import DarkMode from '~/components/global/DarkMode.vue';
+  import Header from '~/components/global/layouts/Header.vue';
 
   const loading = ref(true);
   onMounted(async () => {

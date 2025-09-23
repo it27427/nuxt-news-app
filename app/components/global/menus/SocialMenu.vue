@@ -28,9 +28,9 @@
 </template>
 
 <script lang="ts" setup>
-  import BaseImage from '@/components/base/BaseImage.vue';
-  import BaseLink from '@/components/base/BaseLink.vue';
-  import BasePicture from '@/components/base/BasePicture.vue';
+  import BaseImage from '~/components/base/BaseImage.vue';
+  import BaseLink from '~/components/base/BaseLink.vue';
+  import BasePicture from '~/components/base/BasePicture.vue';
   import type { SocialItem } from '~~/types/news';
 
   defineProps<{

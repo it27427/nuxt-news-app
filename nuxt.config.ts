@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
     splashScreen: false,
-  } as any,
+  },
 
   ssr: true,
 
@@ -36,10 +36,14 @@ export default defineNuxtConfig({
     ],
   },
 
-  components: {
-    global: true,
-    dirs: ['@/components'],
-  },
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+      global: true,
+      extensions: ['vue'],
+    },
+  ],
 
   modules: [
     '@nuxt/image',
@@ -52,9 +56,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
-  css: ['@/assets/scss/main.scss'],
+  css: ['~/assets/scss/main.scss'],
 
-  plugins: ['@/plugins/vue-toastification.ts'],
+  plugins: ['~/plugins/vue-toastification.ts'],
 
   routeRules: {
     '/institutional': { redirect: '/institutional/about/' },
@@ -75,7 +79,7 @@ export default defineNuxtConfig({
   } as any,
 
   tailwindcss: {
-    cssPath: '@/assets/scss/main.scss',
+    cssPath: '~/assets/scss/main.scss',
     configPath: '~/tailwind.config.ts',
     exposeConfig: false,
     viewer: true,
@@ -107,10 +111,8 @@ export default defineNuxtConfig({
     plugins: [tsconfigPaths()],
     resolve: {
       alias: {
-        '@': resolve(__dirname, './app'),
         '~': resolve(__dirname, './app'),
         '~~': resolve(__dirname, '.'),
-        '@@': resolve(__dirname, '.'),
         '#shared': resolve(__dirname, './shared'),
       },
     },

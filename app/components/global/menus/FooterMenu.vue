@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-  import BaseLink from '@/components/base/BaseLink.vue';
+  import BaseLink from '~/components/base/BaseLink.vue';
   const { navItems } = defineProps<{
     navItems: Array<{ label: string; to: string }>;
   }>();

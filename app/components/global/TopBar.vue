@@ -11,5 +11,5 @@
 </template>
 
 <script setup lang="ts">
-  import BrandLogo from '@/components/global/BrandLogo.vue';
+  import BrandLogo from '~/components/global/BrandLogo.vue';
 </script>

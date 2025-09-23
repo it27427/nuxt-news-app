@@ -34,10 +34,10 @@
 </template>
 
 <script lang="ts" setup>
-  import BaseImage from '@/components/base/BaseImage.vue';
-  import BaseLink from '@/components/base/BaseLink.vue';
-  import BasePicture from '@/components/base/BasePicture.vue';
   import { ref } from 'vue';
+  import BaseImage from '~/components/base/BaseImage.vue';
+  import BaseLink from '~/components/base/BaseLink.vue';
+  import BasePicture from '~/components/base/BasePicture.vue';
 
   const title = ref('নির্বাচিত খবর');
 

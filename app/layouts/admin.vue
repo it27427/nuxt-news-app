@@ -47,14 +47,14 @@
 </template>
 
 <script setup lang="ts">
-  import Footer from '@/components/admin/Footer.vue';
-  import Header from '@/components/admin/Header.vue';
-  import Sidebar from '@/components/admin/Sidebar.vue';
-  import Breadcrumb from '@/components/admin/global/Breadcrumb.vue';
-  import Offcanvas from '@/components/admin/global/offcanvas/Offcanvas.vue';
-  import ScrollToTop from '@/components/global/ScrollToTop.vue';
-  import { adminMenus } from '@/menus/adminMenus';
   import { onBeforeUnmount, onMounted, ref } from 'vue';
+  import Footer from '~/components/admin/Footer.vue';
+  import Header from '~/components/admin/Header.vue';
+  import Sidebar from '~/components/admin/Sidebar.vue';
+  import Breadcrumb from '~/components/admin/global/Breadcrumb.vue';
+  import Offcanvas from '~/components/admin/global/offcanvas/Offcanvas.vue';
+  import ScrollToTop from '~/components/global/ScrollToTop.vue';
+  import { adminMenus } from '~/menus/adminMenus';
 
   // Sidebar collapse state
   const sidebarOpen = ref(true);

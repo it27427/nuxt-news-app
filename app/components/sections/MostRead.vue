@@ -43,9 +43,9 @@
 </template>
 
 <script setup lang="ts">
-  import BaseImage from '@/components/base/BaseImage.vue';
-  import BaseLink from '@/components/base/BaseLink.vue';
-  import BasePicture from '@/components/base/BasePicture.vue';
+  import BaseImage from '~/components/base/BaseImage.vue';
+  import BaseLink from '~/components/base/BaseLink.vue';
+  import BasePicture from '~/components/base/BasePicture.vue';
   import type { MostReadItem } from '~~/types/news';
   const props = defineProps<{ mostReadNews: MostReadItem[] }>();
 

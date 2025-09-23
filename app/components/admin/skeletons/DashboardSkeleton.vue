@@ -49,6 +49,6 @@
 </template>
 
 <script setup lang="ts">
-  import ChartCardSkeleton from '@/components/admin/skeletons/ChartCardSkeleton.vue';
-  import MonitoringCardSkeleton from '@/components/admin/skeletons/MonitoringCardSkeleton.vue';
+  import ChartCardSkeleton from '~/components/admin/skeletons/ChartCardSkeleton.vue';
+  import MonitoringCardSkeleton from '~/components/admin/skeletons/MonitoringCardSkeleton.vue';
 </script>

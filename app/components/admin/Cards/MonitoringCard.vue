@@ -23,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-  import type { CardType } from '@/utils/adminPropTypes';
   import { onMounted, ref, watch } from 'vue';
+  import type { CardType } from '~/utils/adminPropTypes';
 
   // Props
   const props = defineProps<CardType>();

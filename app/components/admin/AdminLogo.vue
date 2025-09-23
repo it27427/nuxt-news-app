@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-  import BaseImage from '@/components/base/BaseImage.vue';
-  import BaseLink from '@/components/base/BaseLink.vue';
-  import BasePicture from '@/components/base/BasePicture.vue';
   import { ref } from 'vue';
+  import BaseImage from '~/components/base/BaseImage.vue';
+  import BaseLink from '~/components/base/BaseLink.vue';
+  import BasePicture from '~/components/base/BasePicture.vue';
 
   const brand = ref({
     src: '/images/logo/logo.svg',

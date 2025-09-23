@@ -1,9 +1,9 @@
 // server/api/admin/users/[id]/delete.post.ts
 
-import { db } from '@@/server/db/db';
-import { users } from '@@/server/db/schema';
-import { throwError } from '@@/server/utils/error';
 import { eq } from 'drizzle-orm';
+import { db } from '~~/server/db/db';
+import { users } from '~~/server/db/schema';
+import { throwError } from '~~/server/utils/error';
 
 export default defineEventHandler(async (event) => {
   const params = event.context.params as { id: string };

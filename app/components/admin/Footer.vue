@@ -8,10 +8,10 @@
 </template>
 
 <script lang="ts" setup>
-  import FooterSkeleton from '@/components/admin/skeletons/FooterSkeleton.vue';
-  import Copyright from '@/components/global/Copyright.vue';
-  import SvgIcon from '@/components/global/SvgIcon.vue';
   import { onMounted, ref } from 'vue';
+  import FooterSkeleton from '~/components/admin/skeletons/FooterSkeleton.vue';
+  import Copyright from '~/components/global/Copyright.vue';
+  import SvgIcon from '~/components/global/SvgIcon.vue';
 
   const props = defineProps<{
     footerClass?: string | string[] | Record<string, boolean>;

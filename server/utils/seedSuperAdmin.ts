@@ -1,8 +1,8 @@
 // server/utils/seedSuperAdmin.ts
 
 import bcrypt from 'bcryptjs';
-import { db } from '../db/db';
-import { users } from '../db/schema';
+import { db } from '~~/server/db/db';
+import { users } from '~~/server/db/schema';
 
 export default defineNitroPlugin(async () => {
   const allUsers = await db.select().from(users);
