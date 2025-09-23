@@ -8,8 +8,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "db:generate": "drizzle kit generate:pg",
-    "db:migrate": "drizzle-kit migrate:pg"
+    "db:generate": "drizzle kit generate:pg --out ./server/db/drizzle",
+    "db:migrate": "drizzle-kit migrate:pg",
+    "db:seed": "ts-node ./server/db/seedSuperAdmin.ts"
   },
   "dependencies": {
     "@nuxt/icon": "^2.0.0",

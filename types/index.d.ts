@@ -1,3 +1,5 @@
+// types/index.d.ts
+
 declare module '#app' {
   interface NuxtApp {
     $toast: any;

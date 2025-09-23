@@ -2,8 +2,7 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "strict": true,
-    "skipLibCheck": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "~/*": [
         "./app/*"
@@ -19,14 +18,11 @@
       ],
       "#imports": [
         "./.nuxt/imports.d.ts"
-      ],
-      "#auth": [
-        "./.nuxt/types/auth"
       ]
     },
     "types": [
       "node",
-      "echarts",
+      "echarts"
     ],
     "typeRoots": [
       "./node_modules/@types",

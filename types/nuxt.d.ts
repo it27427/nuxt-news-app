@@ -1,4 +1,5 @@
 // types/nuxt.d.ts
+
 /// <reference types="nuxt" />
 
 declare global {
