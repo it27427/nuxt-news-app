@@ -96,7 +96,7 @@ export default defineNuxtConfig({
     resolve: {
       alias: {
         '@': resolve(__dirname, './app'),
-        '~': resolve(__dirname, '.'),
+        '~': resolve(__dirname, './app'),
         '~/server': resolve(__dirname, './server'),
       },
     },

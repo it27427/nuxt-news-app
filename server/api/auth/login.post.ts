@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import { defineEventHandler, readBody } from 'h3';
 import jwt from 'jsonwebtoken';
-import { db } from '~/server/db/db';
-import { users } from '~/server/db/schema';
+import { db } from '../../../server/db/db';
+import { users } from '../../../server/db/schema';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
