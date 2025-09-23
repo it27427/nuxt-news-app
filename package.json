@@ -10,7 +10,8 @@
     "postinstall": "nuxt prepare",
     "db:generate": "drizzle kit generate:pg --out ./server/db/drizzle",
     "db:migrate": "drizzle-kit migrate:pg",
-    "db:seed": "ts-node ./server/db/seedSuperAdmin.ts"
+    "db:seed": "ts-node ./server/utils/seedSuperAdmin.ts",
+    "db:reset-users": "ts-node ./server/scripts/resetUsers.ts"
   },
   "dependencies": {
     "@nuxt/icon": "^2.0.0",

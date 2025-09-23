@@ -1,9 +1,10 @@
-// server/api/auth/register.post.ts
+// server/api/admin/users/create.post.ts
+
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
-import { db } from '../../../server/db/db';
-import { users } from '../../../server/db/schema';
-import { throwError } from '../../../server/utils/error';
+import { db } from '../../../../server/db/db';
+import { users } from '../../../../server/db/schema';
+import { throwError } from '../../../../server/utils/error';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -13,24 +14,21 @@ export default defineEventHandler(async (event) => {
   if (!name) fields.name = 'Name is required';
   if (!email) fields.email = 'Email is required';
   if (!password) fields.password = 'Password is required';
+  if (!role) fields.role = 'Role is required';
+
   if (Object.keys(fields).length > 0)
     throwError(400, 'Validation failed', fields);
 
+  // Check existing user
   const existing = await db.select().from(users).where(eq(users.email, email));
   if (existing.length > 0)
     throwError(400, 'User already exists', {
       email: 'Email already registered',
     });
 
-  const allUsers = await db.select().from(users);
-
-  let assignedRole = role || 'admin';
-  // প্রথম রেজিস্টার করা ইউজার SUPER_ADMIN হবে যদি ডিফল্ট SUPER_ADMIN already DB তে থাকে
-  if (
-    allUsers.length === 1 &&
-    allUsers[0].email === process.env.SUPER_ADMIN_EMAIL
-  ) {
-    assignedRole = 'super_admin';
+  // Prevent creating another default SUPER_ADMIN
+  if (email === process.env.SUPER_ADMIN_EMAIL) {
+    throwError(403, 'Cannot create another default SUPER_ADMIN');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,8 +37,8 @@ export default defineEventHandler(async (event) => {
     name,
     email,
     password: hashedPassword,
-    role: assignedRole,
+    role: role || 'admin',
   });
 
-  return { success: true, message: 'User registered successfully' };
+  return { success: true, message: 'User created successfully' };
 });
