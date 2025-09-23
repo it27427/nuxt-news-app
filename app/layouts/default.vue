@@ -111,8 +111,8 @@
   import Offcanvas from '@/components/global/offcanvas/Offcanvas.vue';
   import ScrollToTop from '@/components/global/ScrollToTop.vue';
   import TopBar from '@/components/global/TopBar.vue';
+  import type { NavItem } from '@@/types/global';
   import { onMounted, onUnmounted, ref } from 'vue';
-  import type { NavItem } from '~~/types/global';
 
   const navItems = ref<NavItem[]>([
     { label: 'মূলপাতা', to: '/' },

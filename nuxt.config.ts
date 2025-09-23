@@ -1,3 +1,5 @@
+// nuxt.config.ts
+
 import { defineNuxtConfig } from 'nuxt/config';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -15,7 +17,17 @@ export default defineNuxtConfig({
   srcDir: 'app/',
 
   imports: {
-    dirs: ['content', 'server', 'shared', 'composables'],
+    dirs: [
+      'composables',
+      'composables/*/index.{ts,js,mjs,mts}',
+      'composables/**',
+      'utils',
+      'utils/*/index.{ts,js,mjs,mts}',
+      'utils/**',
+      'server/utils',
+      'server/utils/*/index.{ts,js,mjs,mts}',
+      'server/utils/**',
+    ],
     presets: [
       {
         from: 'vue',
@@ -97,7 +109,9 @@ export default defineNuxtConfig({
       alias: {
         '@': resolve(__dirname, './app'),
         '~': resolve(__dirname, './app'),
-        '~/server': resolve(__dirname, './server'),
+        '~~': resolve(__dirname, '.'),
+        '@@': resolve(__dirname, '.'),
+        '#shared': resolve(__dirname, './shared'),
       },
     },
   },

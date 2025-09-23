@@ -1,9 +1,9 @@
 // server/api/admin/users/[id].get.ts
 
+import { db } from '@@/server/db/db';
+import { users } from '@@/server/db/schema';
+import { throwError } from '@@/server/utils/error';
 import { eq } from 'drizzle-orm';
-import { db } from '../../../../server/db/db';
-import { users } from '../../../../server/db/schema';
-import { throwError } from '../../../../server/utils/error';
 
 export default defineEventHandler(async (event) => {
   const { id } = event.context.params as { id: string };

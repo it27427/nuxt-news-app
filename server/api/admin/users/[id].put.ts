@@ -1,10 +1,10 @@
 // server/api/admin/users/[id].put.ts
 
+import { db } from '@@/server/db/db';
+import { users } from '@@/server/db/schema';
+import { throwError } from '@@/server/utils/error';
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
-import { db } from '../../../../server/db/db';
-import { users } from '../../../../server/db/schema';
-import { throwError } from '../../../../server/utils/error';
 
 export default defineEventHandler(async (event) => {
   const { id } = event.context.params as { id: string };

@@ -1,8 +1,9 @@
+// tsconfig.json
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "strict": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "~/*": [
         "./app/*"
@@ -10,8 +11,14 @@
       "@/*": [
         "./app/*"
       ],
-      "~/server/*": [
-        "./server/*"
+      "~~/*": [
+        "./*"
+      ],
+      "@@/*": [
+        "./*"
+      ],
+      "#shared/*": [
+        "./shared/*"
       ],
       "#app": [
         "./node_modules/nuxt/dist/app/index"
@@ -30,15 +37,21 @@
     ]
   },
   "include": [
-    "server/**/*.ts",
+    "**/*.ts",
+    "**/*.vue",
+    ".nuxt/nuxt.d.ts",
+    ".nuxt/types/**/*.d.ts",
+    "types/**/*.d.ts",
     "app/**/*.ts",
     "app/**/*.vue",
     "components/**/*.vue",
-    "types/**/*.d.ts"
+    "server/**/*.ts",
+    "types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    ".nuxt"
+    ".nuxt",
+    "output"
   ]
 }
