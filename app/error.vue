@@ -146,9 +146,6 @@
 <script setup lang="ts">
   import type { NuxtError } from '#app';
   import { useRoute } from '#imports';
-  import BaseLink from '~/components/base/BaseLink.vue';
-  import SvgIcon from '~/components/global/SvgIcon.vue';
-  import { toBanglaNumber } from '~/utils/number';
 
   declare const useErrorAuth: () => {
     status: 'authenticated' | 'unauthenticated';
