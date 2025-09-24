@@ -6,15 +6,23 @@
     <!-- Main Content wrapper -->
     <div v-if="!loading">
       <!-- Desktop Sidebar -->
-      <Sidebar :menus="menus" :open="sidebarOpen" :user="user" @toggle="toggleSidebar"
-        class="hidden lg:flex fixed top-20 left-0 h-screen flex-col transition-all duration-300" />
+      <Sidebar
+        :menus="menus"
+        :open="sidebarOpen"
+        :user="user"
+        @toggle="toggleSidebar"
+        class="hidden lg:flex fixed top-20 left-0 h-screen flex-col transition-all duration-300"
+      />
 
       <!-- Main Content -->
-      <div class="flex-1 flex flex-col transition-all duration-300" :class="{
-        'ml-64': sidebarOpen && screenWidth >= 1024,
-        'ml-20': !sidebarOpen && screenWidth >= 1024,
-        'ml-0': screenWidth < 1024,
-      }">
+      <div
+        class="flex-1 flex flex-col transition-all duration-300"
+        :class="{
+          'ml-64': sidebarOpen && screenWidth >= 1024,
+          'ml-20': !sidebarOpen && screenWidth >= 1024,
+          'ml-0': screenWidth < 1024,
+        }"
+      >
         <!-- Breadcrumbs -->
         <Breadcrumb class="flex items-center w-full h-12">
           <!-- Offcanvas for tablet/mobile -->
@@ -30,7 +38,8 @@
 
         <!-- DASHBOARD-FOOTER -->
         <AdminFooter
-          class="bg-white text-dark dark:bg-slate-800 dark:text-white w-full h-12 flex items-center justify-center" />
+          class="bg-white text-dark dark:bg-slate-800 dark:text-white w-full h-12 flex items-center justify-center"
+        />
       </div>
     </div>
 
@@ -45,12 +54,6 @@
 
 <script setup lang="ts">
   import { onBeforeUnmount, onMounted, ref } from 'vue';
-  import AdminFooter from '~/components/admin/AdminFooter.vue';
-  import AdminHeader from '~/components/admin/AdminHeader.vue';
-  import Sidebar from '~/components/admin/Sidebar.vue';
-  import Breadcrumb from '~/components/admin/global/Breadcrumb.vue';
-  import AdminOffcanvas from '~/components/admin/global/offcanvas/AdminOffcanvas.vue';
-  import ScrollToTop from '~/components/global/ScrollToTop.vue';
   import { useAuth } from '~/composables/useAuth';
   import { adminMenus } from '~/menus/adminMenus';
   import type { AdminMenuType as MenuProps } from '~~/types/admin';
