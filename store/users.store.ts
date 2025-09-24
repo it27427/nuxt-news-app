@@ -1,30 +1,7 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
-// Define types for better code clarity
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  created_at: string;
-  isDefaultSuperAdmin: boolean;
-}
-
-interface UserCreationForm {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}
-
-interface UserUpdateForm {
-  name: string;
-  email: string;
-  password?: string;
-  role: string;
-}
+import type { User, UserCreationForm, UserUpdateForm } from '~~/types/users';
 
 export const useUsersStore = defineStore('users', () => {
   // State variables for managing user data and UI state
