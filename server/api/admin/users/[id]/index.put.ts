@@ -1,4 +1,4 @@
-// server/api/admin/users/[id].put.ts
+// server/api/admin/users/[id]/index.put.ts
 
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';

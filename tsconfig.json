@@ -44,6 +44,7 @@
     ".nuxt",
     "nuxt.config.ts",
     ".nuxt/imports.d.ts",
+    "server/api/admin/users/[id]/.delete.ts",
   ],
   "exclude": [
     "node_modules",

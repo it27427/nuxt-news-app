@@ -1,4 +1,4 @@
-// server/api/admin/users/[id]/delete.post.ts
+// server/api/admin/users/[id]/index.delete.ts
 
 import { eq } from 'drizzle-orm';
 import { db } from '~~/server/db/db';
