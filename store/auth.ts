@@ -5,7 +5,7 @@ import type { UserType } from '~~/types/admin';
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as UserType | null,
-    loading: true,
+    loading: false,
     token: null as string | null,
   }),
   getters: {
