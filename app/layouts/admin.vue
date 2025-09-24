@@ -3,11 +3,13 @@
     <!-- Header -->
     <AdminHeader />
 
-    <div class="flex">
+    <!-- Main Content wrapper -->
+    <div v-if="!loading">
       <!-- Desktop Sidebar -->
       <Sidebar
         :menus="menus"
         :open="sidebarOpen"
+        :user="user"
         @toggle="toggleSidebar"
         class="hidden lg:flex fixed top-20 left-0 h-screen flex-col transition-all duration-300"
       />
@@ -25,7 +27,7 @@
         <Breadcrumb class="flex items-center w-full h-12">
           <!-- Offcanvas for tablet/mobile -->
           <div class="lg:hidden">
-            <AdminOffcanvas :menus="menus" />
+            <AdminOffcanvas :menus="menus" :user="user" />
           </div>
         </Breadcrumb>
 
@@ -41,36 +43,58 @@
       </div>
     </div>
 
+    <div v-else class="flex justify-center items-center h-screen w-full">
+      Loading...
+    </div>
+
     <!-- ScrollToTop -->
     <ScrollToTop class="bottom-1" />
   </div>
 </template>
 
 <script setup lang="ts">
-  const menus = ref<AdminMenu[]>(adminMenus);
+  import { ref, onMounted, onBeforeUnmount } from 'vue';
+  import type { AdminMenuType } from '~~/types/admin';
+  import { adminMenus } from '~/menus/adminMenus';
+  import AdminHeader from '~/components/admin/AdminHeader.vue';
+  import Sidebar from '~/components/admin/Sidebar.vue';
+  import Breadcrumb from '~/components/admin/global/Breadcrumb.vue';
+  import AdminOffcanvas from '~/components/admin/global/offcanvas/AdminOffcanvas.vue';
+  import AdminFooter from '~/components/admin/AdminFooter.vue';
+  import ScrollToTop from '~/components/global/ScrollToTop.vue';
+  import { useCustomAuth } from '~/composables/useCustomAuth';
 
-  // Sidebar collapse state
+  const { user, initializeUser, loading } = useCustomAuth();
+
+  const menus = ref<AdminMenuType[]>(adminMenus);
+
+  onMounted(() => {
+    initializeUser();
+  });
+
   const sidebarOpen = ref(true);
 
-  // Toggle sidebar
   const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value;
   };
 
-  // Screen width reactive ref
   const screenWidth = ref(0);
-
   const updateWidth = () => {
-    screenWidth.value = window.innerWidth;
+    if (process.client) {
+      screenWidth.value = window.innerWidth;
+    }
   };
 
   onMounted(() => {
-    // Initialize screen width on client
-    screenWidth.value = window.innerWidth;
-    window.addEventListener('resize', updateWidth);
+    if (process.client) {
+      screenWidth.value = window.innerWidth;
+      window.addEventListener('resize', updateWidth);
+    }
   });
 
   onBeforeUnmount(() => {
-    window.removeEventListener('resize', updateWidth);
+    if (process.client) {
+      window.removeEventListener('resize', updateWidth);
+    }
   });
 </script>

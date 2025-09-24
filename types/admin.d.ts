@@ -1,6 +1,6 @@
 // types/admin.d.ts
 
-export interface AdminMenu {
+export interface AdminMenuType {
   label: string;
   to?: string;
   icon: string;

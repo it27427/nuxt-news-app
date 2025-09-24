@@ -103,8 +103,8 @@
     Wed: 'বুধ',
     Thu: 'বৃহস্পতি',
     Fri: 'শুক্র',
-    Jan: 'জানুয়ারি',
-    Feb: 'ফেব্রুয়ারি',
+    Jan: 'জানুয়ারি',
+    Feb: 'ফেব্রুয়ারি',
     Mar: 'মার্চ',
     Apr: 'এপ্রিল',
     May: 'মে',
@@ -176,7 +176,7 @@
         ),
         label: {
           formatter: (p: any) =>
-            `${toBengaliText(p.name)}: ${toBengaliNumber(p.value)}`,
+            `${toBengaliText(p.name)}: ${toBengaliNumber(p.value ?? 0)}`,
         },
       });
     } else {

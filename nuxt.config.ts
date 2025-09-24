@@ -134,7 +134,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    // plugins: [tsconfigPaths()],
+    plugins: [tsconfigPaths()],
     resolve: {
       alias: {
         '~': resolve(__dirname, './app'),

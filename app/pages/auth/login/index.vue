@@ -45,6 +45,8 @@
 </template>
 
 <script setup lang="ts">
+  import { nextTick } from 'vue';
+
   definePageMeta({ layout: 'authentication' });
 
   const toast = useToast();
@@ -63,7 +65,12 @@
     success: boolean;
     token?: string;
     message?: string;
-    fields?: LoginFormErrors;
+    user?: {
+      id: number;
+      email: string;
+      name: string;
+    };
+    errors?: LoginFormErrors;
   }
 
   const form = reactive<LoginForm>({ email: '', password: '' });
@@ -72,13 +79,10 @@
 
   async function handleLogin() {
     loading.value = true;
-
-    // Reset previous errors
     Object.keys(errors).forEach(
       (key) => (errors[key as keyof LoginFormErrors] = undefined)
     );
 
-    // Frontend validation
     if (!form.email) errors.email = 'Email is required';
     if (!form.password) errors.password = 'Password is required';
 
@@ -93,30 +97,29 @@
         body: form,
       });
 
-      // Successful login
-      toast.success(res.message || 'Login successful!');
-      if (res.token) localStorage.setItem('token', res.token);
+      if (res.success && res.token && res.user) {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
 
-      Object.keys(form).forEach((k) => (form[k as keyof LoginForm] = ''));
-      router.push('/admin/dashboard');
-    } catch (err: any) {
-      if (err?.data?.fields) {
-        Object.assign(errors, err.data.fields);
+        toast.success(res.message || 'Login successful!');
+        Object.keys(form).forEach((k) => (form[k as keyof LoginForm] = ''));
 
-        // Email not found → show toast
-        if (err.statusCode === 404 && errors.email) {
-          toast.error(
-            err.message ||
-              'User not found! Please register first then try again.'
-          );
-        }
-
-        // Password incorrect → only show below input
-        if (err.statusCode === 401 && errors.password) {
-          // nothing for toast
-        }
+        // ১ সেকেন্ড পরে রিডাইরেক্ট করা হচ্ছে
+        setTimeout(() => {
+          router.push('/admin/dashboard');
+        }, 1000);
+      } else if (res.errors) {
+        Object.assign(errors, res.errors);
+        toast.error(res.message || 'An error occurred. Please try again.');
       } else {
-        toast.error(err?.message || 'Something went wrong');
+        toast.error(res.message || 'Something went wrong.');
+      }
+    } catch (err: any) {
+      if (err?.data?.errors) {
+        Object.assign(errors, err.data.errors);
+        toast.error(err.data.message || 'Authentication failed.');
+      } else {
+        toast.error(err?.message || 'Something went wrong on the server.');
       }
     } finally {
       loading.value = false;

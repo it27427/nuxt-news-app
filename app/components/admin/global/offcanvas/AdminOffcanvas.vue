@@ -10,7 +10,7 @@
       @close="close"
     >
       <!-- Header -->
-      <Header
+      <header
         class="flex flex-col items-center justify-center gap-2 p-4 border-b border-gray-200 dark:border-slate-800 relative"
         :class="[isCollapsed ? 'h-dash-head-xl' : 'h-dash-head-sm']"
       >
@@ -35,7 +35,7 @@
           class="flex items-center justify-center font-hind font-bold rounded-full bg-dark-surface dark:bg-slate-800 text-light uppercase"
           :class="[isCollapsed ? 'w-20 h-20 text-5xl' : 'w-12 h-12 text-3xl']"
         >
-          I
+          {{ props.user?.name?.charAt(0).toUpperCase() }}
         </div>
 
         <!-- User Info -->
@@ -46,32 +46,39 @@
           <li
             class="text-2xl uppercase font-bold font-hind text-black dark:text-gray-200"
           >
-            Istiak Tushar
+            {{ props.user?.name }}
           </li>
           <li class="text-md font-hind text-dark-surface dark:text-gray-200">
-            istiak.tushar@gmail.com
+            {{ props.user?.email }}
           </li>
         </ul>
-      </Header>
+      </header>
 
       <!-- Body -->
-      <OffcanvasBody
+      <div
         class="p-4 overflow-y-auto scrollbar-none"
         :class="[
           isCollapsed ? 'max-h-screen-minus-xl' : 'max-h-screen-minus-sm',
         ]"
       >
         <AdminMenu :menus="props.menus" :open="isCollapsed" />
-      </OffcanvasBody>
+      </div>
     </AdminOffcanvasSidebar>
   </div>
 </template>
 
 <script setup lang="ts">
-  import type { MenuProps } from '~/utils/adminPropTypes';
+  import type { AdminMenuType } from '~~/types/admin';
+  import AdminOffcanvasSidebar from '~/components/admin/global/offcanvas/AdminOffcanvasSidebar.vue';
+  import OpenButton from '~/components/admin/global/offcanvas/OpenButton.vue';
+  import CloseButton from '~/components/admin/global/offcanvas/CloseButton.vue';
+  import CollapseButton from '~/components/admin/global/CollapseButton.vue';
+  import AdminMenu from '~/components/admin/global/AdminMenu.vue';
 
-  const props = defineProps<{ menus: MenuProps[] }>();
-  const emit = defineEmits<{ (e: 'toggle'): void }>();
+  const props = defineProps<{
+    menus: AdminMenuType[];
+    user: { name: string; email: string; role: string } | null;
+  }>();
 
   const isOpen = ref(false);
   const isCollapsed = ref(true);
@@ -81,6 +88,5 @@
 
   const toggleCollapse = () => {
     isCollapsed.value = !isCollapsed.value;
-    emit('toggle');
   };
 </script>

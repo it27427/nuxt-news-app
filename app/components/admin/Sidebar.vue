@@ -1,16 +1,9 @@
 <template>
-  <SidebarSkeleton
-    v-if="loading"
-    :open="open"
-    :itemCount="props.menus.length"
-  />
-
   <aside
-    v-else
     class="bg-light text-dark dark:bg-gray-900 dark:text-white flex-col transition-all duration-300"
     :class="[props.open ? 'w-64' : 'w-20']"
   >
-    <Header
+    <header
       class="flex flex-col items-center justify-center gap-2 p-4 border-b border-gray-200 dark:border-slate-800 relative"
       :class="[open ? 'h-dash-head-xl' : 'h-dash-head-sm']"
     >
@@ -25,22 +18,22 @@
         class="flex items-center justify-center font-hind font-bold rounded-full bg-dark-surface dark:bg-slate-800 text-light uppercase"
         :class="[props.open ? 'w-20 h-20 text-5xl' : 'w-12 h-12 text-3xl']"
       >
-        I
+        {{ props.user?.name?.charAt(0).toUpperCase() }}
       </div>
 
       <ul v-show="props.open" class="flex flex-col items-center justify-center">
         <li
           class="text-2xl uppercase font-bold font-hind text-black dark:text-gray-200 transition-opacity duration-300"
         >
-          Istiak Tushar
+          {{ props.user?.name }}
         </li>
         <li
           class="text-md font-hind text-dark-surface dark:text-gray-200 transition-opacity duration-300"
         >
-          istiak.tushar@gmail.com
+          {{ props.user?.email }}
         </li>
       </ul>
-    </Header>
+    </header>
 
     <!-- DESKTOP-ADMIN-MENU -->
     <nav
@@ -54,22 +47,17 @@
 </template>
 
 <script setup lang="ts">
-  import type { MenuProps } from '~/utils/adminPropTypes';
+  import type { AdminMenuType } from '~~/types/admin';
+  import AdminMenu from '~/components/admin/global/AdminMenu.vue';
+  import CollapseButton from '~/components/admin/global/CollapseButton.vue';
 
   const props = defineProps<{
     open: boolean;
-    menus: MenuProps[];
+    menus: AdminMenuType[];
+    user: { name: string; email: string; role: string } | null;
   }>();
 
-  const loading = ref(true);
   const emit = defineEmits<{ (e: 'toggle'): void }>();
 
   const toggleSidebar = () => emit('toggle');
-
-  // Simulate menu/data loading
-  onMounted(() => {
-    setTimeout(() => {
-      loading.value = false;
-    }, 2500);
-  });
 </script>
