@@ -6,6 +6,6 @@ export default defineNuxtPlugin(async () => {
   const store = useAuthStore();
 
   if (import.meta.client) {
-    store.initialize();
+    await store.initialize();
   }
 });

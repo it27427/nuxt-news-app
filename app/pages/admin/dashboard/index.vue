@@ -61,10 +61,10 @@
 </template>
 
 <script setup lang="ts">
-  import type { CardType, ChartCardProps } from '~/utils/adminPropTypes';
-  import DashboardSkeleton from '~/components/admin/skeletons/DashboardSkeleton.vue';
-  import MonitoringCard from '~/components/admin/Cards/MonitoringCard.vue';
   import ChartCard from '~/components/admin/Cards/ChartCard.vue';
+  import MonitoringCard from '~/components/admin/Cards/MonitoringCard.vue';
+  import DashboardSkeleton from '~/components/admin/skeletons/DashboardSkeleton.vue';
+  import type { CardType, ChartCardProps } from '~/utils/adminPropTypes';
 
   definePageMeta({
     layout: 'admin',
@@ -85,7 +85,7 @@
     lazy: true,
     server: false,
     headers: {
-      Authorization: process.client
+      Authorization: import.meta.client
         ? `Bearer ${localStorage.getItem('token')}`
         : '',
     },
