@@ -1,25 +1,3 @@
-<script setup lang="ts">
-  import { computed } from 'vue';
-  import { useRoute } from 'vue-router';
-  import type { AdminMenuType } from '~~/types/admin';
-  import { useCustomAuth } from '~/composables/useCustomAuth';
-
-  const props = defineProps<{
-    menus: AdminMenuType[];
-    open: boolean;
-  }>();
-
-  const route = useRoute();
-  const { logout, user } = useCustomAuth();
-
-  const filteredMenus = computed(() => {
-    if (!user.value) {
-      return [];
-    }
-    return props.menus.filter((item) => item.roles.includes(user.value.role));
-  });
-</script>
-
 <template>
   <ul v-if="filteredMenus.length > 0" class="flex flex-col gap-2">
     <li v-for="item in filteredMenus" :key="item.to || item.action">
@@ -55,11 +33,32 @@
   </ul>
 </template>
 
+<script setup lang="ts">
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
+  import { useCustomAuth } from '~/composables/useCustomAuth';
+  import type { AdminMenuType as MenuProps } from '~~/types/admin';
+
+  const props = defineProps<{
+    menus: MenuProps[];
+    open: boolean;
+  }>();
+
+  const route = useRoute();
+  const { logout, user } = useCustomAuth();
+
+  const filteredMenus = computed(() =>
+    props.menus.filter(
+      (item) => user.value?.role && item.roles.includes(user.value.role)
+    )
+  );
+</script>
+
 <style lang="scss" scoped>
   .menu-link {
-    @apply w-full flex items-center gap-2 p-2 border-b border-gray-200
-  dark:border-gray-700 font-hind text-base text-dark-surface dark:text-light
-  transition-all hover:rounded-md hover:bg-gray-200 hover:border-b-gray-200
+    @apply w-full flex items-center gap-2 p-2 border-b border-gray-200 
+  dark:border-gray-700 font-hind text-base text-dark-surface dark:text-light 
+  transition-all hover:rounded-md hover:bg-gray-200 hover:border-b-gray-200 
   dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white;
   }
 </style>

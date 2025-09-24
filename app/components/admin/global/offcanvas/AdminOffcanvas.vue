@@ -68,16 +68,17 @@
 </template>
 
 <script setup lang="ts">
-  import type { AdminMenuType } from '~~/types/admin';
-  import AdminOffcanvasSidebar from '~/components/admin/global/offcanvas/AdminOffcanvasSidebar.vue';
-  import OpenButton from '~/components/admin/global/offcanvas/OpenButton.vue';
-  import CloseButton from '~/components/admin/global/offcanvas/CloseButton.vue';
-  import CollapseButton from '~/components/admin/global/CollapseButton.vue';
+  import { ref } from 'vue';
   import AdminMenu from '~/components/admin/global/AdminMenu.vue';
+  import CollapseButton from '~/components/admin/global/CollapseButton.vue';
+  import AdminOffcanvasSidebar from '~/components/admin/global/offcanvas/AdminOffcanvasSidebar.vue';
+  import CloseButton from '~/components/admin/global/offcanvas/CloseButton.vue';
+  import OpenButton from '~/components/admin/global/offcanvas/OpenButton.vue';
+  import type { AdminMenuType as MenuProps, UserType } from '~~/types/admin';
 
   const props = defineProps<{
-    menus: AdminMenuType[];
-    user: { name: string; email: string; role: string } | null;
+    menus: MenuProps[];
+    user: UserType | null;
   }>();
 
   const isOpen = ref(false);

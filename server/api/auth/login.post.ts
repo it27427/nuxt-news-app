@@ -1,5 +1,3 @@
-// server/api/auth/login.post.ts
-
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import { defineEventHandler, readBody } from 'h3';
@@ -11,10 +9,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { email, password } = body;
 
-  // Store errors per field
   const errors: Record<string, string> = {};
 
-  // 1. Empty validation
   if (!email) {
     errors.email = 'Email is required';
   }
@@ -25,14 +21,12 @@ export default defineEventHandler(async (event) => {
     return { success: false, errors };
   }
 
-  // 2. Regex email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     errors.email = 'Invalid email format';
     return { success: false, errors };
   }
 
-  // 3. Check user exists
   const existingUser = await db
     .select()
     .from(users)
@@ -44,7 +38,6 @@ export default defineEventHandler(async (event) => {
 
   const user = existingUser[0];
 
-  // 4. Validate password
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     errors.password =
@@ -52,7 +45,6 @@ export default defineEventHandler(async (event) => {
     return { success: false, errors };
   }
 
-  // 5. Create JWT Token
   const token = jwt.sign(
     { id: user.id, email: user.email },
     process.env.JWT_SECRET || 'secret',
@@ -67,6 +59,7 @@ export default defineEventHandler(async (event) => {
       id: user.id,
       email: user.email,
       name: user.name,
+      role: user.role,
     },
   };
 });

@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
   import { ref, onMounted, onBeforeUnmount } from 'vue';
-  import type { AdminMenuType } from '~~/types/admin';
+  import type { AdminMenuType as MenuProps } from '~~/types/admin';
   import { adminMenus } from '~/menus/adminMenus';
   import AdminHeader from '~/components/admin/AdminHeader.vue';
   import Sidebar from '~/components/admin/Sidebar.vue';
@@ -66,7 +66,7 @@
 
   const { user, initializeUser, loading } = useCustomAuth();
 
-  const menus = ref<AdminMenuType[]>(adminMenus);
+  const menus = ref<MenuProps[]>(adminMenus);
 
   onMounted(() => {
     initializeUser();
@@ -80,20 +80,20 @@
 
   const screenWidth = ref(0);
   const updateWidth = () => {
-    if (process.client) {
+    if (import.meta.client) {
       screenWidth.value = window.innerWidth;
     }
   };
 
   onMounted(() => {
-    if (process.client) {
+    if (import.meta.client) {
       screenWidth.value = window.innerWidth;
       window.addEventListener('resize', updateWidth);
     }
   });
 
   onBeforeUnmount(() => {
-    if (process.client) {
+    if (import.meta.client) {
       window.removeEventListener('resize', updateWidth);
     }
   });

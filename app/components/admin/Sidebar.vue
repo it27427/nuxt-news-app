@@ -47,14 +47,14 @@
 </template>
 
 <script setup lang="ts">
-  import type { AdminMenuType } from '~~/types/admin';
   import AdminMenu from '~/components/admin/global/AdminMenu.vue';
   import CollapseButton from '~/components/admin/global/CollapseButton.vue';
+  import type { AdminMenuType as MenuProps, UserType } from '~~/types/admin';
 
   const props = defineProps<{
     open: boolean;
-    menus: AdminMenuType[];
-    user: { name: string; email: string; role: string } | null;
+    menus: MenuProps[];
+    user: UserType | null;
   }>();
 
   const emit = defineEmits<{ (e: 'toggle'): void }>();

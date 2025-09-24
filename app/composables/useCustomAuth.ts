@@ -1,62 +1,48 @@
-import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import type { UserType } from '~~/types/admin';
 
-// Use a simple ref for the user state, not Nuxt's useState
-const user = ref(null);
+const user = ref<UserType | null>(null);
 const loading = ref(true);
 
 export const useCustomAuth = () => {
   const router = useRouter();
 
-  // Function to initialize the user from localStorage
   const initializeUser = () => {
-    if (process.client) {
+    if (import.meta.client) {
       const storedUser = localStorage.getItem('user');
+
       if (storedUser) {
-        user.value = JSON.parse(storedUser);
-      }
-    }
-    loading.value = false;
-  };
+        try {
+          const parsedUser: UserType = JSON.parse(storedUser);
 
-  const login = async (userData: { email: string }) => {
-    try {
-      const response = await fetch('/api/admin/users');
-      if (!response.ok) {
-        throw new Error('Failed to fetch user list from API');
-      }
-      const userList = await response.json();
-
-      const fetchedUser = userList.find((u: any) => u.email === userData.email);
-
-      if (fetchedUser) {
-        user.value = {
-          name: fetchedUser.name,
-          email: fetchedUser.email,
-          role: fetchedUser.role,
-        };
-        // Save user data to localStorage
-        if (process.client) {
-          localStorage.setItem('user', JSON.stringify(user.value));
+          if (parsedUser && parsedUser.role) {
+            user.value = parsedUser;
+          } else {
+            console.error(
+              'User data is incomplete. Missing role. Redirecting to login.'
+            );
+            localStorage.removeItem('user');
+            router.push('/auth/login');
+          }
+        } catch (e) {
+          console.error('Failed to parse user data from localStorage.', e);
+          localStorage.removeItem('user');
         }
-        router.push('/admin/dashboard');
-      } else {
-        console.error('User not found in the database.');
-        router.push('/auth/login');
       }
-    } catch (error) {
-      console.error('An error occurred during login:', error);
-      router.push('/auth/login');
     }
+
+    loading.value = false;
   };
 
   const logout = () => {
     user.value = null;
-    if (process.client) {
+    if (import.meta.client) {
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
     }
     router.push('/auth/login');
   };
 
-  return { logout, user, login, initializeUser, loading };
+  return { logout, user, initializeUser, loading };
 };

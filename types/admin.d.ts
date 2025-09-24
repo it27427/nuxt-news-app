@@ -8,3 +8,10 @@ export interface AdminMenuType {
   action?: string;
   children?: AdminMenu[];
 }
+
+export interface UserType {
+  id: number;
+  email: string;
+  name?: string;
+  role: string;
+}
