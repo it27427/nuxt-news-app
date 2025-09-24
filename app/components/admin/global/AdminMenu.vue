@@ -36,7 +36,7 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
-  import { useCustomAuth } from '~/composables/useCustomAuth';
+  import { useAuth } from '~/composables/useAuth';
   import type { AdminMenuType as MenuProps } from '~~/types/admin';
 
   const props = defineProps<{
@@ -45,7 +45,7 @@
   }>();
 
   const route = useRoute();
-  const { logout, user } = useCustomAuth();
+  const { logout, user } = useAuth();
 
   const filteredMenus = computed(() =>
     props.menus.filter(
@@ -57,8 +57,8 @@
 <style lang="scss" scoped>
   .menu-link {
     @apply w-full flex items-center gap-2 p-2 border-b border-gray-200 
-  dark:border-gray-700 font-hind text-base text-dark-surface dark:text-light 
-  transition-all hover:rounded-md hover:bg-gray-200 hover:border-b-gray-200 
-  dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white;
+dark:border-gray-700 font-hind text-base text-dark-surface dark:text-light 
+transition-all hover:rounded-md hover:bg-gray-200 hover:border-b-gray-200 
+dark:hover:bg-slate-800 dark:hover:border-b-slate-800 dark:hover:text-white;
   }
 </style>

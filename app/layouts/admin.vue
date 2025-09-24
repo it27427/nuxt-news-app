@@ -53,18 +53,18 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted, onBeforeUnmount } from 'vue';
-  import type { AdminMenuType as MenuProps } from '~~/types/admin';
-  import { adminMenus } from '~/menus/adminMenus';
+  import { onBeforeUnmount, onMounted, ref } from 'vue';
+  import AdminFooter from '~/components/admin/AdminFooter.vue';
   import AdminHeader from '~/components/admin/AdminHeader.vue';
   import Sidebar from '~/components/admin/Sidebar.vue';
   import Breadcrumb from '~/components/admin/global/Breadcrumb.vue';
   import AdminOffcanvas from '~/components/admin/global/offcanvas/AdminOffcanvas.vue';
-  import AdminFooter from '~/components/admin/AdminFooter.vue';
   import ScrollToTop from '~/components/global/ScrollToTop.vue';
-  import { useCustomAuth } from '~/composables/useCustomAuth';
+  import { useAuth } from '~/composables/useAuth';
+  import { adminMenus } from '~/menus/adminMenus';
+  import type { AdminMenuType as MenuProps } from '~~/types/admin';
 
-  const { user, initializeUser, loading } = useCustomAuth();
+  const { user, initializeUser, loading } = useAuth();
 
   const menus = ref<MenuProps[]>(adminMenus);
 
