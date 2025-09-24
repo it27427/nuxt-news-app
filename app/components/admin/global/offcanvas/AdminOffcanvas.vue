@@ -47,7 +47,8 @@
             class="flex flex-col items-center justify-center"
           >
             <li
-              class="text-2xl uppercase font-bold font-hind text-black dark:text-gray-200"
+              :title="props.user?.name"
+              class="text-2xl uppercase font-bold line-clamp-1 font-hind text-black dark:text-gray-200"
             >
               {{ props.user?.name }}
             </li>
