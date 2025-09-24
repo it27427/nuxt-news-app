@@ -67,7 +67,7 @@ export const adminMenus: AdminMenuType[] = [
     label: 'অনুমোদন',
     to: '/admin/approval',
     icon: 'fluent:approvals-app-32-regular',
-    roles: ['super_admin', 'admin'],
+    roles: ['super_admin'],
   },
   {
     label: 'লগ আউট',
