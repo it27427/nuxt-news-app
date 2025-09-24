@@ -5,8 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: {
-    enabled: true,
-    splashScreen: false,
+    enabled: process.env.NODE_ENV === 'development',
   },
 
   ssr: true,

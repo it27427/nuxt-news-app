@@ -30,16 +30,24 @@
   // --- Explorer / Git ---
   "explorer.confirmDelete": false,
   "git.autofetch": true,
-  // --- Nuxt / Vue (Volar Fixes) ---
+  // --- Nuxt / Vue ---
   "nuxt-intellisense.showWelcomeMessage": false,
+  "vue.inlayHints.optionsWrapper": true,
+  "vue.format.script.initialIndent": true,
+  "vue.format.style.initialIndent": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.gotoLocation.multipleDefinitions": "goto",
+  // --- Vue inlay hints ---
+  "vue.inlayHints.destructuredProps": true,
+  "vue.inlayHints.inlineHandlerLeading": true,
+  "vue.inlayHints.missingProps": true,
+  "vue.inlayHints.vBindShorthand": true,
   "vue.suggest.componentNameCasing": "alwaysPascalCase",
   "vue.suggest.propNameCasing": "alwaysKebabCase",
   "vue.trace.server": "messages",
   "vue.autoInsert.dotValue": true,
   "[vue]": {
-    "editor.defaultFormatter": "Vue.volar",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.fixAll.eslint": "explicit",
@@ -106,5 +114,5 @@
   "iisexpress.openInBrowser": "chrome",
   "iisexpress.iisExpressPath": "C:\\Program Files\\IIS Express\\iisexpress.exe",
   "iisexpress.appcmdPath": "C:\\Program Files\\IIS Express\\appcmd.exe",
-  "iisexpress.autoLaunchBrowser": true
+  "iisexpress.autoLaunchBrowser": true,
 }

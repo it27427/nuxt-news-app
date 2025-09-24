@@ -9,11 +9,23 @@
     </h1>
 
     <BaseForm @submit="handleLogin" class="animated-form">
-      <BaseInput id="email" label="Email" placeholder="Enter your email" v-model="form.email" :error="errors.email"
-        type="email" />
+      <BaseInput
+        id="email"
+        label="Email"
+        placeholder="Enter your email"
+        v-model="form.email"
+        :error="errors.email"
+        type="email"
+      />
 
-      <BaseInput id="password" label="Password" placeholder="Enter your password" v-model="form.password"
-        :error="errors.password" type="password" />
+      <BaseInput
+        id="password"
+        label="Password"
+        placeholder="Enter your password"
+        v-model="form.password"
+        :error="errors.password"
+        type="password"
+      />
 
       <BaseButton type="submit" :loading="loading" label="Login" />
     </BaseForm>
@@ -21,8 +33,10 @@
     <div class="flex items-center justify-center gap-2 mt-8">
       <p class="text-md text-dark dark:text-light">Don't have an account?</p>
       <client-only>
-        <BaseLink to="/auth/register"
-          class="text-md text-dark dark:text-white font-medium underline transition-colors hover:text-primary-dark dark:hover:text-primary">
+        <BaseLink
+          to="/auth/register"
+          class="text-md text-dark dark:text-white font-medium underline transition-colors hover:text-primary-dark dark:hover:text-primary"
+        >
           Register
         </BaseLink>
       </client-only>
@@ -33,22 +47,13 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
   import { useAuth } from '~/composables/useAuth';
+  import type { LoginForm, LoginFormErrors } from '~~/types/auth';
 
   definePageMeta({ layout: 'authentication' });
 
   const toast = useToast();
   const formTitle = ref('Login');
-
-  interface LoginForm {
-    email: string;
-    password: string;
-  }
-  interface LoginFormErrors {
-    email?: string;
-    password?: string;
-  }
 
   const form = reactive<LoginForm>({ email: '', password: '' });
   const errors = reactive<LoginFormErrors>({});

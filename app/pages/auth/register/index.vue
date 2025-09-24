@@ -57,23 +57,18 @@
 </template>
 
 <script setup lang="ts">
+  import { reactive, ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useAuth } from '~/composables/useAuth';
+  import type { RegisterForm, RegisterFormErrors } from '~~/types/auth';
+
   definePageMeta({ layout: 'authentication' });
 
   const toast = useToast();
   const router = useRouter();
   const formTitle = ref('Register');
 
-  interface RegisterForm {
-    name: string;
-    email: string;
-    password: string;
-  }
-
-  interface RegisterFormErrors {
-    name?: string;
-    email?: string;
-    password?: string;
-  }
+  const { register, loading } = useAuth();
 
   const form = reactive<RegisterForm>({
     name: '',
@@ -87,11 +82,7 @@
     password: undefined,
   });
 
-  const loading = ref(false);
-
   async function handleRegister() {
-    loading.value = true;
-
     // Reset errors
     Object.keys(errors).forEach(
       (key) => (errors[key as keyof RegisterFormErrors] = undefined)
@@ -113,18 +104,11 @@
     }
 
     if (hasError) {
-      loading.value = false;
       return;
     }
 
     try {
-      const res = await $fetch<{ success: boolean; message: string }>(
-        '/api/auth/register',
-        {
-          method: 'POST',
-          body: { ...form },
-        }
-      );
+      const res = await register(form);
 
       toast.success(res.message);
 
@@ -140,8 +124,6 @@
       } else {
         toast.error(err?.statusMessage || 'Something went wrong');
       }
-    } finally {
-      loading.value = false;
     }
   }
 </script>
@@ -156,6 +138,7 @@
       opacity: 0;
       transform: translateY(-20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
