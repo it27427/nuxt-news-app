@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
   import { onMounted, ref, watch } from 'vue';
-  import type { CardType } from '~/utils/adminPropTypes';
+  import type { CardType } from '~~/types/cards';
 
   // Props
   const props = defineProps<CardType>();

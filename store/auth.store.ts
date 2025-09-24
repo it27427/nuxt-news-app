@@ -1,72 +1,96 @@
+import { useCookie } from '#app';
 import axios from 'axios';
 import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 import type { UserType } from '~~/types/admin';
 import type { LoginForm, RegisterForm } from '~~/types/auth';
 
-export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    user: null as UserType | null,
-    loading: false,
-    token: null as string | null,
-  }),
-  getters: {
-    isAuthenticated: (state) => !!state.user,
-  },
-  actions: {
-    async login(credentials: LoginForm) {
-      try {
-        this.loading = true;
-        const response = await axios.post('/api/auth/login', credentials);
-        const { user, token } = response.data;
+export const useAuthStore = defineStore('auth', () => {
+  // State
+  const user = ref<UserType | null>(null);
+  const loading = ref(false);
+  const token = ref<string | null>(null);
 
-        this.user = user;
-        this.token = token;
+  // Getters
+  const isAuthenticated = computed(() => !!user.value);
 
-        const authToken = useCookie('auth_token');
-        authToken.value = token;
-      } catch (error) {
-        this.logout();
-        throw error;
-      } finally {
-        this.loading = false;
-      }
-    },
-    async register(credentials: RegisterForm) {
-      try {
-        this.loading = true;
-        const response = await axios.post('/api/auth/register', credentials);
-        return response.data;
-      } catch (error) {
-        throw error;
-      } finally {
-        this.loading = false;
-      }
-    },
-    logout() {
-      this.user = null;
-      this.token = null;
+  // Actions
+  async function login(credentials: LoginForm) {
+    try {
+      loading.value = true;
+      const response = await axios.post('/api/auth/login', credentials);
+      const { user: userData, token: userToken } = response.data;
+
+      user.value = userData;
+      token.value = userToken;
 
       const authToken = useCookie('auth_token');
-      authToken.value = null;
+      authToken.value = userToken;
 
+      if (import.meta.client) {
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
+    } catch (error) {
+      logout();
+      throw error;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function register(credentials: RegisterForm) {
+    try {
+      loading.value = true;
+      const response = await axios.post('/api/auth/register', credentials);
+      return response.data;
+    } catch (error) {
+      throw error;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  function logout() {
+    user.value = null;
+    token.value = null;
+
+    const authToken = useCookie('auth_token');
+    authToken.value = null;
+
+    if (import.meta.client) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
-    },
-    async initialize() {
+    }
+  }
+
+  async function initialize() {
+    if (import.meta.client) {
       const authToken = useCookie('auth_token');
       if (authToken.value) {
         try {
           const storedUser = localStorage.getItem('user');
           if (storedUser) {
-            this.user = JSON.parse(storedUser);
-            this.token = authToken.value;
+            user.value = JSON.parse(storedUser);
+            token.value = authToken.value;
           }
         } catch (e) {
-          this.logout();
-          console.error('Failed to initialize user from cookie.');
+          logout();
+          console.error('Failed to initialize user from localStorage.');
         }
       }
-      this.loading = false;
-    },
-  },
+    }
+    loading.value = false;
+  }
+
+  // Exposed State & Actions
+  return {
+    user,
+    loading,
+    token,
+    isAuthenticated,
+    login,
+    register,
+    logout,
+    initialize,
+  };
 });

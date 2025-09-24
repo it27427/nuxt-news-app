@@ -48,7 +48,8 @@
     reactive,
     ref,
   } from 'vue';
-  import type { ChartCardProps } from '~/utils/adminPropTypes';
+
+  import type { ChartCardProps } from '~~/types/cards';
 
   use([
     CanvasRenderer,
@@ -86,8 +87,18 @@
   const handleResize = () => {
     if (typeof window !== 'undefined') windowSize.width = window.innerWidth;
   };
-  onMounted(() => window?.addEventListener('resize', handleResize));
-  onBeforeUnmount(() => window?.removeEventListener('resize', handleResize));
+
+  onMounted(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+    }
+  });
+
+  onBeforeUnmount(() => {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', handleResize);
+    }
+  });
 
   const translationMap: Record<string, string> = {
     'Per News Per Day View': 'সংবাদ প্রতি দৈনিক দর্শক',
