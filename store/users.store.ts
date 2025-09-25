@@ -1,9 +1,13 @@
-// store/users.store.ts
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useAuthStore } from '~~/store/auth.store';
-import type { User, UserCreationForm, UserUpdateForm } from '~~/types/users';
+import type {
+  ApiResponse,
+  User,
+  UserCreationForm,
+  UserUpdateForm,
+} from '~~/types/users';
 
 export const useUsersStore = defineStore('users', () => {
   const users = ref<User[]>([]);
@@ -56,12 +60,13 @@ export const useUsersStore = defineStore('users', () => {
     }
   };
 
-  const createUser = async (form: UserCreationForm) => {
+  const createUser = async (form: UserCreationForm): Promise<ApiResponse> => {
     loading.value = true;
     error.value = null;
     try {
-      await axios.post('/api/admin/users/create', form, getAuthHeaders());
+      const res = await axios.post('/api/admin/users', form, getAuthHeaders());
       await fetchUsers();
+      return res.data as ApiResponse;
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Failed to create user.';
       throw err;

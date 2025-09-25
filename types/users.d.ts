@@ -29,3 +29,9 @@ export interface UserCreationFormErrors {
   password?: string;
   role?: string;
 }
+
+export interface ApiResponse {
+  success: boolean;
+  message: string;
+  [key: string]: any;
+}

@@ -1,4 +1,4 @@
-// server/api/admin/users/create.post.ts
+// server/api/admin/users/index.post.ts
 
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';

@@ -1,4 +1,4 @@
-// server/api/admin/users.get.ts
+// server/api/admin/index.get.ts
 import jwt from 'jsonwebtoken';
 import { db } from '~~/server/db/db';
 import { users } from '~~/server/db/schema';
