@@ -25,6 +25,7 @@
   });
 
   const toast = useToast();
+  const router = useRouter();
   const tagsStore = useTagsStore();
 
   // Reactive form state
@@ -48,10 +49,17 @@
       // createTag now returns the tag object directly
       const newTag = await tagsStore.createTag({ name: form.name });
 
-      toast.success(`Tag "${newTag.name}" created successfully!`);
+      toast.success(`Tag "${newTag.name}" created successfully!`, {
+        timeout: 1000,
+        id: 'local-success',
+      });
 
       // Reset form
       form.name = '';
+
+      setTimeout(() => {
+        router.push('/admin/tags');
+      }, 1000);
     } catch (err: any) {
       toast.error(err?.message || 'Failed to create tag');
     }
