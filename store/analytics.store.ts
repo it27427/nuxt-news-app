@@ -1,3 +1,5 @@
+// store/analytics.store.ts
+
 import { useCookie } from '#app';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';

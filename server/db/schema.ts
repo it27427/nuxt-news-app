@@ -10,3 +10,10 @@ export const users = pgTable('users', {
   role: varchar('role', { length: 50 }).notNull().default('admin'),
   created_at: timestamp('created_at').defaultNow().notNull(),
 });
+
+// Tags table
+export const tags = pgTable('tags', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 256 }).notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+});

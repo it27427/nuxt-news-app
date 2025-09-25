@@ -1,3 +1,5 @@
+// store/auth.store.ts
+
 import { useCookie } from '#app';
 import axios from 'axios';
 import { defineStore } from 'pinia';
