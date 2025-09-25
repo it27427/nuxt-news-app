@@ -156,6 +156,7 @@
 <script setup lang="ts">
   import { VueFinalModal } from 'vue-final-modal';
   import { useToast } from 'vue-toastification';
+  import { toBanglaNumber } from '~/utils/number';
 
   definePageMeta({
     layout: 'admin',

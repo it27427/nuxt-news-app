@@ -1,4 +1,3 @@
-<!-- /app/admin/users/create.vue -->
 <template>
   <section class="p-6 max-w-lg mx-auto">
     <h1 class="text-2xl font-bold mb-4">Create New User</h1>
@@ -37,58 +36,84 @@
         {{ errors.role }}
       </div>
 
-      <BaseButton :loading="loading" type="submit" label="Create User" />
+      <BaseButton
+        :loading="usersStore.loading"
+        type="submit"
+        label="Create User"
+      />
     </form>
   </section>
 </template>
 
 <script setup lang="ts">
+  import { reactive } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useUsersStore } from '~~/store/users.store';
+  import type {
+    UserCreationForm,
+    UserCreationFormErrors,
+  } from '~~/types/users';
+
   definePageMeta({ layout: 'admin' });
 
-  interface Form {
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-  }
-
-  interface FormErrors {
-    name?: string;
-    email?: string;
-    password?: string;
-    role?: string;
-  }
-
+  const toast = useToast();
   const router = useRouter();
+  const usersStore = useUsersStore();
 
-  const form = reactive<Form>({
+  const form = reactive<UserCreationForm>({
     name: '',
     email: '',
     password: '',
     role: 'admin',
   });
 
-  const errors = reactive<FormErrors>({});
-  const loading = ref(false);
+  const errors = reactive<UserCreationFormErrors>({});
 
   const handleSubmit = async () => {
-    loading.value = true;
     Object.keys(errors).forEach(
-      (k) => (errors[k as keyof FormErrors] = undefined)
+      (k) => (errors[k as keyof UserCreationFormErrors] = undefined)
     );
 
+    // === ফ্রন্টএন্ড ভ্যালিডেশন ===
+    let hasError = false;
+    if (!form.name) {
+      errors.name = 'Name is required';
+      hasError = true;
+    }
+    if (!form.email) {
+      errors.email = 'Email is required';
+      hasError = true;
+    }
+    if (!form.password) {
+      errors.password = 'Password is required';
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
+    // === ফ্রন্টএন্ড ভ্যালিডেশন শেষ ===
+
     try {
-      const res = await axios.post('/api/admin/users/create', form);
-      alert(res.data.message || 'User created successfully');
+      const res = await usersStore.createUser(form);
+
+      toast.success(res.message || 'User created successfully');
+
+      // ফর্ম রিসেট
+      Object.assign(form, {
+        name: '',
+        email: '',
+        password: '',
+        role: 'admin',
+      });
+
       router.push('/admin/users');
     } catch (err: any) {
       if (err.response?.data?.fields) {
         Object.assign(errors, err.response.data.fields);
       } else {
-        alert(err.response?.data?.message || 'Something went wrong');
+        toast.error(usersStore.error || 'Something went wrong');
       }
-    } finally {
-      loading.value = false;
     }
   };
 </script>

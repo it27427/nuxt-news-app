@@ -22,3 +22,10 @@ export interface UserUpdateForm {
   password?: string;
   role: string;
 }
+
+export interface UserCreationFormErrors {
+  name?: string;
+  email?: string;
+  password?: string;
+  role?: string;
+}
