@@ -1,4 +1,4 @@
-// store/tagss.store.ts
+// store/tags.store.ts
 
 import axios from 'axios';
 import { defineStore } from 'pinia';
@@ -13,6 +13,7 @@ export const useTagsStore = defineStore('tagsStore', () => {
 
   const authStore = useAuthStore();
 
+  // Get authorization headers
   const getAuthHeaders = () => {
     const token = authStore.token;
     if (!token) throw new Error('Unauthorized: No token provided');
@@ -29,7 +30,10 @@ export const useTagsStore = defineStore('tagsStore', () => {
       });
       tags.value = res.data.data || [];
     } catch (err: any) {
-      error.value = err.response?.data?.message || err.message;
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        'ট্যাগ লোড করতে ব্যর্থ হয়েছে!';
     } finally {
       loading.value = false;
     }
@@ -46,7 +50,10 @@ export const useTagsStore = defineStore('tagsStore', () => {
       tag.value = res.data.tag || null;
       return tag.value;
     } catch (err: any) {
-      error.value = err.response?.data?.message || err.message;
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        'ট্যাগ লোড করতে ব্যর্থ হয়েছে!';
       throw err;
     } finally {
       loading.value = false;
@@ -62,11 +69,15 @@ export const useTagsStore = defineStore('tagsStore', () => {
         headers: getAuthHeaders(),
       });
       if (res.data?.success) {
+        // নতুন ট্যাগ লিস্টের শুরুতে যোগ করা
         tags.value.unshift(res.data.tag);
         return res.data.tag;
       }
     } catch (err: any) {
-      error.value = err.response?.data?.message || err.message;
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        'ট্যাগ তৈরি করতে ব্যর্থ হয়েছে!';
       throw err;
     } finally {
       loading.value = false;
@@ -81,12 +92,17 @@ export const useTagsStore = defineStore('tagsStore', () => {
       const res = await axios.put(`/api/admin/tags/${id}`, payload, {
         headers: getAuthHeaders(),
       });
+      // Update in tags array
       const index = tags.value.findIndex((t) => t.id === id);
       if (index !== -1) tags.value[index] = res.data.tag;
+      // Update single tag if it matches
       if (tag.value?.id === id) tag.value = res.data.tag;
       return res.data.tag;
     } catch (err: any) {
-      error.value = err.response?.data?.message || err.message;
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        'ট্যাগ আপডেট করতে ব্যর্থ হয়েছে!';
       throw err;
     } finally {
       loading.value = false;
@@ -104,7 +120,10 @@ export const useTagsStore = defineStore('tagsStore', () => {
       tags.value = tags.value.filter((t) => t.id !== id);
       if (tag.value?.id === id) tag.value = null;
     } catch (err: any) {
-      error.value = err.response?.data?.message || err.message;
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        'ট্যাগ মুছতে ব্যর্থ হয়েছে!';
       throw err;
     } finally {
       loading.value = false;
