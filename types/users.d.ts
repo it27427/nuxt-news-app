@@ -19,11 +19,11 @@ export interface UserCreationForm {
 export interface UserUpdateForm {
   name: string;
   email: string;
-  password?: string;
+  password: string;
   role: string;
 }
 
-export interface UserCreationFormErrors {
+export interface FormErrors {
   name?: string;
   email?: string;
   password?: string;

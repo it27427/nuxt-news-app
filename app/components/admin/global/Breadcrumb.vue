@@ -50,7 +50,6 @@
 
 <script setup lang="ts">
   import { adminMenus } from '~/menus/adminMenus';
-  import { toBanglaNumber } from '~/utils/number';
 
   const props = defineProps<{
     className?: string;
@@ -79,7 +78,7 @@
     }
 
     // Check Dynamic Edit Routes
-    const dynamicMatch = route.path.match(/^\/admin\/(\w+)\/(\d+)\/edit$/);
+    const dynamicMatch = route.path.match(/^\/admin\/(\w+)\/([\w-]+)\/edit$/);
 
     if (dynamicMatch) {
       const resource = dynamicMatch[1]!;
@@ -88,15 +87,15 @@
       let label = '';
 
       if (resource === 'tags') {
-        label = `🏷️ ট্যাগ সম্পাদনা ← 🆔${toBanglaNumber(id)}`;
+        label = `🏷️ ট্যাগ সম্পাদনা ← 🆔${id}`;
       } else if (resource === 'news') {
-        label = `📰 সংবাদ সম্পাদনা ← 🆔{toBanglaNumber(id)}`;
+        label = `📰 সংবাদ সম্পাদনা ← 🆔${id}`;
       } else if (resource === 'users') {
-        label = `🧑‍💻 ব্যবহারকারী সম্পাদনা ← 🆔{toBanglaNumber(id)}`;
+        label = `🧑‍💻 ব্যবহারকারী সম্পাদনা ← 🆔${id}`;
       } else {
         const capitalizedResource =
           resource.charAt(0).toUpperCase() + resource.slice(1);
-        label = `${capitalizedResource} সম্পাদনা ← 🆔${toBanglaNumber(id)}`;
+        label = `${capitalizedResource} সম্পাদনা ← 🆔${id}`;
       }
 
       return label;

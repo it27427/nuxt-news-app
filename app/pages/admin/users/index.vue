@@ -137,13 +137,8 @@
           </td>
           <td class="p-2 border border-gray-300 dark:border-slate-700">
             <div class="flex justify-center gap-2">
-              <BaseButton small @click="editUser(user.id)" label="Edit" />
-              <BaseButton
-                small
-                color="red"
-                @click="confirmDelete(user)"
-                label="Delete"
-              />
+              <BaseButton @click="editUser(user.id)" label="Edit" />
+              <BaseButton @click="confirmDelete(user)" label="Delete" />
             </div>
           </td>
         </tr>
@@ -200,6 +195,7 @@
 
   definePageMeta({ layout: 'admin' });
 
+  const toast = useToast();
   const router = useRouter();
   const usersStore = useUsersStore();
 
@@ -227,12 +223,16 @@
     if (!selectedUser.value) return;
 
     try {
+      const deletedName = selectedUser.value.name;
       await usersStore.deleteUser(selectedUser.value.id);
-      await usersStore.fetchUsers(); // ✅ refresh list after delete
+      await usersStore.fetchUsers();
+      toast.success(`${deletedName} deleted successfully`);
+
       showModal.value = false;
       selectedUser.value = null;
     } catch (err: any) {
       console.error(err);
+      toast.error('Failed to delete user');
     }
   };
 

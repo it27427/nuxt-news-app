@@ -49,10 +49,7 @@
   import { reactive } from 'vue';
   import { useRouter } from 'vue-router';
   import { useUsersStore } from '~~/store/users.store';
-  import type {
-    UserCreationForm,
-    UserCreationFormErrors,
-  } from '~~/types/users';
+  import type { UserCreationForm, FormErrors } from '~~/types/users';
 
   definePageMeta({ layout: 'admin' });
 
@@ -67,11 +64,11 @@
     role: 'admin',
   });
 
-  const errors = reactive<UserCreationFormErrors>({});
+  const errors = reactive<FormErrors>({});
 
   const handleSubmit = async () => {
     Object.keys(errors).forEach(
-      (k) => (errors[k as keyof UserCreationFormErrors] = undefined)
+      (k) => (errors[k as keyof FormErrors] = undefined)
     );
 
     let hasError = false;
