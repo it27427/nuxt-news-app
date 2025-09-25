@@ -39,7 +39,7 @@
 
         <!-- Current page -->
         <span
-          class="text-gray-700 dark:text-light font-baloda font-medium inline-block mt-1"
+          class="text-gray-700 dark:text-light font-baloda font-medium mt-1 hidden md:inline-block"
         >
           {{ currentLabel }}
         </span>
