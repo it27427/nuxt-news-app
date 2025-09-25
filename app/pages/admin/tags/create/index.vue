@@ -7,7 +7,7 @@
 
         <!-- Submit Button -->
         <BaseButton
-          :loading="tagStore.loading"
+          :loading="tagsStore.loading"
           type="submit"
           label="Create Tag"
         />
@@ -18,14 +18,14 @@
 
 <script setup lang="ts">
   import { reactive } from 'vue';
-  import { useTagStore } from '~~/store/tags.store';
+  import { useTagsStore } from '~~/store/tags.store';
 
   definePageMeta({
     layout: 'admin',
   });
 
   const toast = useToast();
-  const tagStore = useTagStore();
+  const tagsStore = useTagsStore();
 
   // Reactive form state
   const form = reactive({
@@ -45,10 +45,10 @@
     }
 
     try {
-      const res = await tagStore.createTag({ name: form.name });
-      toast.success(
-        `Tag "${res.data?.name || form.name}" created successfully!`
-      );
+      // createTag now returns the tag object directly
+      const newTag = await tagsStore.createTag({ name: form.name });
+
+      toast.success(`Tag "${newTag.name}" created successfully!`);
 
       // Reset form
       form.name = '';
