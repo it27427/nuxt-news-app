@@ -37,7 +37,7 @@ export const adminMenus: AdminMenuType[] = [
     label: 'স্বয়ংক্রিয়তা',
     to: '/admin/automations',
     icon: 'carbon:ibm-event-automation',
-    roles: ['super_admin'],
+    roles: ['super_admin', 'admin'],
   },
   {
     label: 'ব্যবহারকারী তৈরি করুন',

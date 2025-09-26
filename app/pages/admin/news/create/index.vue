@@ -1,12 +1,14 @@
 <template>
   <section>
     <form class="space-y-5">
-      <div class="w-64">
-        <CustomSelect
-          v-model="selectedNewsType"
-          :options="newsTypes"
-          placeholder="সংবাদ ধরন নির্বাচন করুন"
-        />
+      <div class="flex items-center gap-2">
+        <div class="w-1/2">
+          <CustomSelect
+            v-model="selectedNewsType"
+            :options="newsTypes"
+            placeholder="সংবাদ ধরন নির্বাচন করুন"
+          />
+        </div>
       </div>
 
       <client-only>
@@ -50,7 +52,7 @@
     'ভিডিও',
   ];
 
-  const selectedNewsType = ref(null);
+  const selectedNewsType = ref<string[]>([]);
 </script>
 
 <style lang="scss" scoped>
