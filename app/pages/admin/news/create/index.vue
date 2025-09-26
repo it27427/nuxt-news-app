@@ -1,8 +1,34 @@
 <template>
   <section>
-    <client-only>
-      <QuillEditor v-model:content="body" />
-    </client-only>
+    <form class="space-y-5">
+      <div class="w-64">
+        <CustomSelect
+          v-model="selectedNewsType"
+          :options="newsTypes"
+          placeholder="সংবাদ ধরন নির্বাচন করুন"
+        />
+      </div>
+
+      <client-only>
+        <div>
+          <QuillEditor v-model:content="body" />
+        </div>
+      </client-only>
+
+      <div class="flex items-center justify-end gap-3">
+        <button
+          class="py-2 px-5 bg-slate-500 text-white hover:bg-slate-600 font-semibold font-hind text-xl transition-all delay-300"
+        >
+          সংরক্ষণ
+        </button>
+
+        <button
+          class="py-2 px-5 bg-green-500 text-white hover:bg-green-600 font-semibold text-xl transition-all delay-300"
+        >
+          প্রকাশ করুন
+        </button>
+      </div>
+    </form>
   </section>
 </template>
 
@@ -12,6 +38,19 @@
   });
 
   const body = ref('');
+
+  const newsTypes = [
+    'রাজনীতি',
+    'সর্বাধিক পঠিত',
+    'বিশ্ব',
+    'অর্থনীতি',
+    'স্বাস্থ্য',
+    'খেলা',
+    'প্রযুক্তি',
+    'ভিডিও',
+  ];
+
+  const selectedNewsType = ref(null);
 </script>
 
 <style lang="scss" scoped>
