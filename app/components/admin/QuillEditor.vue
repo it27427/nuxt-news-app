@@ -15,7 +15,7 @@
   // BlockEmbed fix for TS
   const BlockEmbed = Quill.import('blots/block/embed') as any;
 
-  // Custom Blot with caption + credit
+  // Custom Image Blot
   class ImageWithCaption extends BlockEmbed {
     static blotName = 'imageWithCaption';
     static tagName = 'div';
@@ -60,6 +60,67 @@
 
   Quill.register({ 'formats/imageWithCaption': ImageWithCaption });
 
+  // Custom Video Blot
+  class VideoWithInfo extends BlockEmbed {
+    static blotName = 'videoWithInfo';
+    static tagName = 'div';
+
+    static create(value: {
+      url: string;
+      caption?: string;
+      credit?: string;
+      length?: string;
+    }) {
+      const node = super.create();
+
+      const figure = document.createElement('figure');
+
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('src', value.url);
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', 'true');
+      iframe.style.width = '100%';
+      iframe.style.height = '22.5rem'; //<=260px
+
+      const caption = document.createElement('figcaption');
+      caption.innerText = value.caption || '';
+
+      const credit = document.createElement('small');
+      credit.innerText = value.credit || '';
+      credit.style.display = 'block';
+      credit.style.color = 'gray';
+      credit.style.fontSize = '11px';
+
+      const length = document.createElement('small');
+      length.innerText = value.length || '';
+      length.style.display = 'block';
+      length.style.color = 'gray';
+      length.style.fontSize = '11px';
+
+      figure.appendChild(iframe);
+      figure.appendChild(caption);
+      figure.appendChild(credit);
+      figure.appendChild(length);
+
+      node.appendChild(figure);
+      return node;
+    }
+
+    static value(node: HTMLElement) {
+      const iframe = node.querySelector('iframe');
+      const caption = node.querySelector('figcaption');
+      const smalls = node.querySelectorAll('small');
+      return {
+        url: iframe?.getAttribute('src') || '',
+        caption: caption?.innerText || '',
+        credit: smalls[0]?.innerText || '',
+        length: smalls[1]?.innerText || '',
+      };
+    }
+  }
+
+  Quill.register({ 'formats/videoWithInfo': VideoWithInfo });
+
   // Toolbar options
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],
@@ -88,8 +149,6 @@
       const reader = new FileReader();
       reader.onload = () => {
         const url = reader.result as string;
-
-        // ইউজার থেকে caption + credit নেওয়া
         const caption = prompt('Enter image caption:');
         const credit = prompt('Enter image source/credit:');
 
@@ -106,11 +165,32 @@
     input.click();
   }
 
+  // Custom video handler
+  function videoHandler(this: any) {
+    const url = prompt('Enter video URL (YouTube/etc):');
+    if (!url) return;
+
+    const caption = prompt('Enter video caption:');
+    const credit = prompt('Enter video source/credit:');
+    const length = prompt('Enter video length (e.g., 03:45):');
+
+    const range = this.quill.getSelection();
+    this.quill.insertEmbed(range.index, 'videoWithInfo', {
+      url,
+      caption,
+      credit,
+      length,
+    });
+  }
+
   const options = ref({
     modules: {
       toolbar: {
         container: toolbarOptions,
-        handlers: { image: imageHandler },
+        handlers: {
+          image: imageHandler,
+          video: videoHandler,
+        },
       },
     },
     theme: 'snow',
