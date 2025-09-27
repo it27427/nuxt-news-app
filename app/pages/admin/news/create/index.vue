@@ -1,8 +1,8 @@
 <template>
   <section>
     <form class="space-y-5">
-      <div class="flex items-center gap-2">
-        <div class="w-1/2">
+      <div class="flex flex-col md:flex-row items-center gap-2">
+        <div class="w-full md:w-1/2">
           <CustomSelect
             v-model="selectedNewsType"
             :options="newsTypes"
@@ -16,6 +16,15 @@
           <QuillEditor v-model:content="body" />
         </div>
       </client-only>
+
+      <!-- <div class="flex flex-col gap-2 md:flex-row">
+        <BaseInput type="text" label="Image Source 1" />
+        <BaseInput type="text" label="Image Source 2" />
+        <BaseInput type="text" label="Image Source 3" />
+        <BaseInput type="text" label="Image Source 4" />
+        <BaseInput type="text" label="Image Source 5" />
+        <BaseInput type="text" label="Image Source 6" />
+      </div> -->
 
       <div class="flex items-center justify-end gap-3">
         <button

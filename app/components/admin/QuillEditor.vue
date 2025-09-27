@@ -1,23 +1,56 @@
 <template>
-  <QuillEditor
-    :options="options"
-    contentType="html"
-    data-gramm="false"
-    data-gramm_editor="false"
-    data-enable-grammarly="false"
-  />
+  <QuillEditor :options="options" contentType="html" />
 </template>
 
 <script lang="ts" setup>
   import { Quill, QuillEditor } from '@vueup/vue-quill';
   import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
+  // Custom fonts
   const customFonts = ['NotoSerif', 'TiroBangla', 'HindSiliguri', 'BalooDa2'];
-
   const Font = Quill.import('formats/font') as any;
   Font.whitelist = customFonts;
   Quill.register(Font, true);
 
+  // BlockEmbed type fix
+  const BlockEmbed = Quill.import('blots/block/embed') as any;
+
+  // Custom ImageWithCaption Blot
+  class ImageWithCaption extends BlockEmbed {
+    static blotName = 'imageWithCaption';
+    static tagName = 'div';
+
+    static create(value: { url: string; caption?: string }) {
+      const node = super.create();
+
+      const figure = document.createElement('figure');
+
+      const img = document.createElement('img');
+      img.setAttribute('src', value.url);
+
+      const caption = document.createElement('figcaption');
+      caption.innerText = value.caption || 'Image Source';
+
+      figure.appendChild(img);
+      figure.appendChild(caption);
+
+      node.appendChild(figure);
+      return node;
+    }
+
+    static value(node: HTMLElement) {
+      const img = node.querySelector('img');
+      const caption = node.querySelector('figcaption');
+      return {
+        url: img?.getAttribute('src') || '',
+        caption: caption?.innerText || '',
+      };
+    }
+  }
+
+  Quill.register({ 'formats/imageWithCaption': ImageWithCaption });
+
+  // Toolbar options
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],
     ['blockquote', 'code-block'],
@@ -32,8 +65,39 @@
     ['clean'],
   ];
 
+  // Custom image handler (Base64 + Caption)
+  function imageHandler(this: any) {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = reader.result as string; // Base64 URL
+        const caption = prompt('Enter image source/credit:');
+        const range = this.quill.getSelection();
+        this.quill.insertEmbed(range.index, 'imageWithCaption', {
+          url,
+          caption,
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+
+    input.click();
+  }
+
   const options = ref({
-    modules: { toolbar: toolbarOptions },
+    modules: {
+      toolbar: {
+        container: toolbarOptions,
+        handlers: { image: imageHandler },
+      },
+    },
     theme: 'snow',
   });
 </script>
