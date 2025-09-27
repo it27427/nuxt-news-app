@@ -69,4 +69,21 @@
     border-bottom-left-radius: 0.3125rem;
     border-bottom-right-radius: 0.3125rem;
   }
+
+  :deep(.ql-snow .ql-tooltip) {
+    left: 0.625rem !important;
+    @apply bg-light text-dark dark:bg-slate-600 dark:text-white border-0;
+  }
+
+  :deep(.ql-snow .ql-tooltip.ql-editing input[type='text']) {
+    @apply bg-transparent;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  :deep(.ql-snow .ql-tooltip a) {
+    @apply text-dark dark:text-white;
+  }
 </style>
