@@ -12,15 +12,15 @@
   Font.whitelist = customFonts;
   Quill.register(Font, true);
 
-  // BlockEmbed type fix
+  // BlockEmbed fix for TS
   const BlockEmbed = Quill.import('blots/block/embed') as any;
 
-  // Custom ImageWithCaption Blot
+  // Custom Blot with caption + credit
   class ImageWithCaption extends BlockEmbed {
     static blotName = 'imageWithCaption';
     static tagName = 'div';
 
-    static create(value: { url: string; caption?: string }) {
+    static create(value: { url: string; caption?: string; credit?: string }) {
       const node = super.create();
 
       const figure = document.createElement('figure');
@@ -29,10 +29,18 @@
       img.setAttribute('src', value.url);
 
       const caption = document.createElement('figcaption');
-      caption.innerText = value.caption || 'Image Source';
+      caption.innerText = value.caption || '';
+
+      const credit = document.createElement('small');
+      credit.innerText = value.credit || '';
+      credit.style.display = 'block';
+      credit.style.color = 'gray';
+      credit.style.fontSize = '11px';
+      credit.style.marginTop = '2px';
 
       figure.appendChild(img);
       figure.appendChild(caption);
+      figure.appendChild(credit);
 
       node.appendChild(figure);
       return node;
@@ -41,9 +49,11 @@
     static value(node: HTMLElement) {
       const img = node.querySelector('img');
       const caption = node.querySelector('figcaption');
+      const credit = node.querySelector('small');
       return {
         url: img?.getAttribute('src') || '',
         caption: caption?.innerText || '',
+        credit: credit?.innerText || '',
       };
     }
   }
@@ -65,7 +75,7 @@
     ['clean'],
   ];
 
-  // Custom image handler (Base64 + Caption)
+  // Custom image handler (Base64 + Caption + Credit)
   function imageHandler(this: any) {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -77,12 +87,17 @@
 
       const reader = new FileReader();
       reader.onload = () => {
-        const url = reader.result as string; // Base64 URL
-        const caption = prompt('Enter image source/credit:');
+        const url = reader.result as string;
+
+        // ইউজার থেকে caption + credit নেওয়া
+        const caption = prompt('Enter image caption:');
+        const credit = prompt('Enter image source/credit:');
+
         const range = this.quill.getSelection();
         this.quill.insertEmbed(range.index, 'imageWithCaption', {
           url,
           caption,
+          credit,
         });
       };
       reader.readAsDataURL(file);
