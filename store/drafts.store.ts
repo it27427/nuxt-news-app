@@ -3,6 +3,14 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+// Author টাইপ
+export interface Author {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// Draft টাইপ
 export interface Draft {
   id: string;
   title: string;
@@ -11,6 +19,7 @@ export interface Draft {
   user_id: string;
   created_at: string;
   updated_at: string;
+  author?: Author; // ✅ optional author field
 }
 
 export const useDraftsStore = defineStore('draftsStore', () => {
@@ -22,6 +31,7 @@ export const useDraftsStore = defineStore('draftsStore', () => {
     loading.value = true;
     error.value = null;
     try {
+      // এখানে Draft[] টাইপ use করা হলো, যাতে author field optional ধরা হয়
       const res = await axios.get<Draft[]>('/api/admin/drafts', {
         params: { limit, offset },
       });

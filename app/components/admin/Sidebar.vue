@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="bg-light text-dark dark:bg-gray-900 dark:text-white flex-col transition-all duration-300"
+    class="bg-light text-dark dark:bg-gray-900 dark:text-white h-screen flex-col transition-all duration-300"
     :class="[props.open ? 'w-64' : 'w-20']"
   >
     <client-only>
@@ -46,7 +46,11 @@
     <!-- DESKTOP-ADMIN-MENU -->
     <nav
       class="flex flex-col gap-2 p-2 overflow-y-auto scrollbar-none"
-      :class="[props.open ? 'max-h-screen-minus-xl' : 'max-h-screen-minus-sm']"
+      :class="
+        props.open
+          ? 'max-h-[calc(100vh-16rem)]'
+          : 'max-h-[calc(100vh-5.0625rem)]'
+      "
     >
       <!-- ADMIN-MENU -->
       <AdminMenu :menus="props.menus" :open="props.open" />
