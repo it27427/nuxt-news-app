@@ -1,35 +1,32 @@
 // server/api/tags/index.get.ts
 
-import { desc } from 'drizzle-orm';
+import { desc } from 'drizzle-orm'; // Import desc for ordering
+import { createError } from 'h3'; // Import createError for consistent error handling
 import { db } from '~~/server/db/db';
 import { tags } from '~~/server/db/schema';
 import { ensureSuperAdmin } from '~~/server/utils/auth';
-import { throwError } from '~~/server/utils/error';
 
-/**
- * Fetches all available tags from the database.
- * This API is restricted to Super Admin only.
- */
 export default defineEventHandler(async (event) => {
-  // CRITICAL: Ensure only Super Admins can read the tags list
-  // The ensureAdmin function currently checks for the 'super_admin' role.
+  // CRITICAL: Ensure only Admins or Super Admins can view tags
   ensureSuperAdmin(event);
 
   try {
+    // Fetch all tags ordered by creation date (newest first)
     const allTags = await db.select().from(tags).orderBy(desc(tags.created_at));
 
-    if (allTags.length === 0) {
-      // If no tags exist, throw an error
-      throwError(404, 'No tags found.');
-    }
-
-    return { success: true, data: allTags };
+    // It is generally okay to return an empty array for a list endpoint,
+    // so we return the data even if it's empty.
+    return {
+      success: true,
+      data: allTags,
+    };
   } catch (err: any) {
-    // If it's an H3Error thrown by throwError or ensureAdmin, re-throw it.
-    if (err.statusCode) throw err;
-
     console.error('Error fetching tags list:', err);
-    // Throw a generic 500 error for unexpected database failures
-    throwError(500, 'Failed to fetch tags list.');
+    // Return consistent error response
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to fetch tags list due to server error.',
+      data: { error: err.message },
+    });
   }
 });

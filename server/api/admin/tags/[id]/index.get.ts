@@ -3,29 +3,41 @@
 import { eq } from 'drizzle-orm';
 import { db } from '~~/server/db/db';
 import { tags } from '~~/server/db/schema';
-import { ensureAuthenticated } from '~~/server/utils/auth';
+// ⚠️ FIX: ensureSuperAdmin should be used for admin endpoints instead of generic ensureAuthenticated
+import { ensureSuperAdmin } from '~~/server/utils/auth';
 import { throwError } from '~~/server/utils/error';
 
+/**
+ * Fetches a single tag by ID for editing in the Admin area.
+ * This API is restricted to Super Admin only.
+ */
 export default defineEventHandler(async (event) => {
-  // ⚠️ Check: Ensure user is logged in to read configuration/tag
-  ensureAuthenticated(event);
+  // CRITICAL: Ensure only Super Admins can access single tag details for editing
+  ensureSuperAdmin(event);
 
   try {
-    const { id } = event.context.params as { id: string };
+    // Correctly get and assert the type of the ID parameter
+    const { id: tagId } = event.context.params as { id: string };
 
-    const tag = await db.select().from(tags).where(eq(tags.id, id));
+    // Fetch the tag by ID, ensuring tagId is used as a string in eq()
+    const tagData = await db.select().from(tags).where(eq(tags.id, tagId));
 
-    if (tag.length === 0) {
+    if (tagData.length === 0) {
+      // Throw 404 if tag is not found
       throwError(404, 'Tag not found', { id: 'Tag not found' });
     }
 
+    // ⚠️ FIX: Return the tag data using the 'tag' key instead of 'category'
     return {
       success: true,
-      category: tag[0],
+      tag: tagData[0], // Return the first (and only) result
     };
   } catch (err: any) {
-    // Ensure error format is consistent
-    if (err.statusMessage && err.statusCode) throw err;
+    // If it's an H3Error thrown by throwError or ensureSuperAdmin, re-throw it.
+    if (err.statusCode) throw err;
+
+    console.error('Error fetching tag:', err);
+    // Return a consistent error response for internal issues
     return {
       success: false,
       message: err.message || 'Failed to fetch tag',

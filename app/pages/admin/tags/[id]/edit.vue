@@ -9,7 +9,7 @@
           class="h-8 w-48 bg-gray-200 dark:bg-slate-700 animate-pulse rounded mx-auto"
         ></div>
       </template>
-      <template v-else>ট্যাগ সংযোজন করুন</template>
+      <template v-else>ট্যাগ হালনাগাদ করুন</template>
     </h2>
 
     <!-- Form Skeleton / Actual Form -->
@@ -22,6 +22,7 @@
           ></div>
         </div>
         <div v-else>
+          <!-- Assuming BaseInput is correctly imported and available -->
           <BaseInput
             v-model="form.name"
             label="Tag Name"
@@ -36,6 +37,7 @@
           ></div>
         </div>
         <div v-else>
+          <!-- Assuming BaseButton is correctly imported and available -->
           <BaseButton
             :loading="tagsStore.loading"
             type="submit"
@@ -79,20 +81,36 @@
   onMounted(async () => {
     try {
       const tagData = await tagsStore.fetchTag(tagId);
-      form.name = tagData.name;
-      setTimeout(() => {
-        localLoading.value = false;
-      }, 2000);
+
+      // CRITICAL: Check if tagData is valid before accessing .name
+      if (tagData && tagData.name) {
+        form.name = tagData.name;
+      } else {
+        // If tag not found (e.g., 404), show error and redirect
+        // The store is designed to throw an error on 404/failure,
+        // but this defensive check is good practice.
+        if (localLoading.value) {
+          // Only show toast if loading has started successfully
+          toast.error('Tag not found or failed to load. Redirecting...');
+          router.push('/admin/tags');
+        }
+      }
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to load tag');
+      // Catch error thrown by store (e.g., 404 or network failure)
+      const errorMessage =
+        err?.response?.data?.message || err.message || 'Failed to load tag';
+      toast.error(errorMessage);
+      router.push('/admin/tags'); // Redirect on network or severe error
     } finally {
+      // Ensure loading stops immediately after API call completes
       localLoading.value = false;
     }
   });
 
   // Handle tag update
   async function handleTagUpdate() {
-    errors.name = '';
+    // Clear previous errors
+    errors.name = undefined;
 
     if (!form.name.trim()) {
       errors.name = 'Tag name is required';
@@ -113,7 +131,14 @@
         router.push('/admin/tags');
       }, 1000);
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to update tag');
+      // Handle server-side validation errors
+      const serverErrors = err.response?.data?.errors;
+      if (serverErrors?.name) {
+        errors.name = serverErrors.name;
+        toast.error(err.response.data.message || 'Validation failed');
+      } else {
+        toast.error(err?.message || 'Failed to update tag');
+      }
     } finally {
       tagsStore.loading = false;
     }
