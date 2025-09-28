@@ -63,7 +63,9 @@
       <div
         class="p-4 overflow-y-auto scrollbar-none"
         :class="[
-          isCollapsed ? 'max-h-screen-minus-xl' : 'max-h-screen-minus-sm',
+          isCollapsed
+            ? 'max-h-[calc(100vh-16rem)]'
+            : 'max-h-[calc(100vh-5.0625rem)]',
         ]"
       >
         <AdminMenu :menus="props.menus" :open="isCollapsed" />
