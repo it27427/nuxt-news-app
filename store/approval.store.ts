@@ -19,20 +19,28 @@ export const useApprovalStore = defineStore('approvalStore', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
+  // Axios instance with SSR safe token from cookie
+  const getAxios = () => {
+    const token = useCookie('auth_token').value;
+    return axios.create({
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+  };
+
   async function fetchApprovalList(
     status: 'pending' | 'approved' | 'rejected' | 'published'
   ) {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.get<{ success: boolean; data: ApprovalNews[] }>(
-        '/api/admin/approval',
-        { params: { status } }
-      );
+      const res = await getAxios().get<{
+        success: boolean;
+        data: ApprovalNews[];
+      }>('/api/admin/approval', { params: { status } });
       approvalList.value = res.data.data;
     } catch (err: any) {
       error.value =
-        err?.response?.data?.message || 'Failed to fetch approval list.';
+        err?.response?.data?.statusMessage || 'Failed to fetch approval list.';
     } finally {
       loading.value = false;
     }
@@ -44,14 +52,14 @@ export const useApprovalStore = defineStore('approvalStore', () => {
     comment?: string
   ) {
     try {
-      const res = await axios.post(`/api/admin/approval/${newsId}`, {
+      const res = await getAxios().post(`/api/admin/approval/${newsId}`, {
         newApprovalStatus,
         comment,
       });
       return res.data;
     } catch (err: any) {
       throw new Error(
-        err?.response?.data?.message || 'Approval action failed.'
+        err?.response?.data?.statusMessage || 'Approval action failed.'
       );
     }
   }
