@@ -22,6 +22,7 @@
           ></div>
         </div>
         <div v-else>
+          <!-- NOTE: Assuming BaseInput component is correctly receiving v-model and error prop -->
           <BaseInput
             v-model="form.name"
             label="Category Name"
@@ -36,6 +37,7 @@
           ></div>
         </div>
         <div v-else>
+          <!-- NOTE: Assuming BaseButton component is correctly receiving loading prop -->
           <BaseButton
             :loading="categoriesStore.loading"
             type="submit"
@@ -50,6 +52,8 @@
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
+  // NOTE: Assuming vue-toastification is configured and available globally
+  import { isAxiosError } from 'axios'; // Import isAxiosError for type safety
   import { useToast } from 'vue-toastification';
   import { useCategoriesStore } from '~~/store/categories.store';
 
@@ -62,7 +66,7 @@
   const categoriesStore = useCategoriesStore();
 
   // Local loading for skeleton
-  const localLoading = ref(true); // start as true
+  const localLoading = ref(true);
 
   // Reactive form state
   const form = reactive({
@@ -81,14 +85,17 @@
 
   // Handle form submit
   async function handleCategorySubmit() {
+    // Clear previous errors
     errors.name = '';
 
+    // Client-side basic validation
     if (!form.name.trim()) {
-      errors.name = 'Category name is required';
+      errors.name = 'Category name is required (Client Check)';
       return;
     }
 
     try {
+      // We set loading true inside the store action, but resetting it locally here for clarity
       categoriesStore.loading = true;
 
       const newCategory = await categoriesStore.createCategory({
@@ -106,7 +113,27 @@
         router.push('/admin/categories');
       }, 1000);
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to create category');
+      // IMPROVED: Enhanced error handling for server validation
+      if (isAxiosError(err) && err.response) {
+        const resData = err.response.data;
+        const status = err.response.status;
+
+        if (status === 400 || status === 409) {
+          // Handle Validation/Conflict errors from the server API handler
+          if (resData.data?.name) {
+            errors.name = resData.data.name; // Apply server error to form field
+            toast.error(resData.data.name);
+          } else {
+            toast.error(resData.statusMessage || 'Validation failed.');
+          }
+        } else {
+          // Handle general error messages (401, 500, etc.)
+          toast.error(resData.message || 'An unexpected error occurred.');
+        }
+      } else {
+        // Handle network errors or non-Axios exceptions
+        toast.error(err.message || 'Failed to create category');
+      }
     } finally {
       categoriesStore.loading = false;
     }

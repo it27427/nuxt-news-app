@@ -1,37 +1,58 @@
 // server/api/admin/categories/[id]/index.get.ts
 
 import { eq } from 'drizzle-orm';
+import { H3Event, createError, getRouterParam } from 'h3';
 import { db } from '~~/server/db/db';
 import { categories } from '~~/server/db/schema';
-import { ensureAuthenticated } from '~~/server/utils/auth';
-import { throwError } from '~~/server/utils/error';
+import { ensureSuperAdmin } from '~~/server/utils/auth';
 
-export default defineEventHandler(async (event) => {
-  // ⚠️ Check: Ensure user is logged in to read configuration/category
-  ensureAuthenticated(event);
+/**
+ * Fetches a single category by ID for editing in the Admin area.
+ * Restricted to Super Admin only.
+ */
+export default defineEventHandler(async (event: H3Event) => {
+  // 1. Authorization Check: Must be Super Admin
+  // Assuming ensureSuperAdmin is available and throws an error if unauthorized
+  ensureSuperAdmin(event);
 
   try {
-    const { id } = event.context.params as { id: string };
+    const categoryId = getRouterParam(event, 'id');
 
-    const category = await db
-      .select()
-      .from(categories)
-      .where(eq(categories.id, id));
-
-    if (category.length === 0) {
-      throwError(404, 'Category not found', { id: 'Category not found' });
+    if (!categoryId) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Bad Request: Category ID is missing.',
+      });
     }
 
+    // Fetch the category by ID
+    const categoryData = await db
+      .select()
+      .from(categories)
+      .where(eq(categories.id, categoryId))
+      .limit(1);
+
+    const category = categoryData[0];
+
+    if (!category) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'Category not found.',
+      });
+    }
+
+    // Success Response
     return {
       success: true,
-      category: category[0],
+      category: category,
     };
   } catch (err: any) {
-    // Ensure error format is consistent
-    if (err.statusMessage && err.statusCode) throw err;
-    return {
-      success: false,
-      message: err.message || 'Failed to fetch category',
-    };
+    // Re-throw H3 errors (including auth/404 errors)
+    if (err.statusCode) throw err;
+    console.error('Error fetching category:', err);
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to fetch category.',
+    });
   }
 });

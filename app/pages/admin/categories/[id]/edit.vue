@@ -60,6 +60,7 @@
     layout: 'admin',
   });
 
+  // Interface for Category data (assuming the store returns this shape)
   interface Category {
     id: string;
     name: string;
@@ -70,9 +71,10 @@
   const route = useRoute();
   const categoriesStore = useCategoriesStore();
 
+  // Get the category ID from the route parameters
   const categoryId = route.params.id as string;
 
-  // Local loading for skeleton
+  // Local loading state for skeleton UI
   const localLoading = ref(true);
 
   // Reactive form state
@@ -86,7 +88,7 @@
   // Fetch category data on mount
   onMounted(async () => {
     try {
-      // The store is now fixed to return the category object directly.
+      // Fetch the category data using the store action
       const categoryData = await categoriesStore.fetchCategory(categoryId);
 
       // Check if data was successfully loaded before accessing its properties
@@ -99,7 +101,7 @@
       }
     } catch (err: any) {
       toast.error(err?.message || 'Failed to load category');
-      // In case of error, still ensure we redirect or stop loading
+      // In case of error, still ensure we redirect
       router.push('/admin/categories');
     } finally {
       // Stop skeleton loading once fetching is complete, regardless of success/fail
@@ -132,12 +134,12 @@
         }
       );
 
+      // Redirect after a short delay
       setTimeout(() => {
         router.push('/admin/categories');
       }, 1000);
     } catch (err: any) {
       // Handle server-side validation errors (e.g., duplicate name)
-      // Assuming server uses a response structure like { message: ..., errors: { name: '...' } }
       const serverErrors = err.response?.data?.errors;
       if (serverErrors?.name) {
         errors.name = serverErrors.name;
