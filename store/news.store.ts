@@ -2,9 +2,11 @@
 
 import axios from 'axios';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useCategoriesStore } from '~~/store/categories.store';
+import { useTagsStore } from '~~/store/tags.store';
 
-// --- Types ---
+// Types
 export interface NewsArticle {
   id: string;
   user_id: string;
@@ -15,24 +17,49 @@ export interface NewsArticle {
   tags: string[];
   title: string;
   subtitle?: string;
-  homepage_excerpt?: string;
-  full_content: any;
-  images?: any[];
-  videos?: any[];
+  homepage_excerpt: any[];
+  full_content: any[];
+  images?: Array<{ img_src: string; caption: string; credit: string }>;
+  videos?: Array<{
+    url: string;
+    caption: string;
+    credit: string;
+    length: string;
+  }>;
   quill_data_for_editing: any;
   created_at?: string;
   updated_at?: string;
 }
 
-// --- Pinia Store ---
 export const useNewsStore = defineStore('newsStore', () => {
+  // State
   const newsList = ref<NewsArticle[]>([]);
   const singleNews = ref<NewsArticle | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
+  // Stores for categories and tags
+  const categoriesStore = useCategoriesStore();
+  const tagsStore = useTagsStore();
+
+  // Computed options for dropdowns
+  const categoryOptions = computed(() =>
+    categoriesStore.categories.map((c) => ({ label: c.name, value: c.id }))
+  );
+
+  const tagOptions = computed(() =>
+    tagsStore.tags.map((t) => ({ label: t.name, value: t.id }))
+  );
+
   // ✅ Create News
-  const createNews = async (payload: any) => {
+  const createNews = async (payload: {
+    userId: string;
+    username: string;
+    userRole: 'admin' | 'super_admin';
+    categories: string[];
+    tags: string[];
+    quill_data_for_editing: any;
+  }) => {
     loading.value = true;
     error.value = null;
     try {
@@ -47,7 +74,7 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  // ✅ Get All News (with pagination)
+  // ✅ Fetch News List
   const fetchNewsList = async (limit = 20, offset = 0) => {
     loading.value = true;
     error.value = null;
@@ -55,7 +82,7 @@ export const useNewsStore = defineStore('newsStore', () => {
       const { data } = await axios.get('/api/admin/news', {
         params: { limit, offset },
       });
-      newsList.value = data;
+      newsList.value = data.data || [];
     } catch (err: any) {
       error.value = err.response?.data?.statusMessage || 'Failed to fetch news';
       throw err;
@@ -64,13 +91,13 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  // ✅ Get Single News by ID
+  // ✅ Fetch Single News by ID
   const fetchSingleNews = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
       const { data } = await axios.get(`/api/admin/news/${id}`);
-      singleNews.value = data;
+      singleNews.value = data.data || null;
     } catch (err: any) {
       error.value =
         err.response?.data?.statusMessage || 'Failed to fetch single news';
@@ -81,11 +108,21 @@ export const useNewsStore = defineStore('newsStore', () => {
   };
 
   // ✅ Update News
-  const updateNews = async (id: string, payload: any) => {
+  const updateNews = async (
+    id: string,
+    payload: {
+      categories?: string[];
+      tags?: string[];
+      quill_data_for_editing?: any;
+    }
+  ) => {
     loading.value = true;
     error.value = null;
     try {
       const { data } = await axios.put(`/api/admin/news/${id}`, payload);
+      const index = newsList.value.findIndex((n) => n.id === id);
+      if (index !== -1) newsList.value[index] = data.data;
+      if (singleNews.value?.id === id) singleNews.value = data.data;
       return data;
     } catch (err: any) {
       error.value =
@@ -102,8 +139,8 @@ export const useNewsStore = defineStore('newsStore', () => {
     error.value = null;
     try {
       const { data } = await axios.delete(`/api/admin/news/${id}`);
-      // delete করার পর newsList থেকে remove করে দিব
       newsList.value = newsList.value.filter((n) => n.id !== id);
+      if (singleNews.value?.id === id) singleNews.value = null;
       return data;
     } catch (err: any) {
       error.value =
@@ -119,6 +156,8 @@ export const useNewsStore = defineStore('newsStore', () => {
     singleNews,
     loading,
     error,
+    categoryOptions,
+    tagOptions,
     createNews,
     fetchNewsList,
     fetchSingleNews,
