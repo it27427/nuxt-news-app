@@ -22,6 +22,18 @@ export const adminMenus: AdminMenuType[] = [
     roles: ['super_admin', 'admin'],
   },
   {
+    label: 'ধরন তৈরি করুন',
+    to: '/admin/categories/create',
+    icon: 'oui:ml-create-single-metric-job',
+    roles: ['super_admin'],
+  },
+  {
+    label: 'ধরন তালিকা',
+    to: '/admin/categories',
+    icon: 'carbon:categories',
+    roles: ['super_admin'],
+  },
+  {
     label: 'ট্যাগ তৈরি করুন',
     to: '/admin/tags/create',
     icon: 'oui:tag',
