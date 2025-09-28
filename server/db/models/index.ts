@@ -1,3 +1,5 @@
+// server/db/models/index.ts
+
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 // Fix: 'createInsertSchema' and 'createSelectSchema' are usually imported
 // from a companion library like 'drizzle-zod' for validation schemas.

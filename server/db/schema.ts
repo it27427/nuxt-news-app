@@ -1,3 +1,5 @@
+// server/db/schema.ts
+
 import {
   boolean,
   integer,
@@ -17,7 +19,7 @@ export const users = pgTable('users', {
   name: varchar('name', { length: 256 }).notNull(),
   email: varchar('email', { length: 256 }).notNull().unique(),
   password: varchar('password', { length: 256 }).notNull(),
-  // role: 'admin' (standard writer) | 'super_admin' (approver) | 'reader'
+  // role: 'admin' (standard writer) | 'reporter' | 'super_admin' (approver)
   role: varchar('role', { length: 50 }).notNull().default('admin'),
   created_at: timestamp('created_at').defaultNow().notNull(),
 });

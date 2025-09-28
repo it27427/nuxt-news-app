@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { H3Event, createError } from 'h3';
 import { db } from '~~/server/db/db';
 import { approvals, news, notifications } from '~~/server/db/schema';
-import { ensureAdmin } from '~~/server/utils/auth'; // Super Admin check
+import { ensureSuperAdmin } from '~~/server/utils/auth'; // Super Admin check
 
 /**
  * Handles Super Admin action: Approve or Reject a news article.
@@ -12,7 +12,7 @@ import { ensureAdmin } from '~~/server/utils/auth'; // Super Admin check
  */
 export default defineEventHandler(async (event: H3Event) => {
   // ⚠️ CRITICAL: Only Super Admins can approve or reject articles
-  const superAdminUser = ensureAdmin(event);
+  const superAdminUser = ensureSuperAdmin(event);
 
   const { id: newsId } = event.context.params as { id: string };
   const body = await readBody(event);
@@ -41,6 +41,7 @@ export default defineEventHandler(async (event: H3Event) => {
         statusMessage: 'News article not found.',
       });
     }
+
     const article = originalNews[0];
 
     // Determine final statuses based on action

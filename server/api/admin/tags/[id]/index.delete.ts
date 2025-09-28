@@ -3,9 +3,13 @@
 import { eq } from 'drizzle-orm';
 import { db } from '~~/server/db/db';
 import { tags } from '~~/server/db/schema';
+import { ensureSuperAdmin } from '~~/server/utils/auth';
 import { throwError } from '~~/server/utils/error';
 
 export default defineEventHandler(async (event) => {
+  // ⚠️ CRITICAL: Ensure only Super Admins can delete tags
+  ensureSuperAdmin(event);
+
   try {
     const { id } = event.context.params as { id: string };
 
@@ -21,6 +25,8 @@ export default defineEventHandler(async (event) => {
       message: 'Tag deleted successfully',
     };
   } catch (err: any) {
+    // Ensure error format is consistent
+    if (err.statusMessage && err.statusCode) throw err;
     return {
       success: false,
       message: err.message || 'Failed to delete tag',

@@ -4,7 +4,7 @@ import { desc, eq } from 'drizzle-orm';
 import { H3Event, createError } from 'h3';
 import { db } from '~~/server/db/db';
 import { news } from '~~/server/db/schema';
-import { ensureAdmin } from '~~/server/utils/auth'; // Super Admin check
+import { ensureSuperAdmin } from '~~/server/utils/auth'; // Super Admin check
 
 /**
  * Fetches news articles based on their approval_status for the Super Admin panel.
@@ -12,7 +12,7 @@ import { ensureAdmin } from '~~/server/utils/auth'; // Super Admin check
  */
 export default defineEventHandler(async (event: H3Event) => {
   // ⚠️ CRITICAL: Ensure only Super Admins can access the approval panel lists
-  ensureAdmin(event);
+  ensureSuperAdmin(event);
 
   try {
     const query = getQuery(event);

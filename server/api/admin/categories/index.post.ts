@@ -1,14 +1,13 @@
-// server/api/tags/index.post.ts
+// server/api/categories/index.post.ts
 
 import { eq } from 'drizzle-orm';
 import { db } from '~~/server/db/db';
-import { tags } from '~~/server/db/schema';
+import { categories } from '~~/server/db/schema';
 import { ensureSuperAdmin } from '~~/server/utils/auth';
 import { throwError } from '~~/server/utils/error';
 
 export default defineEventHandler(async (event) => {
-  // ⚠️ CRITICAL: Ensure only Super Admins can create tags.
-  // The ensureAdmin utility is currently configured to enforce 'super_admin' role.
+  // ⚠️ CRITICAL: ensureSuperAdmin is now configured to check ONLY for 'super_admin' role.
   ensureSuperAdmin(event);
 
   const body = await readBody(event);
@@ -16,28 +15,30 @@ export default defineEventHandler(async (event) => {
 
   // Validation
   const fields: Record<string, string> = {};
-  if (!name || !name.trim()) fields.name = 'Tag name is required';
+  if (!name || !name.trim()) fields.name = 'Category name is required';
   if (Object.keys(fields).length > 0)
     throwError(400, 'Validation failed', fields);
 
   // Check duplicate
   const existing = await db
     .select()
-    .from(tags)
-    .where(eq(tags.name, name.trim()));
+    .from(categories)
+    .where(eq(categories.name, name.trim()));
   if (existing.length > 0) {
-    throwError(400, 'Tag already exists', { name: 'Tag already exists' });
+    throwError(400, 'Category already exists', {
+      name: 'Category already exists',
+    });
   }
 
   // Insert
   const result = await db
-    .insert(tags)
+    .insert(categories)
     .values({ name: name.trim() })
     .returning();
 
   return {
     success: true,
-    message: 'Tag created successfully',
-    tag: result[0],
+    message: 'Category created successfully',
+    category: result[0],
   };
 });

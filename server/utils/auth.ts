@@ -14,7 +14,7 @@ interface AuthUser {
  * If the user is unauthorized or unauthenticated, it throws an H3 error.
  * @param event The H3Event object containing the user context.
  */
-export function ensureAdmin(event: H3Event): AuthUser {
+export function ensureSuperAdmin(event: H3Event): AuthUser {
   const authUser = event.context.user as AuthUser | undefined;
 
   // 1. Check Authentication
