@@ -15,6 +15,13 @@
       "when": 1758825531184,
       "tag": "0001_sweet_microbe",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759017895356,
+      "tag": "0002_lively_scarlet_witch",
+      "breakpoints": true
     }
   ]
 }
