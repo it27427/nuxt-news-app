@@ -12,7 +12,7 @@
           :key="index"
           class="bg-green-500 text-white text-sm px-2 py-1 rounded flex items-center gap-1"
         >
-          {{ item }}
+          {{ item.label }}
           <button
             type="button"
             @click.stop="removeOption(item)"
@@ -53,49 +53,52 @@
         @click="toggleOption(option)"
         class="cursor-pointer px-4 py-2 flex justify-between items-center hover:bg-green-500 hover:text-white dark:hover:bg-green-600 dark:hover:text-white"
       >
-        {{ option }}
-        <span v-if="selected.includes(option)">✔</span>
+        {{ option.label }}
+        <span v-if="selected.some((s) => s.value === option.value)">✔</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+  import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+
+  interface Option {
+    label: string;
+    value: string;
+  }
 
   const props = defineProps<{
-    modelValue: string[];
-    options: string[];
+    modelValue: Option[];
+    options: Option[];
     placeholder?: string;
   }>();
 
   const emit = defineEmits<{
-    (e: 'update:modelValue', value: string[]): void;
+    (e: 'update:modelValue', value: Option[]): void;
   }>();
 
   const open = ref(false);
-  const selected = ref<string[]>([]);
+  const selected = ref<Option[]>([]);
   const dropdownRef = ref<HTMLElement | null>(null);
-
-  const placeholder = props.placeholder || 'সংবাদ ধরন নির্বাচন করুন';
+  const placeholder = props.placeholder || 'Select...';
 
   const toggleDropdown = () => {
     open.value = !open.value;
   };
 
-  // Toggle option selection
-  const toggleOption = (option: string) => {
-    if (selected.value.includes(option)) {
-      selected.value = selected.value.filter((o) => o !== option);
+  const toggleOption = (option: Option) => {
+    const exists = selected.value.find((s) => s.value === option.value);
+    if (exists) {
+      selected.value = selected.value.filter((s) => s.value !== option.value);
     } else {
       selected.value.push(option);
     }
     emit('update:modelValue', selected.value);
   };
 
-  // Remove option from selected (for tag close button)
-  const removeOption = (option: string) => {
-    selected.value = selected.value.filter((o) => o !== option);
+  const removeOption = (option: Option) => {
+    selected.value = selected.value.filter((s) => s.value !== option.value);
     emit('update:modelValue', selected.value);
   };
 
@@ -107,12 +110,6 @@
     { immediate: true }
   );
 
-  // Display selected or placeholder
-  const selectedLabel = computed(() =>
-    selected.value.length ? selected.value.join(', ') : placeholder
-  );
-
-  // Close dropdown when clicking outside
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.value &&

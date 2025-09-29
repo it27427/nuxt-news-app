@@ -14,13 +14,6 @@ export default defineEventHandler(async (event) => {
       .from(categories)
       .orderBy(desc(categories.created_at));
 
-    // 💡 DEBUG: Log the full list of categories being returned by the API.
-    // This will help diagnose if a category name is hiding in the database due to spaces or case differences.
-
-    allCategories.forEach((c) =>
-      console.log(`ID: ${c.id}, Name (Length ${c.name.length}): [${c.name}]`)
-    );
-
     return { success: true, data: allCategories };
   } catch (err: any) {
     // Ensure error format is consistent

@@ -1,7 +1,7 @@
 // store/users.store.ts
 
-import axios from 'axios';
 import { defineStore } from 'pinia';
+import axios from 'axios';
 import { ref } from 'vue';
 import { useAuthStore } from '~~/store/auth.store';
 import type {

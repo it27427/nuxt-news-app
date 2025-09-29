@@ -12,6 +12,10 @@
   import Delta from 'quill-delta';
   import { computed, ref, watch } from 'vue';
 
+  // NOTE: Import EmbedBlot for custom image/video
+  const Embed = Quill.import('blots/embed') as any;
+  const Block = Quill.import('blots/block') as any; // Block is needed for custom title/subtitle
+
   // NOTE: Define the Delta type with the isEqual method for reliable comparison
   type DeltaWithIsEqual = Delta & { isEqual: (other: Delta) => boolean };
 
@@ -21,7 +25,9 @@
     contentType?: 'html' | 'json' | 'text';
   }>();
 
-  const emit = new Function() as (e: 'update:modelValue', value: any) => void;
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: any): void;
+  }>();
 
   // Local state: Always initialize as a Delta object for internal use
   const initialDelta = new Delta(
@@ -51,6 +57,7 @@
         return;
       }
 
+      // Check if the delta content is actually different before updating
       if (!localContent.value.isEqual(incomingDelta)) {
         localContent.value = incomingDelta;
       }
@@ -73,19 +80,23 @@
   });
 
   const saveContentType = computed(() => {
+    // When contentType is 'json', the QuillEditor needs 'delta'
     return props.contentType === 'json' ? 'delta' : props.contentType;
   });
 
   // ---------------- Custom Block Formats (Title & Subtitle) ----------------
   if (!(Quill as any).registeredCustomBlocks) {
-    const Block = Quill.import('blots/block') as any;
+    // const Block = Quill.import('blots/block') as any; // Already imported above
 
+    // NewsTitle Blot
     class NewsTitle extends Block {
       static blotName = 'newsTitle';
-      static tagName = 'div'; // Use a generic tag like div or p, no inherent semantics
-      // Override default formats if needed
+      static tagName = 'div';
+      // Use static formats for Block-level formats
       static formats(domNode: HTMLElement) {
-        return { newsTitle: true };
+        return domNode.getAttribute('class') === 'ql-news-title'
+          ? { newsTitle: true }
+          : {};
       }
       static create(value: any) {
         const node = super.create(value);
@@ -95,11 +106,15 @@
       }
     }
 
+    // NewsSubtitle Blot
     class NewsSubtitle extends Block {
       static blotName = 'newsSubtitle';
       static tagName = 'div';
+      // Use static formats for Block-level formats
       static formats(domNode: HTMLElement) {
-        return { newsSubtitle: true };
+        return domNode.getAttribute('class') === 'ql-news-subtitle'
+          ? { newsSubtitle: true }
+          : {};
       }
       static create(value: any) {
         const node = super.create(value);
@@ -120,14 +135,13 @@
   Font.whitelist = customFonts;
   Quill.register(Font, true);
 
-  // ---------------- Image/Video Blots (Overriding default to store extra data) ----------------
+  // ---------------- Image/Video Blots (FIXED) ----------------
+  // The base Image/Video blots in Quill are a type of Embed.
+  // We use the imported Embed blot as the base for custom formats.
 
-  // 1. ImageWithData (Overriding the default 'image' blot)
   if (!(Quill as any).registeredImageWithData) {
-    const ImageBlot = Quill.import('formats/image') as any;
-
-    class ImageWithData extends ImageBlot {
-      static blotName = 'image'; // MUST use the name 'image' to replace the default
+    class ImageWithData extends Embed {
+      static blotName = 'image';
       static tagName = 'img';
 
       static value(node: HTMLImageElement) {
@@ -156,29 +170,65 @@
         }
 
         node.setAttribute('src', url);
-        node.setAttribute('data-caption', caption || '');
-        node.setAttribute('data-credit', credit || '');
+        // Set your custom attributes directly on the DOM node as data-*
+        node.dataset.caption = caption || '';
+        node.dataset.credit = credit || '';
 
-        return node;
+        // Add a wrapper to help display the caption/credit in the editor/output
+        const container = document.createElement('span');
+        container.classList.add('image-with-data-wrapper');
+        container.setAttribute('contenteditable', 'false'); // Prevent editing inside embed
+        container.appendChild(node);
+
+        const captionNode = document.createElement('figcaption');
+        captionNode.classList.add('image-caption');
+        captionNode.innerText = caption || '';
+        container.appendChild(captionNode);
+
+        const creditNode = document.createElement('div');
+        creditNode.classList.add('image-credit');
+        creditNode.innerText = credit || '';
+        container.appendChild(creditNode);
+
+        return container; // Return the wrapper node
       }
 
-      formats(domNode: HTMLImageElement) {
-        const formats = super.formats(domNode);
-        formats.caption = domNode.dataset.caption;
-        formats.credit = domNode.dataset.credit;
-        return formats;
+      // FIX: Use static formats to read formats from the blot's DOM node
+      static formats(domNode: HTMLSpanElement) {
+        // Find the actual image node inside the wrapper
+        const imgNode = domNode.querySelector('img');
+        if (!imgNode) return {};
+
+        return {
+          caption: imgNode.dataset.caption,
+          credit: imgNode.dataset.credit,
+        };
+      }
+
+      // Instance format method to update the DOM node
+      format(name: string, value: any): void {
+        const imgNode = this.domNode.querySelector('img');
+        if (!imgNode) return;
+
+        if (name === 'caption') {
+          imgNode.dataset.caption = value;
+          this.domNode.querySelector('.image-caption').innerText = value || '';
+        } else if (name === 'credit') {
+          imgNode.dataset.credit = value;
+          this.domNode.querySelector('.image-credit').innerText = value || '';
+        } else {
+          super.format(name, value);
+        }
       }
     }
 
+    // FIX: Register the custom image blot with the correct key and keep existing one.
     Quill.register(ImageWithData, true);
     (Quill as any).registeredImageWithData = true;
   }
 
-  // 2. VideoWithData (Overriding the default 'video' blot)
   if (!(Quill as any).registeredVideoWithData) {
-    const VideoBlot = Quill.import('formats/video') as any;
-
-    class VideoWithData extends VideoBlot {
+    class VideoWithData extends Embed {
       static blotName = 'video';
       static tagName = 'iframe';
 
@@ -213,19 +263,69 @@
         }
 
         node.setAttribute('src', url);
-        node.setAttribute('data-caption', caption || '');
-        node.setAttribute('data-credit', credit || '');
-        node.setAttribute('data-length', length || '');
+        node.setAttribute('frameborder', '0');
+        node.setAttribute('allowfullscreen', 'true');
 
-        return node;
+        // Set your custom attributes directly on the DOM node as data-*
+        node.dataset.caption = caption || '';
+        node.dataset.credit = credit || '';
+        node.dataset.length = length || '';
+
+        // Add a wrapper to help display the caption/credit/length in the editor/output
+        const container = document.createElement('span');
+        container.classList.add('video-with-data-wrapper');
+        container.setAttribute('contenteditable', 'false'); // Prevent editing inside embed
+        container.appendChild(node);
+
+        const captionNode = document.createElement('figcaption');
+        captionNode.classList.add('video-caption');
+        captionNode.innerText = caption || '';
+        container.appendChild(captionNode);
+
+        const creditNode = document.createElement('div');
+        creditNode.classList.add('video-credit');
+        creditNode.innerText = `Credit: ${credit || ''}`;
+        container.appendChild(creditNode);
+
+        const lengthNode = document.createElement('div');
+        lengthNode.classList.add('video-length');
+        lengthNode.innerText = `Length: ${length || ''}`;
+        container.appendChild(lengthNode);
+
+        return container; // Return the wrapper node
       }
 
-      formats(domNode: HTMLIFrameElement) {
-        const formats = super.formats(domNode);
-        formats.caption = domNode.dataset.caption;
-        formats.credit = domNode.dataset.credit;
-        formats.length = domNode.dataset.length;
-        return formats;
+      // FIX: Use static formats to read formats from the blot's DOM node
+      static formats(domNode: HTMLSpanElement) {
+        const videoNode = domNode.querySelector('iframe');
+        if (!videoNode) return {};
+
+        return {
+          caption: videoNode.dataset.caption,
+          credit: videoNode.dataset.credit,
+          length: videoNode.dataset.length,
+        };
+      }
+
+      // Instance format method to update the DOM node
+      format(name: string, value: any): void {
+        const videoNode = this.domNode.querySelector('iframe');
+        if (!videoNode) return;
+
+        if (name === 'caption') {
+          videoNode.dataset.caption = value;
+          this.domNode.querySelector('.video-caption').innerText = value || '';
+        } else if (name === 'credit') {
+          videoNode.dataset.credit = value;
+          this.domNode.querySelector('.video-credit').innerText =
+            `Credit: ${value || ''}`;
+        } else if (name === 'length') {
+          videoNode.dataset.length = value;
+          this.domNode.querySelector('.video-length').innerText =
+            `Length: ${value || ''}`;
+        } else {
+          super.format(name, value);
+        }
       }
     }
 
@@ -233,8 +333,7 @@
     (Quill as any).registeredVideoWithData = true;
   }
 
-  // ---------------- Handlers (Custom Logic without inserting newline) ----------------
-
+  // ---------------- Handlers ----------------
   function imageHandler(this: any) {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -253,19 +352,14 @@
         const credit = prompt('Enter image source/credit:');
 
         const range = this.quill.getSelection(true);
-        if (range) {
+        if (range && range.index <= this.quill.getLength()) {
           this.quill.insertEmbed(
             range.index,
             'image',
             { url, caption, credit },
             Quill.sources.USER
           );
-          // Move cursor after the embed
-          this.quill.setSelection(
-            range.index + 1,
-            range.index + 1,
-            Quill.sources.SILENT
-          );
+          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
         }
       };
       reader.readAsDataURL(file);
@@ -281,29 +375,27 @@
     const length = prompt('Enter video length (e.g., 03:45):');
 
     const range = this.quill.getSelection();
-    if (range) {
+    if (range && range.index <= this.quill.getLength()) {
       this.quill.insertEmbed(
         range.index,
         'video',
         { url, caption, credit, length },
         Quill.sources.USER
       );
-      // Move cursor after the embed
-      this.quill.setSelection(
-        range.index + 1,
-        range.index + 1,
-        Quill.sources.SILENT
-      );
+      this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
     }
   }
 
-  // Custom Handler to apply 'newsTitle' format
   function titleHandler(this: any) {
     const range = this.quill.getSelection();
-    if (range) {
+    if (range && range.index <= this.quill.getLength()) {
+      const safeLength = Math.min(
+        range.length,
+        this.quill.getLength() - range.index
+      );
       this.quill.formatLine(
         range.index,
-        range.length,
+        safeLength || 1, // Ensure length is at least 1 for formatLine
         'newsTitle',
         true,
         Quill.sources.USER
@@ -311,13 +403,16 @@
     }
   }
 
-  // Custom Handler to apply 'newsSubtitle' format
   function subtitleHandler(this: any) {
     const range = this.quill.getSelection();
-    if (range) {
+    if (range && range.index <= this.quill.getLength()) {
+      const safeLength = Math.min(
+        range.length,
+        this.quill.getLength() - range.index
+      );
       this.quill.formatLine(
         range.index,
-        range.length,
+        safeLength || 1, // Ensure length is at least 1 for formatLine
         'newsSubtitle',
         true,
         Quill.sources.USER
@@ -325,35 +420,83 @@
     }
   }
 
-  // ---------------- Toolbar ----------------
+  // ---------------- Toolbar & Options ----------------
   const toolbarOptions = [
-    // Custom Title/Subtitle buttons
-    [{ header: 'newsTitle' }, { header: 'newsSubtitle' }],
-    // Standard formats
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ font: customFonts }],
     ['bold', 'italic', 'underline', 'strike'],
     ['blockquote', 'code-block'],
     ['link', 'image', 'video'],
-    [{ font: customFonts }],
     [{ size: ['small', false, 'large', 'huge'] }],
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
     [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
     [{ script: 'sub' }, { script: 'super' }],
     [{ indent: '-1' }, { indent: '+1' }],
     [{ color: [] }, { background: [] }],
+    // Add custom formats to the toolbar
+    [{ newsTitle: 'News Title' }, { newsSubtitle: 'News Subtitle' }],
     ['clean'],
   ];
 
-  // ---------------- Options ----------------
   const options = ref({
     modules: {
       toolbar: {
         container: toolbarOptions,
         handlers: {
-          image: imageHandler, // Custom handler for local upload + data
-          video: videoHandler, // Custom handler for URL prompt + data
-          // Map toolbar button to custom handlers
+          image: imageHandler,
+          video: videoHandler,
           newsTitle: titleHandler,
           newsSubtitle: subtitleHandler,
+        },
+      },
+      // FIX: Add keyboard module to handle 'Enter' key press in custom blocks
+      keyboard: {
+        bindings: {
+          // Handle 'Enter' key specifically for 'newsTitle' format
+          newsTitleEnter: {
+            key: 'enter',
+            format: ['newsTitle'],
+            handler: function (this: any, range: any) {
+              // 1. Insert a new line break at the current position
+              this.quill.insertText(range.index, '\n', Quill.sources.USER);
+
+              // 2. Move the selection to the newly created line
+              this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+
+              // 3. Remove the 'newsTitle' format from the new line, defaulting to paragraph
+              this.quill.formatLine(
+                range.index + 1,
+                1,
+                'newsTitle',
+                false,
+                Quill.sources.USER
+              );
+
+              return false; // Prevent default Quill 'Enter' behavior
+            },
+          },
+          // Handle 'Enter' key specifically for 'newsSubtitle' format
+          newsSubtitleEnter: {
+            key: 'enter',
+            format: ['newsSubtitle'],
+            handler: function (this: any, range: any) {
+              // 1. Insert a new line break at the current position
+              this.quill.insertText(range.index, '\n', Quill.sources.USER);
+
+              // 2. Move the selection to the newly created line
+              this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+
+              // 3. Remove the 'newsSubtitle' format from the new line, defaulting to paragraph
+              this.quill.formatLine(
+                range.index + 1,
+                1,
+                'newsSubtitle',
+                false,
+                Quill.sources.USER
+              );
+
+              return false;
+            },
+          },
         },
       },
     },
@@ -361,31 +504,11 @@
   });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   /* Editor text styles */
   .ql-font-NotoSerif {
     font-family: 'Noto Serif Bengali', serif;
   }
-  // ... (Other font definitions) ...
-
-  /* Custom block styles for the editor UI */
-  :deep(.ql-editor .ql-news-title) {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: #1a202c; /* Dark text for prominence */
-  }
-
-  :deep(.ql-editor .ql-news-subtitle) {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    color: #4a5568; /* Slightly lighter text */
-  }
-
-  // ... (Other toolbar and default styles) ...
   .ql-font-TiroBangla {
     font-family: 'Tiro Bangla', sans-serif;
   }
