@@ -1,8 +1,7 @@
 // server/api/admin/news/index.get.ts
 
-import { and, desc, eq } from 'drizzle-orm';
-import { SQL } from 'drizzle-orm/sql';
-import { H3Event } from 'h3';
+import { desc, sql } from 'drizzle-orm';
+import { H3Event, getQuery } from 'h3';
 import { db } from '~~/server/db/db';
 import { SelectNews } from '~~/server/db/models';
 import { news } from '~~/server/db/schema';
@@ -10,68 +9,70 @@ import { news } from '~~/server/db/schema';
 // --- API Handler ---
 
 export default defineEventHandler(async (event: H3Event) => {
-  // 1. Mock Authentication and Authorization (MUST BE REPLACED BY REAL AUTH LOGIC)
-  // Assumes a server middleware has populated the authenticated user context.
-  const authUser = event.context.user as
-    | {
-        id: string;
-        role: 'admin' | 'super_admin' | 'reporter';
-      }
-    | undefined;
+  // 1. Get query parameters
+  const query = getQuery(event);
+  const limit = parseInt(query.limit as string) || 20;
+  const offset = parseInt(query.offset as string) || 0;
 
-  // Check if user is authenticated.
-  // If not authenticated, restrict access to this administrative endpoint.
-  if (!authUser) {
+  // 2. Mock Authentication (MUST BE REPLACED BY REAL AUTH LOGIC)
+  // Assuming successful authentication allows access to the list
+  if (!event.context.user) {
     throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden: Authentication required for this endpoint.',
+      statusCode: 401,
+      statusMessage: 'Unauthorized: Authentication data is missing.',
     });
   }
 
-  const userId = authUser.id;
-  const userRole = authUser.role;
-
-  // The endpoint is restricted to show only PUBLISHED news based on previous request.
-  const enforcedStatus: SelectNews['status'] = 'published';
-
-  // 2. Read Query Parameters for Pagination
-  const query = getQuery(event);
-  const limit = parseInt(query.limit as string) || 20; // Default limit 20
-  const offset = parseInt(query.offset as string) || 0;
-
   try {
-    // 3. Build the WHERE clause dynamically
-    const conditions: SQL[] = [];
+    // 3. Fetch News List
+    // 💡 FIX: We must select ALL properties defined in SelectNews to satisfy the TypeScript compiler.
+    // images and videos fields are now included.
+    const allNews: SelectNews[] = await db
+      .select({
+        id: news.id,
+        user_id: news.user_id,
+        username: news.username,
+        status: news.status,
+        approval_status: news.approval_status,
+        categories: news.categories,
+        tags: news.tags,
+        title: news.title,
+        subtitle: news.subtitle,
+        homepage_excerpt: news.homepage_excerpt,
+        full_content: news.full_content,
 
-    // ENFORCE STATUS: Filter for 'published' status for everyone
-    conditions.push(eq(news.status, enforcedStatus));
+        // 💡 ADDED: Including images and videos to match SelectNews type
+        images: news.images,
+        videos: news.videos,
 
-    // ROLE-BASED FILTERING:
-    // If the user is NOT a 'super_admin', they can only see their own published articles.
-    if (userRole !== 'super_admin') {
-      // This applies to both 'admin' and 'reporter' roles.
-      conditions.push(eq(news.user_id, userId));
-    }
+        // 💡 UPDATED: Select the new Tiptap JSON field name
+        tiptap_json_for_editing: news.tiptap_json_for_editing,
 
-    // Super Admins ('super_admin') see all published articles (no user_id filter applied).
-    // 4. Query the database
-    const articles = await db
-      .select()
+        created_at: news.created_at,
+        updated_at: news.updated_at,
+      })
       .from(news)
-      // Use 'and' to combine multiple conditions
-      .where(and(...conditions))
+      .orderBy(desc(news.created_at))
       .limit(limit)
-      .offset(offset)
-      .orderBy(desc(news.created_at)); // Order by newest first
+      .offset(offset);
 
-    // 5. Return the results
-    return articles;
+    // 4. Fetch Total Count (simplified)
+    const totalCountResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(news);
+    const totalCount = totalCountResult[0]?.count || 0;
+
+    // 5. Success Response
+    return {
+      message: 'News list fetched successfully.',
+      data: allNews,
+      totalCount: totalCount,
+    };
   } catch (error) {
     console.error('Database Fetch Error:', error);
-    // Throw an H3 error for client
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error: Failed to fetch news articles.',
+      statusMessage: 'Internal Server Error: Failed to fetch the news list.',
     });
   }
 });

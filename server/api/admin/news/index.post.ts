@@ -1,24 +1,25 @@
 // server/api/admin/news/index.post.ts
 
-import { H3Event } from 'h3';
+import { H3Event, createError } from 'h3';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '~~/server/db/db';
 import { InsertApproval, InsertNews } from '~~/server/db/models';
 import { approvals, news } from '~~/server/db/schema';
-import { parseQuillDelta } from '~~/server/utils/parseQuillDelta';
-import { DeltaOp, ParsedContent } from '~~/types/newstypes';
+// 💡 UPDATED: Import the new Tiptap parser
+import { parseTiptapJson } from '~~/server/utils/parseTiptapJson';
+// 💡 UPDATED: Import Tiptap Node type from the new types file
+import { ParsedContent, TiptapNode } from '~~/types/newstypes';
 
 // --- Incoming Request Body Type ---
 
 /**
  * Defines the expected request body structure for creating a news article.
- * NOTE: This local definition is used to align with the destructuring variables
- * and resolve TypeScript errors previously encountered.
  */
 export interface CreateNewsBody {
   categories: string[];
   tags: string[];
-  quill_data_for_editing: { ops: DeltaOp[] };
+  // 💡 UPDATED: Expect ProseMirror JSON for editing
+  tiptap_json_for_editing: TiptapNode;
   userId: string;
   username: string;
   userRole: 'admin' | 'super_admin' | 'reporter';
@@ -33,7 +34,8 @@ export default defineEventHandler(async (event: H3Event) => {
     userId,
     username,
     userRole,
-    quill_data_for_editing,
+    // 💡 UPDATED: Destructure the new field name
+    tiptap_json_for_editing,
     categories,
     tags,
   } = body;
@@ -47,6 +49,7 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
+  // NOTE: Assuming only 'admin' and 'super_admin' can publish/create articles
   if (userRole === 'reporter') {
     throw createError({
       statusCode: 403,
@@ -54,33 +57,39 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
-  // Ensure quill data is present and has operations
-  if (!quill_data_for_editing || quill_data_for_editing.ops.length === 0) {
+  // Ensure tiptap data is present (must be a doc type with content)
+  if (
+    !tiptap_json_for_editing ||
+    tiptap_json_for_editing.type !== 'doc' ||
+    !tiptap_json_for_editing.content ||
+    tiptap_json_for_editing.content.length === 0
+  ) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Bad Request: Quill content data is required.',
+      statusMessage: 'Bad Request: Tiptap content data is required.',
     });
   }
 
-  // 2. Parse the Quill Delta JSON
+  // 2. Parse the Tiptap JSON
   let parsedContent: ParsedContent;
   try {
-    // Pass only the 'ops' array to the parser function
-    parsedContent = parseQuillDelta(quill_data_for_editing.ops);
+    // 💡 UPDATED: Use the new Tiptap parser
+    parsedContent = parseTiptapJson(tiptap_json_for_editing);
   } catch (error) {
-    console.error('Quill Parsing Error:', error);
+    console.error('Tiptap Parsing Error:', error);
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Content parsing failed.',
+      statusCode: 400, // Changed to 400 as it's a content structure error
+      statusMessage: (error as Error).message || 'Content parsing failed.',
     });
   }
 
   // Final check for the required Title extracted from content
   if (!parsedContent.title) {
+    // This check is now also inside parseTiptapJson, but kept as a failsafe
     throw createError({
       statusCode: 400,
       statusMessage:
-        'Bad Request: Article title is required. Ensure the first line is formatted as the News Title.',
+        'Bad Request: Article title is required. Ensure the first element is a Heading Level 1.',
     });
   }
 
@@ -116,8 +125,8 @@ export default defineEventHandler(async (event: H3Event) => {
     full_content: parsedContent.full_content,
     images: parsedContent.images,
     videos: parsedContent.videos,
-    // Store the raw Delta object for loading back into the editor later
-    quill_data_for_editing: quill_data_for_editing as any,
+    // 💡 UPDATED: Store the raw Tiptap JSON object
+    tiptap_json_for_editing: tiptap_json_for_editing as any,
   };
 
   // 5. Construct Approval Log Payload

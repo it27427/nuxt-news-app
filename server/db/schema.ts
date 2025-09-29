@@ -66,7 +66,7 @@ export const news = pgTable('news', {
   title: varchar('title', { length: 255 }).notNull(),
   subtitle: varchar('subtitle', { length: 255 }),
 
-  // Complex JSON/Quill Data (your custom organized content)
+  // Complex JSON/Tiptap Data (your custom organized content)
   homepage_excerpt: jsonb('homepage_excerpt').notNull().$type<Array<any>>(),
   full_content: jsonb('full_content').notNull().$type<Array<any>>(),
   images:
@@ -78,10 +78,12 @@ export const news = pgTable('news', {
       Array<{ url: string; caption: string; credit: string; length: string }>
     >(),
 
-  // Full Quill Delta for editing (raw data required for editor to load)
-  quill_data_for_editing: jsonb('quill_data_for_editing')
+  // Full Tiptap JSON for editing (raw data required for editor to load)
+  // 💡 RENAMED from quill_data_for_editing
+  tiptap_json_for_editing: jsonb('tiptap_json_for_editing')
     .notNull()
-    .$type<Array<any>>(),
+    // ProseMirror JSON structure starts with a 'type' of 'doc' and has 'content'
+    .$type<{ type: 'doc'; content: Array<any> }>(),
 
   // Timestamps
   created_at: timestamp('created_at').defaultNow().notNull(),
@@ -99,7 +101,7 @@ export const approvals = pgTable('approvals', {
   acted_by: uuid('acted_by')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  // action: 'sent_for_review' | 'approved' | 'rejected' | 'pending' | 'published_direct'
+  // action: 'sent_for_review' | 'approved' | 'rejected' | 'pending' | 'published_direct' | etc.
   action: varchar('action', { length: 50 }).notNull(),
   comment: text('comment'), // Reason for rejection or approval note
   created_at: timestamp('created_at').defaultNow().notNull(),

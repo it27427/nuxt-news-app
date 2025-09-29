@@ -20,12 +20,14 @@ export type SelectUser = InferSelectModel<typeof users>;
  * (e.g., 'id', 'created_at', 'updated_at').
  */
 export const InsertNewsSchema = createInsertSchema(news);
+// 💡 The generated type now includes 'tiptap_json_for_editing' instead of 'quill_data_for_editing'
 export type InsertNews = InferInsertModel<typeof news>;
 
 /**
  * Type used for selecting data from the 'news' table.
  */
 export const SelectNewsSchema = createSelectSchema(news);
+// 💡 The generated type now includes 'tiptap_json_for_editing' instead of 'quill_data_for_editing'
 export type SelectNews = InferSelectModel<typeof news>;
 
 // --- Approvals Log Models ---

@@ -79,15 +79,10 @@ export default defineEventHandler(async (event: H3Event) => {
     // 4. Database Transaction for Deletion
     await db.transaction(async (tx) => {
       // A. Delete associated approval logs first
-      // Note: If you have configured ON DELETE CASCADE in your DB schema for approvals,
-      // this step (A) might be optional, but executing it explicitly ensures data integrity.
       await tx.delete(approvals).where(eq(approvals.news_id, articleId));
 
       // B. Delete the main news article
-      const result = await tx.delete(news).where(eq(news.id, articleId));
-
-      // Optional: Check if a row was actually deleted (drizzle might not return affected rows easily)
-      // For simplicity, we rely on the earlier existence check.
+      await tx.delete(news).where(eq(news.id, articleId));
     });
 
     // 5. Success Response

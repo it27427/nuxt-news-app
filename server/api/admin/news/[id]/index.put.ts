@@ -3,35 +3,38 @@
 import { eq } from 'drizzle-orm';
 import { H3Event, getRouterParam } from 'h3';
 import { db } from '~~/server/db/db';
-import { InsertApproval, SelectNews } from '~~/server/db/models';
-import { approvals, news } from '~~/server/db/schema';
-import { parseQuillDelta } from '~~/server/utils/parseQuillDelta';
-import { DeltaOp, ParsedContent } from '~~/types/newstypes';
+import { news } from '~~/server/db/schema';
+// 💡 UPDATED: Import the new Tiptap parser
+import { parseTiptapJson } from '~~/server/utils/parseTiptapJson';
+// 💡 UPDATED: Import Tiptap Node type from the new types file
+import { SelectNews } from '~~/server/db/models';
+import { ParsedContent, TiptapNode } from '~~/types/newstypes';
 
-// --- Incoming Request Body Type (Request Body Structure) ---
+// --- Auth Context Type ---
+
+interface AuthUser {
+  id: string;
+  role: 'admin' | 'super_admin' | 'reporter';
+}
+
+// --- Request Body Type ---
 
 /**
- * Defines the request body structure for updating a news article.
- * All fields are optional except for the auth context.
+ * Defines the expected request body structure for updating a news article.
  */
 export interface UpdateNewsBody {
-  // Auth Context (usually injected by middleware, but kept here for type safety)
-  userId: string;
-  userRole: 'admin' | 'super_admin' | 'reporter';
-
-  // Updatable Content
-  quill_data_for_editing?: { ops: DeltaOp[] };
   categories?: string[];
   tags?: string[];
+  // 💡 UPDATED: Expect ProseMirror JSON for editing (optional for partial update)
+  tiptap_json_for_editing?: TiptapNode;
 }
 
 // --- API Handler ---
 
 export default defineEventHandler(async (event: H3Event) => {
-  // 1. Get Article ID from URL and Read Body
+  // 1. Get Article ID and Request Body
   const articleId = getRouterParam(event, 'id');
   const body: UpdateNewsBody = await readBody(event);
-  const { userId, userRole, quill_data_for_editing, categories, tags } = body;
 
   if (!articleId) {
     throw createError({
@@ -39,14 +42,20 @@ export default defineEventHandler(async (event: H3Event) => {
       statusMessage: 'Bad Request: Article ID is missing.',
     });
   }
-  if (!userId || !userRole) {
+
+  // 2. Mock Authentication (MUST BE REPLACED BY REAL AUTH LOGIC)
+  const authUser = event.context.user as AuthUser | undefined;
+
+  if (!authUser) {
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized: Authentication data is missing.',
     });
   }
 
-  // Check for administrative access (reporter is allowed to update their own articles)
+  const { id: userId, role: userRole } = authUser;
+
+  // Check for administrative access (reporter can also update their own article)
   if (
     userRole !== 'admin' &&
     userRole !== 'super_admin' &&
@@ -58,114 +67,110 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
-  try {
-    // 2. Fetch the current article to verify ownership and existence
-    const existingArticles = await db
-      .select()
-      .from(news)
-      .where(eq(news.id, articleId))
-      .limit(1);
-    const existingArticle = existingArticles[0];
+  // 3. Fetch the current article to verify ownership and existence
+  const existingArticles: SelectNews[] = await db
+    .select()
+    .from(news)
+    .where(eq(news.id, articleId))
+    .limit(1);
+  const existingArticle = existingArticles[0];
 
-    if (!existingArticle) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: `Not Found: Article with ID ${articleId} not found.`,
-      });
-    }
-
-    // Authorization Check: Admins/Reporters can only update their own articles.
-    if (userRole !== 'super_admin' && existingArticle.user_id !== userId) {
-      throw createError({
-        statusCode: 403,
-        statusMessage:
-          'Forbidden: You can only update articles you have created.',
-      });
-    }
-
-    // 3. Prepare Update Payloads and Status Logic
-    const newsUpdatePayload: Partial<SelectNews> = {};
-    let approvalAction = 'updated_draft';
-    let approvalComment = `Article updated by ${userRole}.`;
-
-    // Parse Quill Content if provided
-    if (quill_data_for_editing) {
-      let parsedContent: ParsedContent;
-      try {
-        parsedContent = parseQuillDelta(quill_data_for_editing.ops);
-      } catch (error) {
-        console.error('Quill Parsing Error:', error);
-        throw createError({
-          statusCode: 500,
-          statusMessage: 'Content parsing failed during update.',
-        });
-      }
-
-      // Update core content fields
-      newsUpdatePayload.title = parsedContent.title;
-      newsUpdatePayload.subtitle = parsedContent.subtitle;
-      newsUpdatePayload.homepage_excerpt = parsedContent.homepage_excerpt;
-      newsUpdatePayload.full_content = parsedContent.full_content;
-      newsUpdatePayload.images = parsedContent.images;
-      newsUpdatePayload.videos = parsedContent.videos;
-      newsUpdatePayload.quill_data_for_editing = quill_data_for_editing as any; // Type cast for JSONB
-
-      // Status Logic: If the article was previously published or approved,
-      // and a non-super admin updates the content, revert status to 'pending'.
-      if (
-        userRole !== 'super_admin' &&
-        existingArticle.approval_status === 'approved'
-      ) {
-        newsUpdatePayload.approval_status = 'pending';
-        newsUpdatePayload.status = 'draft'; // Revert status until re-approved
-
-        approvalAction = 'reverted_to_pending';
-        approvalComment =
-          'Major content update, reverted to pending for re-approval.';
-      } else if (existingArticle.approval_status === 'pending') {
-        // If already pending, keep it pending, just log the update.
-        approvalAction = 'updated_pending_article';
-        approvalComment = 'Content updated while article was pending review.';
-      }
-    }
-
-    // Update non-content fields (categories, tags)
-    if (categories) newsUpdatePayload.categories = categories;
-    if (tags) newsUpdatePayload.tags = tags;
-
-    // 4. Construct Approval Log Payload
-    const approvalPayload: InsertApproval = {
-      news_id: articleId,
-      acted_by: userId,
-      action: approvalAction,
-      comment: approvalComment,
-    };
-
-    // 5. Database Transaction
-    await db.transaction(async (tx) => {
-      // A. Update the main news article
-      await tx
-        .update(news)
-        .set({ ...newsUpdatePayload, updated_at: new Date() }) // Include updated_at timestamp
-        .where(eq(news.id, articleId));
-
-      // B. Log the update action
-      await tx.insert(approvals).values(approvalPayload);
+  if (!existingArticle) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: `Not Found: Article with ID ${articleId} not found.`,
     });
+  }
+
+  // Authorization Check: Admins/Reporters can only update their own articles.
+  if (userRole !== 'super_admin' && existingArticle.user_id !== userId) {
+    throw createError({
+      statusCode: 403,
+      statusMessage:
+        'Forbidden: You can only update articles you have created.',
+    });
+  }
+
+  // 4. Determine Update Payload & Parse Content if Tiptap data is provided
+  const updatePayload: Partial<SelectNews> = {
+    updated_at: new Date(), // Set update time
+  };
+
+  if (body.categories) {
+    updatePayload.categories = body.categories;
+  }
+  if (body.tags) {
+    updatePayload.tags = body.tags;
+  }
+
+  // 💡 Tiptap Content Handling
+  if (body.tiptap_json_for_editing) {
+    // Basic validation
+    if (
+      body.tiptap_json_for_editing.type !== 'doc' ||
+      !body.tiptap_json_for_editing.content ||
+      body.tiptap_json_for_editing.content.length === 0
+    ) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Bad Request: Tiptap content data is invalid.',
+      });
+    }
+
+    let parsedContent: ParsedContent;
+    try {
+      // 💡 UPDATED: Use the new Tiptap parser
+      parsedContent = parseTiptapJson(body.tiptap_json_for_editing);
+    } catch (error) {
+      console.error('Tiptap Parsing Error:', error);
+      throw createError({
+        statusCode: 400,
+        statusMessage: (error as Error).message || 'Content parsing failed.',
+      });
+    }
+
+    // Update content fields in payload
+    updatePayload.title = parsedContent.title;
+    updatePayload.subtitle = parsedContent.subtitle;
+    updatePayload.homepage_excerpt = parsedContent.homepage_excerpt;
+    updatePayload.full_content = parsedContent.full_content;
+    updatePayload.images = parsedContent.images;
+    updatePayload.videos = parsedContent.videos;
+    // 💡 UPDATED: Store the raw Tiptap JSON object
+    updatePayload.tiptap_json_for_editing = body.tiptap_json_for_editing as any;
+  }
+
+  // 5. Execute Update
+  try {
+    const updatedArticles = await db
+      .update(news)
+      .set(updatePayload)
+      .where(eq(news.id, articleId))
+      .returning();
+
+    const updatedArticle = updatedArticles[0];
+
+    if (!updatedArticle) {
+      // Should not happen if existence check passed, but good practice
+      throw new Error('Failed to retrieve updated article data.');
+    }
 
     // 6. Success Response
     return {
       message: 'News article updated successfully.',
-      articleId: articleId,
-      status: newsUpdatePayload.status || existingArticle.status,
-      approvalStatus:
-        newsUpdatePayload.approval_status || existingArticle.approval_status,
+      data: updatedArticle,
     };
   } catch (error) {
+    // Re-throw H3 errors or catch DB errors
+    const h3Error = error as any;
+    if (h3Error.statusCode) {
+      throw error;
+    }
     console.error('Database Update Error:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error: Failed to update article.',
+      statusMessage:
+        'Internal Server Error: Failed to update the news article.',
     });
   }
 });

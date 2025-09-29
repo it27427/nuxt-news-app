@@ -1,16 +1,10 @@
 // server/api/admin/news/[id]/index.get.ts
 
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { H3Event, getRouterParam } from 'h3';
 import { db } from '~~/server/db/db';
+import { SelectNews } from '~~/server/db/models';
 import { news } from '~~/server/db/schema';
-
-// --- Auth Context Type ---
-
-interface AuthUser {
-  id: string;
-  role: 'admin' | 'super_admin' | 'reporter';
-}
 
 // --- API Handler ---
 
@@ -26,49 +20,34 @@ export default defineEventHandler(async (event: H3Event) => {
   }
 
   // 2. Mock Authentication (MUST BE REPLACED BY REAL AUTH LOGIC)
-  const authUser = event.context.user as AuthUser | undefined;
-
-  if (!authUser) {
+  if (!event.context.user) {
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized: Authentication data is missing.',
     });
   }
 
-  const { id: userId, role: userRole } = authUser;
-
   try {
-    // 3. Build the WHERE clause for Authorization
-    const conditions = [eq(news.id, articleId)];
-
-    // Super Admins can fetch any article.
-    // Other roles ('admin', 'reporter') can ONLY fetch articles they own.
-    if (userRole !== 'super_admin') {
-      // Non-super-admins must match the user_id
-      conditions.push(eq(news.user_id, userId));
-    }
-
-    // 4. Query the database
-    const articles = await db
+    // 3. Fetch the Article
+    const existingArticles: SelectNews[] = await db
       .select()
       .from(news)
-      // Use 'and' to ensure both article ID and authorization checks pass
-      .where(and(...conditions))
+      .where(eq(news.id, articleId))
       .limit(1);
+    const existingArticle = existingArticles[0];
 
-    const article = articles[0];
-
-    // 5. Check Result and Return
-    if (!article) {
-      // If no article found, it's either 404 (doesn't exist) or 403 (exists but unauthorized)
-      // For security, we usually default to 404 in the admin view.
+    if (!existingArticle) {
       throw createError({
         statusCode: 404,
-        statusMessage: `Not Found: Article with ID ${articleId} not found or access denied.`,
+        statusMessage: `Not Found: Article with ID ${articleId} not found.`,
       });
     }
 
-    return article;
+    // 4. Success Response
+    return {
+      message: 'News article fetched successfully.',
+      data: existingArticle,
+    };
   } catch (error) {
     // Re-throw H3 errors
     const h3Error = error as any;
@@ -78,7 +57,8 @@ export default defineEventHandler(async (event: H3Event) => {
     console.error('Database Fetch Error:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error: Failed to fetch the news article.',
+      statusMessage:
+        'Internal Server Error: Failed to fetch the news article data.',
     });
   }
 });
