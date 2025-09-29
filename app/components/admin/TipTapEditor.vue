@@ -1,10 +1,9 @@
 <template>
   <div class="editor-container">
     <ClientOnly>
-      <!-- BubbleMenu loaded dynamically on client; use <component :is="BubbleMenu"> to avoid static TS import -->
       <component
-        v-if="BubbleMenu && editor"
-        :is="BubbleMenu"
+        v-if="BubbleMenuComponent && editor"
+        :is="BubbleMenuComponent"
         :editor="editor"
         :tippy-options="{ duration: 100 }"
         class="bubble-menu-style"
@@ -29,30 +28,15 @@
         </button>
       </component>
     </ClientOnly>
-
     <div v-if="editor" class="toolbar">
       <div class="toolbar-group">
-        <select
-          class="select-control"
-          :value="editor.getAttributes('textStyle').fontFamily || 'Inter'"
-          @change="
-            editor
-              .chain()
-              .focus()
-              .setFontFamily(($event.target as HTMLSelectElement).value)
-              .run()
+        <CustomSelects
+          :model-value="
+            editor.getAttributes('textStyle').fontFamily || defaultFontFamily
           "
-        >
-          <option value="Noto Serif Bengali">Noto Serif Bengali</option>
-          <option value="Tiro Bangla">Tiro Bangla</option>
-          <option value="Hind Siliguri">Hind Siliguri</option>
-          <option value="Baloo Da 2">Baloo Da 2</option>
-          <option value="serif">Serif</option>
-          <option value="monospace">Monospace</option>
-          <option value="Comic Sans MS, Comic Sans">Comic Sans</option>
-        </select>
-
-        <!-- levels is typed as Level[] so template typing is safe -->
+          :options="fontOptions"
+          @update:model-value="setFontFamily"
+        />
         <button
           v-for="level in levels"
           :key="level"
@@ -62,7 +46,6 @@
           H{{ level }}
         </button>
       </div>
-
       <div class="toolbar-group">
         <button
           :class="{ 'is-active': editor.isActive('bold') }"
@@ -95,7 +78,6 @@
           <Icon icon="ic:round-highlight" />
         </button>
       </div>
-
       <div class="toolbar-group">
         <button
           :class="{ 'is-active': editor.isActive('bulletList') }"
@@ -116,7 +98,6 @@
           <Icon icon="ic:round-task" />
         </button>
       </div>
-
       <div class="toolbar-group">
         <button @click="openImageFileInput">
           <Icon icon="ic:round-image" />
@@ -142,7 +123,6 @@
           <Icon icon="ic:round-table-chart" />
         </button>
       </div>
-
       <div class="toolbar-group">
         <button @click="editor.chain().focus().undo().run()">
           <Icon icon="ic:round-undo" />
@@ -152,7 +132,6 @@
         </button>
       </div>
     </div>
-
     <input
       ref="fileInputRef"
       type="file"
@@ -160,14 +139,11 @@
       style="display: none"
       @change="handleFileInputChange"
     />
-
     <EditorContent :editor="editor" class="editor-content-area" />
-
     <div v-if="editor" class="char-count">
       {{ editor.storage.characterCount.characters() }}/{{ MAX_CHARACTERS }}
       Characters
     </div>
-
     <div class="json-output">
       <h3>JSON Data (For Database)</h3>
       <pre>{{ jsonOutput }}</pre>
@@ -181,7 +157,6 @@
   import {
     EditorContent,
     useEditor,
-    /* DO NOT statically import BubbleMenu to avoid TS export-mismatch */
     type Editor,
     type JSONContent,
   } from '@tiptap/vue-3';
@@ -218,10 +193,10 @@
     CustomYoutubeOptions,
   } from '~~/types/tiptap';
 
-  /* -------------------------
-   Constants & reactive refs
-   ------------------------- */
-  const MAX_CHARACTERS = 10000;
+  const MAX_CHARACTERS = 100000;
+
+  const defaultFontFamily = ref('Noto Serif Bengali');
+
   const content: JSONContent = {
     type: 'doc',
     content: [
@@ -242,42 +217,36 @@
     ],
   };
 
+  const fontOptions = [
+    { label: 'Noto Serif Bengali', value: 'Noto Serif Bengali' },
+    { label: 'Tiro Bangla', value: 'Tiro Bangla' },
+    { label: 'Hind Siliguri', value: 'Hind Siliguri' },
+    { label: 'Baloo Da 2', value: 'Baloo Da 2' },
+    { label: 'Serif (Default)', value: 'serif' },
+    { label: 'Monospace', value: 'monospace' },
+    { label: 'Comic Sans MS', value: 'Comic Sans MS, Comic Sans' },
+  ];
+
   const jsonOutput = ref<JSONContent>(content);
   const fileInputRef: Ref<HTMLInputElement | null> = ref(null);
-
-  /* -------------------------
-   Fix #1: levels typed as Level[]
-   This fixes: "Type 'number' is not assignable to type 'Level'."
-   ------------------------- */
   const levels = [1, 2, 3, 4, 5, 6] as Level[];
 
-  /* -------------------------
-   Fix #2: BubbleMenu dynamic client-only import
-   Don't import BubbleMenu statically — some installed versions have no TS export.
-   Instead we import on the client and expose as a runtime component (any).
-   ------------------------- */
-  const BubbleMenu = ref<any>(null);
-  if (process.client) {
-    try {
-      const mod = await import('@tiptap/vue-3');
-      // prefer named export, but fall back to other possibilities
-      BubbleMenu.value =
-        (mod as any).BubbleMenu ??
-        (mod as any).default?.BubbleMenu ??
-        (mod as any).default ??
-        (mod as any);
-    } catch (err) {
-      // keep BubbleMenu null; component won't render. log for debugging.
-      // This prevents the "Async component loader resolved to undefined" warning
-      // because template checks `v-if="BubbleMenu && editor"`.
-      // eslint-disable-next-line no-console
-      console.warn('Could not load BubbleMenu from @tiptap/vue-3:', err);
-    }
+  const BubbleMenuComponent = ref<any>(null);
+
+  if (import.meta.client) {
+    import('@tiptap/vue-3')
+      .then((mod) => {
+        BubbleMenuComponent.value =
+          (mod as any).BubbleMenu || (mod as any).default?.BubbleMenu;
+      })
+      .catch((err) => {
+        console.warn(
+          'Could not load BubbleMenu from @tiptap/vue-3 dynamically:',
+          err
+        );
+      });
   }
 
-  /* -------------------------
-   Custom extensions
-   ------------------------- */
   const CustomImage = Image.extend({
     addAttributes() {
       return {
@@ -299,11 +268,13 @@
     },
   });
 
-  /* -------------------------
-   Editor init
-   ------------------------- */
   const editor: Ref<Editor | undefined> = useEditor({
     content: content,
+    editorProps: {
+      attributes: {
+        style: `font-family: ${defaultFontFamily.value};`,
+      },
+    },
     extensions: [
       StarterKit.configure({
         heading: false,
@@ -342,9 +313,6 @@
     editor.value?.destroy();
   });
 
-  /* -------------------------
-   Toolbar actions
-   ------------------------- */
   const setLink = () => {
     if (!editor.value) return;
     const previousUrl = editor.value.getAttributes('link').href;
@@ -360,6 +328,11 @@
       .extendMarkRange('link')
       .setLink({ href: url })
       .run();
+  };
+
+  const setFontFamily = (value: string) => {
+    if (!editor.value) return;
+    editor.value.chain().focus().setFontFamily(value).run();
   };
 
   const openImageFileInput = () => {
@@ -407,10 +380,8 @@
 <style lang="scss" scoped>
   .editor-content-area {
     :deep(.ProseMirror) {
-      /* ProseMirror base styles: min-height, padding, outline-none */
       @apply min-h-[300px] p-4 focus:outline-none;
 
-      /* Bengali Font Styles inside ProseMirror (Must remain custom due to deep attribute selectors) */
       [style*='font-family: Noto Serif Bengali'] {
         font-family: 'Noto Serif Bengali', serif !important;
       }
@@ -424,89 +395,56 @@
         font-family: 'Baloo Da 2', sans-serif !important;
       }
 
-      /* Placeholder Text (Must remain custom due to pseudo-element) */
       p.is-editor-empty:first-child::before {
         content: attr(data-placeholder);
         float: left;
         @apply text-gray-400 pointer-events-none h-0;
       }
 
-      /* Image Styling */
       img {
         @apply max-w-full h-auto block my-3 rounded-md shadow;
       }
 
-      /* YouTube Container Styling (Tailwind + custom aspect ratio CSS) */
       .youtube-container {
         @apply relative w-full overflow-hidden my-4 rounded-lg shadow-lg;
-        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        padding-bottom: 56.25%;
         height: 0;
       }
 
-      /* YouTube Iframe (Must remain custom CSS for absolute positioning) */
       .youtube-container iframe {
         @apply absolute top-0 left-0 w-full h-full;
       }
     }
   }
 
-  .select-control {
-    /* Tailwind for the select box itself */
-    @apply px-3 py-1.5 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600 shadow-sm transition-colors;
-
-    /* Styling the font within the select dropdown options (Must remain custom due to attribute selectors) */
-    option[value='Noto Serif Bengali'] {
-      font-family: 'Noto Serif Bengali', serif;
-    }
-    option[value='Tiro Bangla'] {
-      font-family: 'Tiro Bangla', sans-serif;
-    }
-    option[value='Hind Siliguri'] {
-      font-family: 'Hind Siliguri', sans-serif;
-    }
-    option[value='Baloo Da 2'] {
-      font-family: 'Baloo Da 2', sans-serif;
-    }
-  }
-
-  /* Editor container styles */
   .editor-container {
     @apply border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden;
   }
 
-  /* Toolbar styles */
   .toolbar {
     @apply flex flex-wrap gap-2 sm:gap-3 p-2 border-b border-b-gray-300 dark:border-b-gray-700 bg-white dark:bg-gray-800 shadow-md;
   }
 
-  /* Toolbar Group styles */
   .toolbar-group {
     @apply flex gap-1 sm:gap-2 pr-3 border-r border-gray-300 dark:border-gray-700;
   }
 
-  /* Toolbar Group Last Child (Must remain custom CSS) */
   .toolbar-group:last-child {
     border-right: none;
   }
 
-  /* Toolbar Buttons and Selects */
-  .toolbar button,
-  .toolbar select {
+  .toolbar button {
     @apply bg-transparent border border-transparent px-2 sm:px-3 py-1 sm:py-2 cursor-pointer rounded-lg transition-all duration-200 flex items-center justify-center text-sm text-gray-700 dark:text-gray-200;
   }
 
-  /* Toolbar Button/Select Hover State */
-  .toolbar button:hover,
-  .toolbar select:hover {
+  .toolbar button:hover {
     @apply bg-gray-100 dark:bg-gray-700;
   }
 
-  /* Toolbar Button Active State */
   .toolbar button.is-active {
     @apply bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-700;
   }
 
-  /* Bubble and Floating Menu Styles */
   .bubble-menu-style,
   .floating-menu-style {
     @apply flex bg-gray-800 dark:bg-gray-900 p-2 rounded-xl gap-2 shadow-2xl z-50;
@@ -524,12 +462,10 @@
     }
   }
 
-  /* Character Count */
   .char-count {
     @apply p-3 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700;
   }
 
-  /* JSON Output Block */
   .json-output {
     @apply mt-5 p-4 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-inner;
 

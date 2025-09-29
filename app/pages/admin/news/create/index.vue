@@ -25,7 +25,6 @@
 
       <!-- Quill Editor -->
       <TipTapEditor />
-      <client-only></client-only>
 
       <!-- Buttons -->
       <div class="flex items-center justify-end gap-3">
@@ -103,10 +102,6 @@
       await categoriesStore.fetchCategories();
     if (!tagsStore.tags.length) await tagsStore.fetchTags();
   });
-
-  // ------------------
-  // Utility: Clean Delta
-  // ------------------
 
   // ------------------
   // Actions
