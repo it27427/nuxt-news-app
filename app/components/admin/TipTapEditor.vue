@@ -37,14 +37,22 @@
           :options="fontOptions"
           @update:model-value="setFontFamily"
         />
-        <button
-          v-for="level in levels"
-          :key="level"
-          :class="{ 'is-active': editor.isActive('heading', { level }) }"
-          @click="editor.chain().focus().toggleHeading({ level }).run()"
-        >
-          H{{ level }}
-        </button>
+
+        <CustomSelects
+          :model-value="
+            editor.isActive('heading')
+              ? editor.getAttributes('heading').level.toString()
+              : '0' // '0' represents Paragraph
+          "
+          :options="
+            headingOptions.map((opt) => ({
+              label: opt.label,
+              value: opt.level.toString(),
+            }))
+          "
+          @update:model-value="toggleHeadingLevel"
+          class="min-w-[120px]"
+        />
       </div>
       <div class="toolbar-group">
         <button
@@ -222,9 +230,20 @@
     { label: 'Tiro Bangla', value: 'Tiro Bangla' },
     { label: 'Hind Siliguri', value: 'Hind Siliguri' },
     { label: 'Baloo Da 2', value: 'Baloo Da 2' },
-    { label: 'Serif (Default)', value: 'serif' },
+    { label: 'Serif', value: 'serif' },
     { label: 'Monospace', value: 'monospace' },
     { label: 'Comic Sans MS', value: 'Comic Sans MS, Comic Sans' },
+  ];
+
+  // Options for the heading level dropdown
+  const headingOptions = [
+    { label: 'Paragraph', level: 0, icon: 'ic:round-notes' },
+    { label: 'Heading 1', level: 1, icon: 'ic:round-title' },
+    { label: 'Heading 2', level: 2, icon: 'ic:round-title' },
+    { label: 'Heading 3', level: 3, icon: 'ic:round-title' },
+    { label: 'Heading 4', level: 4, icon: 'ic:round-title' },
+    { label: 'Heading 5', level: 5, icon: 'ic:round-title' },
+    { label: 'Heading 6', level: 6, icon: 'ic:round-title' },
   ];
 
   const jsonOutput = ref<JSONContent>(content);
@@ -277,7 +296,7 @@
     },
     extensions: [
       StarterKit.configure({
-        heading: false,
+        heading: false, // Disable default heading as we configure it below
         link: false,
         codeBlock: false,
         underline: false,
@@ -296,6 +315,7 @@
       Table.configure({ resizable: true }),
       TableRow,
       TableHeader,
+      // Removed duplicate TableCell configuration to fix the warning
       TableCell,
       TaskList,
       TaskItem.configure({ nested: true }),
@@ -312,6 +332,24 @@
   onBeforeUnmount(() => {
     editor.value?.destroy();
   });
+
+  /**
+   * Toggles the heading level or sets it to paragraph based on the selected value.
+   * @param value The selected heading level as a string ('1' to '6') or '0' for Paragraph.
+   */
+  const toggleHeadingLevel = (value: string) => {
+    if (!editor.value) return;
+
+    // TypeScript Fix: Compare 'value' as a string to '0'.
+    if (value === '0') {
+      // If 'Paragraph' is selected, set to paragraph
+      editor.value.chain().focus().setParagraph().run();
+    } else {
+      // Toggle heading for the selected level. Convert the string '1'-'6' to Level type.
+      const level = parseInt(value) as Level;
+      editor.value.chain().focus().toggleHeading({ level }).run();
+    }
+  };
 
   const setLink = () => {
     if (!editor.value) return;

@@ -1,10 +1,10 @@
 <template>
-  <div class="relative w-64">
+  <div :class="['relative w-64', className]" ref="dropdownRef">
     <!-- Selected Value -->
     <button
       @click="toggleDropdown"
       type="button"
-      class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-4 py-2 flex justify-between items-center shadow-sm hover:ring-1 hover:ring-blue-500 focus:outline-none"
+      class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-4 py-2 flex justify-between items-center shadow-sm hover:ring-1 hover:ring-green-500 focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
     >
       <span>{{ selectedLabel }}</span>
       <svg
@@ -41,28 +41,27 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ref, watch } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   interface Option {
     label: string;
     value: string;
   }
 
-  // Props
   const props = defineProps<{
     modelValue: string;
     options: Option[];
+    className?: string;
   }>();
 
   const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void;
   }>();
 
-  // Reactive
   const open = ref(false);
   const selected = ref(props.modelValue);
+  const dropdownRef = ref<HTMLElement | null>(null);
 
-  // Watch parent v-model changes
   watch(
     () => props.modelValue,
     (val) => {
@@ -84,4 +83,22 @@
     emit('update:modelValue', option.value);
     open.value = false;
   };
+
+  // Click outside to close
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.value &&
+      !dropdownRef.value.contains(event.target as Node)
+    ) {
+      open.value = false;
+    }
+  };
+
+  onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+  });
+
+  onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+  });
 </script>
