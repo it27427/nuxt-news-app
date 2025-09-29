@@ -5,31 +5,9 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { useCategoriesStore } from '~~/store/categories.store';
 import { useTagsStore } from '~~/store/tags.store';
-
-// Types
-export interface NewsArticle {
-  id: string;
-  user_id: string;
-  username: string;
-  status: 'draft' | 'published';
-  approval_status: 'draft' | 'pending' | 'approved';
-  categories: string[];
-  tags: string[];
-  title: string;
-  subtitle?: string;
-  homepage_excerpt: any[];
-  full_content: any[];
-  images?: Array<{ img_src: string; caption: string; credit: string }>;
-  videos?: Array<{
-    url: string;
-    caption: string;
-    credit: string;
-    length: string;
-  }>;
-  quill_data_for_editing: any;
-  created_at?: string;
-  updated_at?: string;
-}
+// 💡 FIXED: 'type' keyword added for type-only import to resolve TS1484 error
+import type { NewsArticle } from '~~/types/article';
+import type { TiptapNode } from '~~/types/newstypes';
 
 export const useNewsStore = defineStore('newsStore', () => {
   // State
@@ -38,11 +16,11 @@ export const useNewsStore = defineStore('newsStore', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  // Stores for categories and tags
+  // Stores for categories and tags (Assuming these exist and work)
   const categoriesStore = useCategoriesStore();
   const tagsStore = useTagsStore();
 
-  // Computed options for dropdowns
+  // Computed options for dropdowns (Assuming the stores are populated)
   const categoryOptions = computed(() =>
     categoriesStore.categories.map((c) => ({ label: c.name, value: c.id }))
   );
@@ -51,14 +29,15 @@ export const useNewsStore = defineStore('newsStore', () => {
     tagsStore.tags.map((t) => ({ label: t.name, value: t.id }))
   );
 
-  // ✅ Create News
+  // ✅ Create News (POST)
   const createNews = async (payload: {
     userId: string;
     username: string;
     userRole: 'admin' | 'super_admin';
     categories: string[];
     tags: string[];
-    quill_data_for_editing: any;
+    // 💡 UPDATED: Use new Tiptap JSON field name and type
+    tiptap_json_for_editing: TiptapNode;
   }) => {
     loading.value = true;
     error.value = null;
@@ -74,7 +53,7 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  // ✅ Fetch News List
+  // ✅ Fetch News List (GET)
   const fetchNewsList = async (limit = 20, offset = 0) => {
     loading.value = true;
     error.value = null;
@@ -82,6 +61,7 @@ export const useNewsStore = defineStore('newsStore', () => {
       const { data } = await axios.get('/api/admin/news', {
         params: { limit, offset },
       });
+      // The fetched data structure now uses tiptap_json_for_editing
       newsList.value = data.data || [];
     } catch (err: any) {
       error.value = err.response?.data?.statusMessage || 'Failed to fetch news';
@@ -91,12 +71,13 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  // ✅ Fetch Single News by ID
+  // ✅ Fetch Single News by ID (GET)
   const fetchSingleNews = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
       const { data } = await axios.get(`/api/admin/news/${id}`);
+      // The fetched data structure now uses tiptap_json_for_editing
       singleNews.value = data.data || null;
     } catch (err: any) {
       error.value =
@@ -107,22 +88,27 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  // ✅ Update News
+  // ✅ Update News (PUT)
   const updateNews = async (
     id: string,
     payload: {
       categories?: string[];
       tags?: string[];
-      quill_data_for_editing?: any;
+      // 💡 UPDATED: Use new Tiptap JSON field name and type
+      tiptap_json_for_editing?: TiptapNode;
     }
   ) => {
     loading.value = true;
     error.value = null;
     try {
       const { data } = await axios.put(`/api/admin/news/${id}`, payload);
+      const updatedArticle: NewsArticle = data.data;
+
+      // Update local state
       const index = newsList.value.findIndex((n) => n.id === id);
-      if (index !== -1) newsList.value[index] = data.data;
-      if (singleNews.value?.id === id) singleNews.value = data.data;
+      if (index !== -1) newsList.value[index] = updatedArticle;
+      if (singleNews.value?.id === id) singleNews.value = updatedArticle;
+
       return data;
     } catch (err: any) {
       error.value =
@@ -133,12 +119,13 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  // ✅ Delete News
+  // ✅ Delete News (DELETE)
   const deleteNews = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
       const { data } = await axios.delete(`/api/admin/news/${id}`);
+      // Remove from list after successful deletion
       newsList.value = newsList.value.filter((n) => n.id !== id);
       if (singleNews.value?.id === id) singleNews.value = null;
       return data;
