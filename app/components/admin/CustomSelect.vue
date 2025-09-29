@@ -4,7 +4,7 @@
     <button
       type="button"
       @click="toggleDropdown"
-      class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm px-4 py-2 text-left focus:outline-none focus:ring-1 focus:ring-green-500 flex justify-between items-center flex-wrap gap-1"
+      class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm hover:ring-1 hover:ring-green-500 focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
     >
       <template v-if="selected.length">
         <span
@@ -12,11 +12,11 @@
           :key="index"
           class="bg-green-500 text-white text-sm px-2 py-1 rounded flex items-center gap-1"
         >
-          {{ item.label }}
+          <span class="inline-block mr-1">{{ item.label }}</span>
           <button
             type="button"
             @click.stop="removeOption(item)"
-            class="ml-1 text-white hover:text-gray-200"
+            class="text-white hover:text-gray-200"
           >
             &times;
           </button>
