@@ -1,43 +1,36 @@
 // store/drafts.store.ts
+
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
-// Author টাইপ
-export interface Author {
-  id: string;
-  name: string;
-  email: string;
-}
-
-// Draft টাইপ
-export interface Draft {
-  id: string;
-  title: string;
-  content: string;
-  status: 'draft' | 'pending';
-  user_id: string;
-  created_at: string;
-  updated_at: string;
-  author?: Author; // ✅ optional author field
-}
+import type { Draft } from '~~/types/draft';
 
 export const useDraftsStore = defineStore('draftsStore', () => {
   const drafts = ref<Draft[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
+  /**
+   * Fetches user drafts and pending articles from the API.
+   * Filters based on user role (super_admin sees all, others see their own).
+   * @param limit - Max number of articles to fetch.
+   * @param offset - Pagination offset.
+   */
   async function fetchDrafts(limit = 20, offset = 0) {
     loading.value = true;
     error.value = null;
     try {
-      // এখানে Draft[] টাইপ use করা হলো, যাতে author field optional ধরা হয়
+      // The API returns the full SelectNews structure, mapped to the comprehensive Draft type
       const res = await axios.get<Draft[]>('/api/admin/drafts', {
         params: { limit, offset },
       });
       drafts.value = res.data;
     } catch (err: any) {
-      error.value = err?.response?.data?.message || 'Failed to fetch drafts.';
+      console.error('Drafts fetch error:', err);
+      error.value =
+        err?.response?.data?.statusMessage || 'Failed to fetch drafts.';
+      // Throw the error for component handling
+      throw err;
     } finally {
       loading.value = false;
     }
