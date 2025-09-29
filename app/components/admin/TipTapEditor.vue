@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-container">
+  <div class="editor-container scrollbar-none">
     <ClientOnly>
       <component
         v-if="BubbleMenuComponent && editor"
@@ -418,6 +418,8 @@
 
 <style lang="scss" scoped>
   .editor-content-area {
+    @apply max-h-[40rem];
+
     :deep(.ProseMirror) {
       @apply min-h-[300px] p-4 focus:outline-none;
 
@@ -457,11 +459,11 @@
   }
 
   .editor-container {
-    @apply border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden;
+    @apply border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg relative max-h-[40rem] overflow-auto;
   }
 
   .toolbar {
-    @apply flex flex-wrap gap-2 sm:gap-3 p-2 border-b border-b-gray-300 dark:border-b-gray-700 bg-white dark:bg-gray-800 shadow-md;
+    @apply sticky top-0 z-10 w-full flex flex-wrap gap-2 sm:gap-3 p-2 border-b border-b-gray-300 dark:border-b-gray-700 bg-white dark:bg-gray-800 shadow-md;
   }
 
   .toolbar-group {
@@ -481,7 +483,7 @@
   }
 
   .toolbar button.is-active {
-    @apply bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:border-blue-700;
+    @apply bg-green-600 text-white border-green-600 hover:bg-green-700 hover:border-green-700;
   }
 
   .bubble-menu-style,
@@ -497,7 +499,7 @@
     }
 
     button.is-active {
-      @apply bg-blue-500 hover:bg-blue-500;
+      @apply bg-green-500 hover:bg-green-500;
     }
   }
 
