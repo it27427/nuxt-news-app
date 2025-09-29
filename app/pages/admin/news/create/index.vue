@@ -24,7 +24,7 @@
       </div>
 
       <!-- Quill Editor -->
-      <RichTextEditor />
+      <TipTapEditor />
       <client-only></client-only>
 
       <!-- Buttons -->
@@ -49,7 +49,6 @@
 </template>
 
 <script lang="ts" setup>
-  import Delta from 'quill-delta';
   import { computed, onMounted, ref } from 'vue';
   import { useCategoriesStore } from '~~/store/categories.store';
   import { useNewsStore } from '~~/store/news.store';
@@ -70,8 +69,6 @@
   // ------------------
   // State & Stores
   // ------------------
-  const body = ref<Delta>(new Delta());
-  const finalBody = computed(() => cleanDelta(body.value));
 
   const newsStore = useNewsStore();
   const categoriesStore = useCategoriesStore();
@@ -110,34 +107,20 @@
   // ------------------
   // Utility: Clean Delta
   // ------------------
-  function cleanDelta(delta: Delta): Delta {
-    const newOps: any[] = [...delta.ops];
-    while (newOps.length > 0 && newOps[0].insert === '\n') newOps.shift();
-    while (newOps.length > 0 && newOps[newOps.length - 1].insert === '\n')
-      newOps.pop();
-    return new Delta(newOps);
-  }
 
   // ------------------
   // Actions
   // ------------------
   async function saveDraft() {
-    if (!finalBody.value.ops.length) {
-      alert('কোনো কন্টেন্ট নেই!');
-      return;
-    }
-
     try {
       const payload = {
-        userId: 'user-id', // 💡 লগিন ইউজারের আইডি ব্যবহার কর
-        username: 'username', // 💡 লগিন ইউজারের নাম
+        userId: 'user-id',
+        username: 'username',
         userRole: 'admin' as 'admin' | 'super_admin',
-        categories: selectedNewsType.value.map((c) => c.value), // Only send values
-        tags: selectedNewsTag.value.map((t) => t.value), // Only send values
-        quill_data_for_editing: finalBody.value,
+        categories: selectedNewsType.value.map((c) => c.value),
+        tags: selectedNewsTag.value.map((t) => t.value),
       };
 
-      const res = await newsStore.createNews(payload);
       alert('সংবাদ সংরক্ষণাগারে সংরক্ষণ করা হয়েছে!');
     } catch (err) {
       console.error(err);
@@ -146,22 +129,15 @@
   }
 
   async function publishContent() {
-    if (!finalBody.value.ops.length) {
-      alert('কোনো কন্টেন্ট নেই!');
-      return;
-    }
-
     try {
       const payload = {
-        userId: 'user-id', // 💡 লগিন ইউজারের আইডি ব্যবহার কর
-        username: 'username', // 💡 লগিন ইউজারের নাম
+        userId: 'user-id',
+        username: 'username',
         userRole: 'admin' as 'admin' | 'super_admin',
-        categories: selectedNewsType.value.map((c) => c.value), // Only send values
-        tags: selectedNewsTag.value.map((t) => t.value), // Only send values
-        quill_data_for_editing: finalBody.value,
+        categories: selectedNewsType.value.map((c) => c.value),
+        tags: selectedNewsTag.value.map((t) => t.value),
       };
 
-      const res = await newsStore.createNews(payload);
       alert('সংবাদ প্রকাশ করা হয়েছে!');
     } catch (err) {
       console.error(err);

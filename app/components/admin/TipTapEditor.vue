@@ -1,8 +1,10 @@
 <template>
   <div class="editor-container">
     <ClientOnly>
-      <BubbleMenu
-        v-if="editor"
+      <!-- BubbleMenu loaded dynamically on client; use <component :is="BubbleMenu"> to avoid static TS import -->
+      <component
+        v-if="BubbleMenu && editor"
+        :is="BubbleMenu"
         :editor="editor"
         :tippy-options="{ duration: 100 }"
         class="bubble-menu-style"
@@ -25,7 +27,7 @@
         >
           <Icon icon="ic:round-link" />
         </button>
-      </BubbleMenu>
+      </component>
     </ClientOnly>
 
     <div v-if="editor" class="toolbar">
@@ -50,8 +52,9 @@
           <option value="Comic Sans MS, Comic Sans">Comic Sans</option>
         </select>
 
+        <!-- levels is typed as Level[] so template typing is safe -->
         <button
-          v-for="level in [1, 2, 3, 4, 5, 6]"
+          v-for="level in levels"
           :key="level"
           :class="{ 'is-active': editor.isActive('heading', { level }) }"
           @click="editor.chain().focus().toggleHeading({ level }).run()"
@@ -176,9 +179,9 @@
   import { Icon } from '@iconify/vue';
   import StarterKit from '@tiptap/starter-kit';
   import {
-    BubbleMenu,
     EditorContent,
     useEditor,
+    /* DO NOT statically import BubbleMenu to avoid TS export-mismatch */
     type Editor,
     type JSONContent,
   } from '@tiptap/vue-3';
@@ -215,8 +218,10 @@
     CustomYoutubeOptions,
   } from '~~/types/tiptap';
 
+  /* -------------------------
+   Constants & reactive refs
+   ------------------------- */
   const MAX_CHARACTERS = 10000;
-
   const content: JSONContent = {
     type: 'doc',
     content: [
@@ -240,6 +245,39 @@
   const jsonOutput = ref<JSONContent>(content);
   const fileInputRef: Ref<HTMLInputElement | null> = ref(null);
 
+  /* -------------------------
+   Fix #1: levels typed as Level[]
+   This fixes: "Type 'number' is not assignable to type 'Level'."
+   ------------------------- */
+  const levels = [1, 2, 3, 4, 5, 6] as Level[];
+
+  /* -------------------------
+   Fix #2: BubbleMenu dynamic client-only import
+   Don't import BubbleMenu statically — some installed versions have no TS export.
+   Instead we import on the client and expose as a runtime component (any).
+   ------------------------- */
+  const BubbleMenu = ref<any>(null);
+  if (process.client) {
+    try {
+      const mod = await import('@tiptap/vue-3');
+      // prefer named export, but fall back to other possibilities
+      BubbleMenu.value =
+        (mod as any).BubbleMenu ??
+        (mod as any).default?.BubbleMenu ??
+        (mod as any).default ??
+        (mod as any);
+    } catch (err) {
+      // keep BubbleMenu null; component won't render. log for debugging.
+      // This prevents the "Async component loader resolved to undefined" warning
+      // because template checks `v-if="BubbleMenu && editor"`.
+      // eslint-disable-next-line no-console
+      console.warn('Could not load BubbleMenu from @tiptap/vue-3:', err);
+    }
+  }
+
+  /* -------------------------
+   Custom extensions
+   ------------------------- */
   const CustomImage = Image.extend({
     addAttributes() {
       return {
@@ -261,6 +299,9 @@
     },
   });
 
+  /* -------------------------
+   Editor init
+   ------------------------- */
   const editor: Ref<Editor | undefined> = useEditor({
     content: content,
     extensions: [
@@ -301,6 +342,9 @@
     editor.value?.destroy();
   });
 
+  /* -------------------------
+   Toolbar actions
+   ------------------------- */
   const setLink = () => {
     if (!editor.value) return;
     const previousUrl = editor.value.getAttributes('link').href;
