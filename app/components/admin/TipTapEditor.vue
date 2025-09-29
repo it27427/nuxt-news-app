@@ -36,13 +36,14 @@
           "
           :options="fontOptions"
           @update:model-value="setFontFamily"
+          class="w-auto"
         />
 
         <CustomSelects
           :model-value="
             editor.isActive('heading')
               ? editor.getAttributes('heading').level.toString()
-              : '0' // '0' represents Paragraph
+              : '0'
           "
           :options="
             headingOptions.map((opt) => ({
@@ -51,7 +52,7 @@
             }))
           "
           @update:model-value="toggleHeadingLevel"
-          class="min-w-[120px]"
+          class="w-auto"
         />
       </div>
       <div class="toolbar-group">
