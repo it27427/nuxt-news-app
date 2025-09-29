@@ -1,10 +1,10 @@
 // server/api/admin/approval/[id]/index.post.ts
 
 import { eq } from 'drizzle-orm';
-import { H3Event, createError } from 'h3';
+import { H3Event, createError, readBody } from 'h3';
 import { db } from '~~/server/db/db';
 import { approvals, news, notifications } from '~~/server/db/schema';
-import { ensureSuperAdmin } from '~~/server/utils/auth'; // Super Admin check
+import { ensureSuperAdmin } from '~~/server/utils/auth';
 
 /**
  * Handles Super Admin action: Approve or Reject a news article.
@@ -16,10 +16,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
   const { id: newsId } = event.context.params as { id: string };
   const body = await readBody(event);
-  const {
-    newApprovalStatus, // 'approved' or 'rejected'
-    comment = null,
-  } = body;
+  const { newApprovalStatus, comment = null } = body;
 
   // Validation
   if (!['approved', 'rejected'].includes(newApprovalStatus)) {
@@ -53,12 +50,12 @@ export default defineEventHandler(async (event: H3Event) => {
       // Approved: Set final status to published
       finalStatus = 'published';
       actionLog = 'approved';
-      notificationMessage = `অভিনন্দন! আপনার নিউজ "${article.title}" Super Admin কর্তৃক **অনুমোদিত ও প্রকাশিত** হয়েছে।`;
+      notificationMessage = `অভিনন্দন! আপনার নিউজ "${article.title}" Super Admin কর্তৃক **অনুমোদিত ও প্রকাশিত** হয়েছে।`;
     } else {
       // Rejected: Revert main status to draft and set approval status to rejected
       finalStatus = 'draft';
       actionLog = 'rejected';
-      notificationMessage = `দুঃখিত। আপনার নিউজ "${article.title}" Super Admin কর্তৃক **বাতিল** করা হয়েছে।`;
+      notificationMessage = `দুঃখিত। আপনার নিউজ "${article.title}" Super Admin কর্তৃক **বাতিল** করা হয়েছে।`;
     }
 
     // 2. Update the news article status

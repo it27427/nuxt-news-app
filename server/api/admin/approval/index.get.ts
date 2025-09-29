@@ -1,14 +1,14 @@
 // server/api/admin/approval/index.get.ts
 
 import { desc, eq } from 'drizzle-orm';
-import { H3Event, createError } from 'h3';
+import { H3Event, createError, getQuery } from 'h3';
 import { db } from '~~/server/db/db';
 import { news } from '~~/server/db/schema';
-import { ensureSuperAdmin } from '~~/server/utils/auth'; // Super Admin check
+import { ensureSuperAdmin } from '~~/server/utils/auth';
 
 /**
  * Fetches news articles based on their approval_status for the Super Admin panel.
- * Query Parameter: status (pending, approved, rejected)
+ * Query Parameter: status (pending, approved, rejected, published)
  */
 export default defineEventHandler(async (event: H3Event) => {
   // ⚠️ CRITICAL: Ensure only Super Admins can access the approval panel lists
@@ -32,8 +32,7 @@ export default defineEventHandler(async (event: H3Event) => {
 
     let condition;
 
-    // 'published' status can mean both approved status and final status,
-    // we'll filter by the main 'status' field for published articles.
+    // 'published' status is filtered by the main 'status' field.
     if (requestedStatus === 'published') {
       condition = eq(news.status, 'published');
     } else {
@@ -41,6 +40,7 @@ export default defineEventHandler(async (event: H3Event) => {
       condition = eq(news.approval_status, requestedStatus);
     }
 
+    // 💡 The .select() without arguments fetches ALL columns, including tiptap_json_for_editing.
     const newsList = await db
       .select()
       .from(news)

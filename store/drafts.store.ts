@@ -24,6 +24,7 @@ export const useDraftsStore = defineStore('draftsStore', () => {
       const res = await axios.get<Draft[]>('/api/admin/drafts', {
         params: { limit, offset },
       });
+      // The fetched data now correctly includes Tiptap JSON content fields
       drafts.value = res.data;
     } catch (err: any) {
       console.error('Drafts fetch error:', err);

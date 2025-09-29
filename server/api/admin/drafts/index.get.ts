@@ -31,7 +31,6 @@ export default defineEventHandler(async (event: H3Event) => {
   const userRole = authUser.role;
 
   // This endpoint specifically fetches articles that are not yet published.
-  // We assume 'draft' and 'pending' are the statuses for work-in-progress.
   const allowedStatuses: SelectNews['status'][] = ['draft', 'pending'];
 
   // 2. Read Query Parameters for Pagination
@@ -43,24 +42,26 @@ export default defineEventHandler(async (event: H3Event) => {
     // 3. Build the WHERE clause dynamically
     const conditions: SQL[] = [];
 
-    // ENFORCE STATUS: Filter for 'draft' or 'pending' status
+    // ENFORCE STATUS: Filter for 'draft' or 'pending' status for everyone
     conditions.push(inArray(news.status, allowedStatuses));
 
     // ROLE-BASED FILTERING:
     // If the user is NOT a 'super_admin', they can only see their own drafts and pending articles.
     if (userRole !== 'super_admin') {
+      // This applies to 'admin' and 'reporter' roles.
       conditions.push(eq(news.user_id, userId));
     }
+    // Super Admins see all drafts/pending articles (no user_id filter applied).
 
     // 4. Query the database
-    // 💡 The .select() without arguments fetches ALL columns, including tiptap_json_for_editing.
     const articles = await db
       .select()
       .from(news)
+      // Use 'and' to combine multiple conditions
       .where(and(...conditions))
       .limit(limit)
       .offset(offset)
-      .orderBy(desc(news.created_at));
+      .orderBy(desc(news.created_at)); // Order by newest first
 
     // 5. Return the results
     return articles;
