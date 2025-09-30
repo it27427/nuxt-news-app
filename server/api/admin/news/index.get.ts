@@ -7,15 +7,13 @@ import { SelectNews } from '~~/server/db/models';
 import { news } from '~~/server/db/schema';
 
 // --- API Handler ---
-
 export default defineEventHandler(async (event: H3Event) => {
   // 1. Get query parameters
   const query = getQuery(event);
   const limit = parseInt(query.limit as string) || 20;
   const offset = parseInt(query.offset as string) || 0;
 
-  // 2. Mock Authentication (MUST BE REPLACED BY REAL AUTH LOGIC)
-  // Assuming successful authentication allows access to the list
+  // 2. Authentication Check
   if (!event.context.user) {
     throw createError({
       statusCode: 401,
@@ -25,8 +23,6 @@ export default defineEventHandler(async (event: H3Event) => {
 
   try {
     // 3. Fetch News List
-    // 💡 FIX: We must select ALL properties defined in SelectNews to satisfy the TypeScript compiler.
-    // images and videos fields are now included.
     const allNews: SelectNews[] = await db
       .select({
         id: news.id,
@@ -36,16 +32,14 @@ export default defineEventHandler(async (event: H3Event) => {
         approval_status: news.approval_status,
         categories: news.categories,
         tags: news.tags,
-        title: news.title,
-        subtitle: news.subtitle,
         homepage_excerpt: news.homepage_excerpt,
         full_content: news.full_content,
 
-        // 💡 ADDED: Including images and videos to match SelectNews type
+        // Images & Videos
         images: news.images,
         videos: news.videos,
 
-        // 💡 UPDATED: Select the new Tiptap JSON field name
+        // Tiptap JSON
         tiptap_json_for_editing: news.tiptap_json_for_editing,
 
         created_at: news.created_at,
@@ -56,7 +50,7 @@ export default defineEventHandler(async (event: H3Event) => {
       .limit(limit)
       .offset(offset);
 
-    // 4. Fetch Total Count (simplified)
+    // 4. Fetch Total Count
     const totalCountResult = await db
       .select({ count: sql<number>`count(*)` })
       .from(news);

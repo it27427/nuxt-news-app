@@ -25,20 +25,11 @@
         </div>
       </div>
 
-      <!-- Quill Editor -->
-      <client-only>
-        <div>
-          <QuillEditor v-model:content="body" contentType="json" />
-        </div>
-      </client-only>
+      <!-- Tiptap Editor -->
+      <ClientOnly>
+        <TipTapEditor v-model="tiptapContent" />
+      </ClientOnly>
 
-      <!-- Preview Cleaned Delta -->
-      <div class="mt-4">
-        <h3>Editor Output (JSON/Delta) - Cleaned Data</h3>
-        <pre>{{ finalBody.ops || finalBody }}</pre>
-      </div>
-
-      <!-- Buttons -->
       <div class="flex items-center justify-end gap-3">
         <button
           type="submit"
@@ -52,55 +43,45 @@
 </template>
 
 <script lang="ts" setup>
-  import Delta from 'quill-delta';
+  definePageMeta({ layout: 'admin' });
+
+  import type { JSONContent } from '@tiptap/vue-3';
   import { computed, onMounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useToast } from 'vue-toastification';
   import { useCategoriesStore } from '~~/store/categories.store';
   import { useNewsStore } from '~~/store/news.store';
   import { useTagsStore } from '~~/store/tags.store';
+  import type { TiptapNode } from '~~/types/newstypes';
 
-  definePageMeta({ layout: 'admin' });
-
-  const title = ref('সংবাদ সংযোজন করুন');
-
-  // ------------------
-  // Option Interface
-  // ------------------
   interface Option {
     label: string;
     value: string;
   }
 
-  // ------------------
-  // Stores & State
-  // ------------------
+  const title = ref('সংবাদ আপডেট করুন');
+  const toast = useToast();
+  const router = useRouter();
+  const route = useRoute();
+
   const newsStore = useNewsStore();
   const categoriesStore = useCategoriesStore();
   const tagsStore = useTagsStore();
-  const route = useRoute();
-  const router = useRouter();
-  const toast = useToast();
 
-  const body = ref<Delta>(new Delta());
-  const finalBody = computed(() => cleanDelta(body.value));
-
+  // Reactive refs
   const selectedNewsType = ref<Option[]>([]);
   const selectedNewsTag = ref<Option[]>([]);
+  const tiptapContent = ref<JSONContent>({ type: 'doc', content: [] });
 
-  // ------------------
-  // Computed Options
-  // ------------------
+  // Computed dropdown options
   const categoryOptions = computed<Option[]>(() =>
-    categoriesStore.categories.map((c) => ({ label: c.name, value: c.name }))
+    categoriesStore.categories.map((c) => ({ label: c.name, value: c.id }))
   );
   const tagOptions = computed<Option[]>(() =>
-    tagsStore.tags.map((t) => ({ label: t.name, value: t.name }))
+    tagsStore.tags.map((t) => ({ label: t.name, value: t.id }))
   );
 
-  // ------------------
-  // Lifecycle: Fetch Categories, Tags, and News
-  // ------------------
+  // Fetch categories, tags, and news on mount
   onMounted(async () => {
     if (!categoriesStore.categories.length)
       await categoriesStore.fetchCategories();
@@ -110,9 +91,7 @@
     if (newsId) await fetchNews(newsId);
   });
 
-  // ------------------
-  // Fetch Single News
-  // ------------------
+  // --- Fetch Single News ---
   async function fetchNews(id: string) {
     try {
       await newsStore.fetchSingleNews(id);
@@ -126,77 +105,71 @@
       }));
       selectedNewsTag.value = news.tags.map((t) => ({ label: t, value: t }));
 
-      // Populate Quill
-      if (news.quill_data_for_editing) body.value = news.quill_data_for_editing;
+      // Populate Tiptap
+      if (news.tiptap_json_for_editing) {
+        tiptapContent.value = news.tiptap_json_for_editing;
+      }
     } catch (err) {
       console.error('Failed to fetch news:', err);
       toast.error('সংবাদ লোড করতে ব্যর্থ হয়েছে!');
     }
   }
 
-  // ------------------
-  // Utility: Clean Delta
-  // ------------------
-  function cleanDelta(delta: Delta): Delta {
-    const newOps: any[] = [...delta.ops];
-    while (newOps.length > 0 && newOps[0].insert === '\n') newOps.shift();
-    while (newOps.length > 0 && newOps[newOps.length - 1].insert === '\n')
-      newOps.pop();
-    return new Delta(newOps);
-  }
+  // --- Build payload ---
+  function buildPayload() {
+    const nodes = tiptapContent.value.content ?? [];
+    const firstNode = nodes[0] ?? null;
 
-  // ------------------
-  // Update News
-  // ------------------
-  async function updateNewsContent() {
-    if (!finalBody.value.ops.length) {
-      toast.error('কোনো কন্টেন্ট নেই!');
-      return;
+    let titleText: string | null = null;
+    if (
+      firstNode?.type === 'heading' &&
+      firstNode.content?.[0]?.type === 'text'
+    ) {
+      titleText = firstNode.content[0].text?.trim() || null;
     }
 
+    if (!titleText)
+      throw new Error(
+        'অনুগ্রহ করে Tiptap এডিটরের শুরুতে সংবাদটির শিরোনাম লিখুন।'
+      );
+    if (!selectedNewsType.value.length)
+      throw new Error('দয়া করে অন্তত একটি ক্যাটেগরি নির্বাচন করুন।');
+
+    const isOnlyTitle = nodes.length === 1 && nodes[0]?.type === 'heading';
+    const isEmptyPara =
+      nodes.length === 1 &&
+      nodes[0]?.type === 'paragraph' &&
+      !nodes[0]?.content;
+    if (isOnlyTitle || isEmptyPara)
+      throw new Error('News content cannot be empty.');
+
+    // --- Cast tiptap_content to TiptapNode ---
+    const tiptapPayload: TiptapNode = {
+      type: tiptapContent.value.type || 'doc',
+      content: nodes as TiptapNode[],
+      attrs: tiptapContent.value.attrs,
+    };
+
+    return {
+      categories: selectedNewsType.value.map((c) => c.value),
+      tags: selectedNewsTag.value.map((t) => t.value),
+      tiptap_json_for_editing: tiptapPayload,
+    };
+  }
+
+  // --- Update News ---
+  async function updateNewsContent() {
     try {
       const newsId = route.params.id as string;
       if (!newsId) return;
 
-      const payload = {
-        categories: selectedNewsType.value.map((c) => c.value),
-        tags: selectedNewsTag.value.map((t) => t.value),
-        quill_data_for_editing: finalBody.value,
-      };
-
+      const payload = buildPayload();
       await newsStore.updateNews(newsId, payload);
+
       toast.success('সংবাদ সফলভাবে আপডেট হয়েছে!');
-      router.push('/admin/news');
-    } catch (err) {
-      console.error(err);
-      toast.error('সংবাদ আপডেট করতে ব্যর্থ হয়েছে!');
+      router.push('/admin/news/');
+    } catch (err: any) {
+      toast.error(err.message || 'সংবাদ আপডেট করতে ব্যর্থ হয়েছে!');
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  :deep(.ql-editor) {
-    min-height: 40rem;
-  }
-  :deep(.ql-toolbar.ql-snow) {
-    border-top-left-radius: 0.3125rem;
-    border-top-right-radius: 0.3125rem;
-  }
-  :deep(.ql-container.ql-snow) {
-    border-bottom-left-radius: 0.3125rem;
-    border-bottom-right-radius: 0.3125rem;
-  }
-  :deep(.ql-snow .ql-tooltip) {
-    left: 0.625rem !important;
-    @apply bg-light text-dark dark:bg-slate-600 dark:text-white border-0;
-  }
-  :deep(.ql-snow .ql-tooltip.ql-editing input[type='text']) {
-    @apply bg-transparent;
-    &:focus {
-      outline: none;
-    }
-  }
-  :deep(.ql-snow .ql-tooltip a) {
-    @apply text-dark dark:text-white;
-  }
-</style>

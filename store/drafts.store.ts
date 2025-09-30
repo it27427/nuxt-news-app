@@ -11,36 +11,66 @@ export const useDraftsStore = defineStore('draftsStore', () => {
   const error = ref<string | null>(null);
 
   /**
-   * Fetches user drafts and pending articles from the API.
-   * Filters based on user role (super_admin sees all, others see their own).
-   * @param limit - Max number of articles to fetch.
-   * @param offset - Pagination offset.
+   * Fetch drafts for the logged-in user
+   * Super Admin sees all, others see their own drafts/pending
+   * @param limit Number of drafts to fetch
+   * @param offset Pagination offset
    */
-  async function fetchDrafts(limit = 20, offset = 0) {
+  const fetchDrafts = async (limit = 20, offset = 0) => {
     loading.value = true;
     error.value = null;
     try {
-      // The API returns the full SelectNews structure, mapped to the comprehensive Draft type
-      const res = await axios.get<Draft[]>('/api/admin/drafts', {
+      const token = localStorage.getItem('auth_token');
+      if (!token) throw new Error('No auth token found');
+
+      const { data } = await axios.get<Draft[]>('/api/admin/drafts', {
         params: { limit, offset },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      // The fetched data now correctly includes Tiptap JSON content fields
-      drafts.value = res.data;
+
+      drafts.value = data;
+      return data;
     } catch (err: any) {
-      console.error('Drafts fetch error:', err);
+      console.error('Failed to fetch drafts:', err);
       error.value =
         err?.response?.data?.statusMessage || 'Failed to fetch drafts.';
-      // Throw the error for component handling
       throw err;
     } finally {
       loading.value = false;
     }
-  }
+  };
+
+  /**
+   * Save a new draft
+   */
+  const createDraft = async (payload: Draft) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (!token) throw new Error('No auth token found');
+
+      const { data } = await axios.post('/api/admin/drafts', payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      drafts.value.push(data);
+      return data;
+    } catch (err: any) {
+      console.error('Failed to create draft:', err);
+      error.value =
+        err?.response?.data?.statusMessage || 'Failed to create draft.';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
 
   return {
     drafts,
     loading,
     error,
     fetchDrafts,
+    createDraft,
   };
 });

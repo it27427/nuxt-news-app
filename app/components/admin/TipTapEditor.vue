@@ -9,13 +9,13 @@
     >
       <button
         :class="{ 'is-active': editor.isActive('bold') }"
-        @click="editor?.chain().focus().toggleBold().run()"
+        @click="editor.chain().focus().toggleBold().run()"
       >
         <Icon icon="ic:round-format-bold" />
       </button>
       <button
         :class="{ 'is-active': editor.isActive('italic') }"
-        @click="editor?.chain().focus().toggleItalic().run()"
+        @click="editor.chain().focus().toggleItalic().run()"
       >
         <Icon icon="ic:round-format-italic" />
       </button>
@@ -38,21 +38,49 @@
           @update:model-value="setFontFamily"
           class="w-auto"
         />
-        <CustomSelects
-          :model-value="
-            editor?.isActive('heading')
-              ? (editor.getAttributes('heading').level ?? 0).toString()
-              : '0'
-          "
-          :options="
-            headingOptions.map((opt) => ({
-              label: opt.label,
-              value: opt.level.toString(),
-            }))
-          "
-          @update:model-value="toggleHeadingLevel"
-          class="w-auto"
-        />
+
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+        >
+          H1
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+        >
+          H2
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+        >
+          H3
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
+        >
+          H4
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
+        >
+          H5
+        </button>
+        <button
+          @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
+        >
+          H6
+        </button>
+        <button
+          @click="editor.chain().focus().setParagraph().run()"
+          :class="{ 'is-active': editor.isActive('paragraph') }"
+        >
+          Paragraph
+        </button>
       </div>
 
       <div class="toolbar-group">
@@ -63,6 +91,7 @@
         >
           <Icon icon="ic:round-format-bold" />
         </button>
+
         <button
           v-tooltip="'ইটালিক'"
           :class="{ 'is-active': editor.isActive('italic') }"
@@ -70,6 +99,7 @@
         >
           <Icon icon="ic:round-format-italic" />
         </button>
+
         <button
           v-tooltip="'আন্ডারলাইন'"
           :class="{ 'is-active': editor.isActive('underline') }"
@@ -77,6 +107,7 @@
         >
           <Icon icon="ic:round-format-underlined" />
         </button>
+
         <button
           v-tooltip="'স্ট্রাইক'"
           :class="{ 'is-active': editor.isActive('strike') }"
@@ -84,12 +115,37 @@
         >
           <Icon icon="ic:round-format-strikethrough" />
         </button>
+
         <button
           v-tooltip="'হাইলাইট'"
           :class="{ 'is-active': editor.isActive('highlight') }"
           @click="editor?.chain().focus().toggleHighlight().run()"
         >
           <Icon icon="ic:round-highlight" />
+        </button>
+
+        <button
+          v-tooltip="'ব্লককোট'"
+          :class="{ 'is-active': editor.isActive('blockquote') }"
+          @click="editor?.chain().focus().toggleBlockquote().run()"
+        >
+          <Icon icon="ic:round-format-quote" />
+        </button>
+
+        <button
+          v-tooltip="'কোডব্লক'"
+          @click="editor.chain().focus().setCodeBlock().run()"
+          :class="{ 'is-active': editor.isActive('codeblock') }"
+        >
+          <Icon icon="fluent:code-block-48-regular" />
+        </button>
+
+        <button
+          v-tooltip="'হরাইজন্টাল রোলার'"
+          @click="editor.chain().focus().setHorizontalRule().run()"
+          :class="{ 'is-active': editor.isActive('horizontalrule') }"
+        >
+          <Icon icon="codicon:horizontal-rule" />
         </button>
       </div>
 
@@ -101,6 +157,7 @@
         >
           <Icon icon="ic:round-list" />
         </button>
+
         <button
           v-tooltip="'অর্ডার্ড লিস্ট'"
           :class="{ 'is-active': editor.isActive('orderedList') }"
@@ -108,6 +165,7 @@
         >
           <Icon icon="ic:round-format-list-numbered" />
         </button>
+
         <button
           v-tooltip="'টাস্ক লিস্ট'"
           :class="{ 'is-active': editor.isActive('taskList') }"
@@ -137,14 +195,14 @@
 
       <div class="toolbar-group">
         <button
-          @click="editor?.chain().focus().undo().run()"
+          @click="editor.chain().focus().undo().run()"
           v-tooltip="'পূর্বাবস্থায় ফিরে যান'"
         >
           <Icon icon="ic:round-undo" />
         </button>
 
         <button
-          @click="editor?.chain().focus().redo().run()"
+          @click="editor.chain().focus().redo().run()"
           v-tooltip="'পুনরায় ফিরে যান'"
         >
           <Icon icon="ic:round-redo" />
@@ -260,16 +318,11 @@
 
 <script lang="ts" setup>
   import { Icon } from '@iconify/vue';
-  import Blockquote from '@tiptap/extension-blockquote';
-  import { BulletList } from '@tiptap/extension-bullet-list';
   import { CharacterCount } from '@tiptap/extension-character-count';
   import { FontFamily } from '@tiptap/extension-font-family';
-  import { Heading, type Level } from '@tiptap/extension-heading';
   import { Highlight } from '@tiptap/extension-highlight';
   import { Image, type SetImageOptions } from '@tiptap/extension-image';
   import { Link } from '@tiptap/extension-link';
-  import { OrderedList } from '@tiptap/extension-ordered-list';
-  import { Paragraph } from '@tiptap/extension-paragraph';
   import { Placeholder } from '@tiptap/extension-placeholder';
   import { TaskItem } from '@tiptap/extension-task-item';
   import { TaskList } from '@tiptap/extension-task-list';
@@ -286,9 +339,23 @@
   import { onBeforeUnmount, ref, watch, type Ref } from 'vue';
   import { VueFinalModal } from 'vue-final-modal';
 
+  type PlaceholderContent = (options: {
+    node: any;
+    editor: Editor;
+    pos: number;
+  }) => string | false | null | undefined;
+
   const initialContent: JSONContent = {
     type: 'doc',
-    content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }],
+    content: [
+      {
+        type: 'heading',
+        attrs: {
+          level: 1,
+        },
+        content: [{ type: 'text', text: '\u200B' }],
+      },
+    ],
   };
 
   interface Props {
@@ -306,15 +373,6 @@
     'Tiro Bangla',
     'Hind Siliguri',
     'Baloo Da 2',
-  ]);
-  const headingOptions = ref([
-    { label: 'Normal Text', level: 0 },
-    { label: 'Heading 1', level: 1 },
-    { label: 'Heading 2', level: 2 },
-    { label: 'Heading 3', level: 3 },
-    { label: 'Heading 4', level: 4 },
-    { label: 'Heading 5', level: 5 },
-    { label: 'Heading 6', level: 6 },
   ]);
 
   const fileInputRef = ref<HTMLInputElement | null>(null);
@@ -347,33 +405,44 @@
   const editor: Ref<Editor | undefined> = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: false,
         link: false,
-        paragraph: false,
-        bulletList: false,
-        orderedList: false,
-        taskList: false,
-        taskItem: false,
       }),
-      Heading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
       Link.configure({ openOnClick: false }),
-      Paragraph,
       Image,
       Youtube,
       TextStyle,
       FontFamily.configure({ types: ['textStyle'] }),
-      Highlight,
-      BulletList,
-      Blockquote,
-      OrderedList,
       TaskList,
       TaskItem,
-      Placeholder.configure({ placeholder: 'Start writing content...' }),
+      Highlight,
+      Placeholder.configure({
+        placeholder: ({ node, editor }: Parameters<PlaceholderContent>[0]) => {
+          if (editor.isEmpty) {
+            return 'সংবাদ লিখা শুরু করুন...';
+          }
+
+          const isH1 = node.type.name === 'heading' && node.attrs.level === 1;
+          const isEmpty =
+            node.content?.size === 0 || node.textContent === '\u200B';
+
+          if (isH1 && isEmpty) {
+            return 'সংবাদ লিখা শুরু করুন...';
+          }
+
+          return '';
+        },
+      } as any),
       CharacterCount.configure({ limit: MAX_CHARACTERS }),
     ],
+
     content:
       props.modelValue?.type === 'doc' ? props.modelValue : initialContent,
+
     onUpdate: ({ editor }) => emit('update:modelValue', editor.getJSON()),
+
+    onCreate: ({ editor }) => {
+      editor.chain().focus().setHeading({ level: 1 }).run();
+    },
   });
 
   watch(
@@ -382,9 +451,13 @@
       if (!editor.value) return;
       const normalizedValue =
         newValue?.type === 'doc' ? newValue : initialContent;
+      const current = editor.value.getJSON();
+
+      // shallow comparison
       if (
-        JSON.stringify(normalizedValue) !==
-        JSON.stringify(editor.value.getJSON())
+        normalizedValue.content?.length &&
+        JSON.stringify(normalizedValue.content) !==
+          JSON.stringify(current.content)
       ) {
         editor.value.commands.setContent(normalizedValue, {
           emitUpdate: false,
@@ -440,12 +513,6 @@
   // Font & Heading
   const setFontFamily = (font: string) =>
     editor.value?.chain().focus().setFontFamily(font).run();
-  const toggleHeadingLevel = (levelStr: string) => {
-    if (!editor.value) return;
-    const level = parseInt(levelStr, 10) as Level | 0;
-    if (level === 0) editor.value.chain().focus().setParagraph().run();
-    else editor.value.chain().focus().toggleHeading({ level }).run();
-  };
 
   // Link
   const setLink = () => {
@@ -472,6 +539,12 @@
     @apply min-h-[40rem] max-h-[50rem];
 
     :deep(.ProseMirror) {
+      .is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        float: left;
+        @apply text-gray-400 pointer-events-none h-0;
+      }
+
       @apply min-h-[40rem] max-h-[50rem] focus:outline-none border border-green-500 dark:border-slate-700 p-6;
 
       [style*='font-family: Noto Serif Bengali'] {

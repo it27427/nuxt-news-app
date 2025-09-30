@@ -1,13 +1,12 @@
 // store/news.store.ts
-
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { useCategoriesStore } from '~~/store/categories.store';
-import { useTagsStore } from '~~/store/tags.store';
-import type { ArticleCreationPayload, NewsArticle } from '~~/types/article';
-import type { Draft } from '~~/types/draft';
-import type { TiptapNode } from '~~/types/newstypes';
+import type { ArticleCreationPayload, NewsArticle } from '../types/article';
+import type { Draft } from '../types/draft';
+import type { TiptapNode } from '../types/newstypes';
+import { useCategoriesStore } from './categories.store';
+import { useTagsStore } from './tags.store';
 
 export const useNewsStore = defineStore('newsStore', () => {
   // --- STATES ---
@@ -32,60 +31,72 @@ export const useNewsStore = defineStore('newsStore', () => {
     tagsStore.tags.map((t) => ({ label: t.name, value: t.id }))
   );
 
-  // --- CORE CREATE ARTICLE FUNCTION ---
-  const createArticle = async (
-    payload: ArticleCreationPayload,
-    status: 'draft' | 'pending' | 'approved'
-  ) => {
+  // --- UTILS ---
+  const getAuthHeader = () => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) throw new Error('No auth token found');
+    return { Authorization: `Bearer ${token}` };
+  };
+
+  // --- CREATE ARTICLE ---
+  const createArticle = async (payload: ArticleCreationPayload) => {
     loading.value = true;
     error.value = null;
+
     try {
-      const fullPayload = { ...payload, approval_status: status };
-      const { data } = await axios.post('/api/admin/news', fullPayload);
+      const { data } = await axios.post('/api/admin/news', payload, {
+        headers: getAuthHeader(),
+      });
       return data;
     } catch (err: any) {
       error.value =
-        err.response?.data?.statusMessage || 'Failed to create article';
+        err.response?.data?.statusMessage ||
+        err.message ||
+        'Failed to create article';
       throw err;
     } finally {
       loading.value = false;
     }
   };
 
-  // --- WRAPPER ACTIONS ---
-  const createDraft = (payload: ArticleCreationPayload) => {
-    return createArticle(payload, 'draft');
-  };
+  const createDraft = (payload: ArticleCreationPayload) =>
+    createArticle(payload);
+  const createPendingNews = (payload: ArticleCreationPayload) =>
+    createArticle(payload);
+  const createApprovedNews = (payload: ArticleCreationPayload) =>
+    createArticle(payload);
 
-  const createPendingNews = (payload: ArticleCreationPayload) => {
-    return createArticle(payload, 'pending');
-  };
-
-  // --- DRAFT MANAGEMENT ---
+  // --- FETCH DRAFTS ---
   const fetchDrafts = async (limit = 20, offset = 0) => {
     draftsLoading.value = true;
     draftsError.value = null;
+
     try {
-      const res = await axios.get<Draft[]>('/api/admin/drafts', {
+      const { data } = await axios.get<Draft[]>('/api/admin/drafts', {
         params: { limit, offset },
+        headers: getAuthHeader(),
       });
-      drafts.value = res.data;
+
+      drafts.value = data;
+      return data;
     } catch (err: any) {
       draftsError.value =
-        err.response?.data?.statusMessage || 'Failed to fetch drafts';
+        err?.response?.data?.statusMessage || 'Failed to fetch drafts';
       throw err;
     } finally {
       draftsLoading.value = false;
     }
   };
 
-  // --- NEWS CRUD ---
+  // --- FETCH NEWS LIST ---
   const fetchNewsList = async (limit = 20, offset = 0) => {
     loading.value = true;
     error.value = null;
+
     try {
       const { data } = await axios.get('/api/admin/news', {
         params: { limit, offset },
+        headers: getAuthHeader(),
       });
       newsList.value = data.data || [];
     } catch (err: any) {
@@ -96,11 +107,15 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
+  // --- FETCH SINGLE NEWS ---
   const fetchSingleNews = async (id: string) => {
     loading.value = true;
     error.value = null;
+
     try {
-      const { data } = await axios.get(`/api/admin/news/${id}`);
+      const { data } = await axios.get(`/api/admin/news/${id}`, {
+        headers: getAuthHeader(),
+      });
       singleNews.value = data.data || null;
     } catch (err: any) {
       error.value =
@@ -111,6 +126,7 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
+  // --- UPDATE NEWS ---
   const updateNews = async (
     id: string,
     payload: {
@@ -121,10 +137,13 @@ export const useNewsStore = defineStore('newsStore', () => {
   ) => {
     loading.value = true;
     error.value = null;
-    try {
-      const { data } = await axios.put(`/api/admin/news/${id}`, payload);
-      const updatedArticle: NewsArticle = data.data;
 
+    try {
+      const { data } = await axios.put(`/api/admin/news/${id}`, payload, {
+        headers: getAuthHeader(),
+      });
+
+      const updatedArticle: NewsArticle = data.data;
       const index = newsList.value.findIndex((n) => n.id === id);
       if (index !== -1) newsList.value[index] = updatedArticle;
       if (singleNews.value?.id === id) singleNews.value = updatedArticle;
@@ -139,13 +158,18 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
+  // --- DELETE NEWS ---
   const deleteNews = async (id: string) => {
     loading.value = true;
     error.value = null;
+
     try {
-      const { data } = await axios.delete(`/api/admin/news/${id}`);
+      const { data } = await axios.delete(`/api/admin/news/${id}`, {
+        headers: getAuthHeader(),
+      });
       newsList.value = newsList.value.filter((n) => n.id !== id);
       if (singleNews.value?.id === id) singleNews.value = null;
+
       return data;
     } catch (err: any) {
       error.value =
@@ -156,9 +180,7 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  // --- RETURN ALL ---
   return {
-    // States
     newsList,
     singleNews,
     loading,
@@ -168,9 +190,9 @@ export const useNewsStore = defineStore('newsStore', () => {
     draftsError,
     categoryOptions,
     tagOptions,
-    // Actions
     createDraft,
     createPendingNews,
+    createApprovedNews,
     createArticle,
     fetchDrafts,
     fetchNewsList,

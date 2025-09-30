@@ -1,6 +1,6 @@
 <template>
   <section>
-    <form @submit.prevent="publishContent" class="space-y-5">
+    <form @submit.prevent="publishContent" class="flex flex-col gap-5">
       <div class="flex flex-col md:flex-row gap-4">
         <div class="w-full md:w-1/2">
           <CustomSelect
@@ -125,7 +125,7 @@
       tags: selectedNewsTag.value.map((t) => t.value),
       tiptap_json_for_editing: {
         ...tiptapContent.value,
-        type: tiptapContent.value.type || 'doc', // ✅ Ensure type is always string
+        type: tiptapContent.value.type || 'doc',
       },
     };
   }
@@ -145,14 +145,14 @@
   async function publishContent() {
     try {
       const payload = buildPayload();
-
-      // Example: Check superadmin flag (replace with your auth logic)
       const isSuperAdmin = (window as any).currentUser?.role === 'super_admin';
 
       if (isSuperAdmin) {
-        await newsStore.createArticle(payload, 'approved');
+        // Super Admin → approved directly
+        await newsStore.createApprovedNews(payload);
         toast.success('সংবাদ সফলভাবে প্রকাশ করা হয়েছে!');
       } else {
+        // Admin / Reporter → pending
         await newsStore.createPendingNews(payload);
         toast.success('সংবাদ সফলভাবে Pending এ জমা দেওয়া হয়েছে!');
       }
