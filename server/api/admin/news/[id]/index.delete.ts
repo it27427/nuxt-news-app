@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 import { H3Event, getRouterParam } from 'h3';
 import { db } from '~~/server/db/db';
-import { approvals, news } from '~~/server/db/schema'; // approvals table is needed for cascade delete logic
+import { approvals, news } from '~~/server/db/schema';
 
 // --- Auth Context Type ---
 
