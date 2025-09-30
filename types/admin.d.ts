@@ -1,5 +1,7 @@
 // types/admin.d.ts
 
+export type Role = 'super_admin' | 'admin' | 'reporter';
+
 export interface AdminMenuType {
   label: string;
   to?: string;

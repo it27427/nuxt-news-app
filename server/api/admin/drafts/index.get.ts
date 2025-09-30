@@ -1,53 +1,35 @@
 // server/api/admin/drafts/index.get.ts
 
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { createError, getQuery, H3Event } from 'h3';
 import { db } from '~~/server/db/db';
-import type { SelectNews } from '~~/server/db/models';
 import { news } from '~~/server/db/schema';
 
-// --- Auth Context Type ---
 interface AuthUser {
   id: string;
   role: 'super_admin' | 'admin' | 'reporter';
 }
 
 export default defineEventHandler(async (event: H3Event) => {
-  // --- Auth Check ---
   const authUser = event.context.user as AuthUser | undefined;
   if (!authUser) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized: Please log in to view drafts.',
-    });
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
   }
 
-  const userId = authUser.id;
-  const userRole = authUser.role;
-
-  // --- Pagination Parameters ---
+  const { id: userId, role: userRole } = authUser;
   const query = getQuery(event);
   const limit = parseInt(query.limit as string) || 20;
   const offset = parseInt(query.offset as string) || 0;
 
   try {
-    const allowedStatuses: SelectNews['status'][] = ['draft', 'pending'];
+    const conditions = [eq(news.status, 'draft')];
 
-    // --- Build conditions ---
-    const conditions = [];
-
-    // Status filter for everyone
-    conditions.push(inArray(news.status, allowedStatuses));
-
-    // Role-based filter
     if (userRole !== 'super_admin') {
-      // admin & reporter: only their own drafts
+      // শুধু নিজের ড্রাফট
       conditions.push(eq(news.user_id, userId));
     }
-    // super_admin sees all drafts (no user_id filter)
 
-    // --- Fetch from DB ---
-    const articles = await db
+    const drafts = await db
       .select()
       .from(news)
       .where(and(...conditions))
@@ -55,12 +37,12 @@ export default defineEventHandler(async (event: H3Event) => {
       .offset(offset)
       .orderBy(desc(news.created_at));
 
-    return articles;
+    return { success: true, data: drafts };
   } catch (error) {
-    console.error('Database Fetch Error:', error);
+    console.error('Draft Fetch Error:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error: Failed to fetch drafts.',
+      statusMessage: 'Failed to fetch drafts',
     });
   }
 });

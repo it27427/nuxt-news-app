@@ -1,3 +1,5 @@
+// server/middleware/auth.ts
+
 import { eq } from 'drizzle-orm';
 import { createError, getCookie, H3Event, sendError } from 'h3';
 import jwt from 'jsonwebtoken';
