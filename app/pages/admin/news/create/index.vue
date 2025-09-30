@@ -1,6 +1,7 @@
 <template>
   <section>
     <form @submit.prevent="publishContent" class="flex flex-col gap-5">
+      <!-- Categories & Tags -->
       <div class="flex flex-col md:flex-row gap-4">
         <div class="w-full md:w-1/2">
           <CustomSelect
@@ -10,7 +11,6 @@
             multiple
           />
         </div>
-
         <div class="w-full md:w-1/2">
           <CustomSelect
             v-model="selectedNewsTag"
@@ -21,26 +21,28 @@
         </div>
       </div>
 
+      <!-- Tiptap Editor -->
       <ClientOnly>
         <TipTapEditor v-model="tiptapContent" />
       </ClientOnly>
 
+      <!-- Buttons -->
       <div class="flex items-center justify-end gap-3">
         <button
           type="button"
           @click="saveDraft"
-          :disabled="newsStore.loading"
+          :disabled="loading"
           class="py-2 px-5 bg-slate-500 text-white hover:bg-slate-600 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          সংরক্ষণ
+          সংরক্ষণ করুন
         </button>
 
         <button
           type="submit"
-          :disabled="newsStore.loading"
+          :disabled="loading"
           class="py-2 px-5 bg-green-500 text-white hover:bg-green-600 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {{ newsStore.loading ? 'প্রকাশ হচ্ছে...' : 'প্রকাশ করুন' }}
+          {{ submitButtonLabel }}
         </button>
       </div>
     </form>
@@ -54,8 +56,10 @@
   import { computed, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useCategoriesStore } from '~~/store/categories.store';
+  import { useDraftsStore } from '~~/store/drafts.store';
   import { useNewsStore } from '~~/store/news.store';
   import { useTagsStore } from '~~/store/tags.store';
+  import type { TiptapNode } from '~~/types/newstypes';
 
   const toast = useToast();
   const router = useRouter();
@@ -66,32 +70,40 @@
   }
 
   const newsStore = useNewsStore();
+  const draftsStore = useDraftsStore();
   const categoriesStore = useCategoriesStore();
   const tagsStore = useTagsStore();
 
-  // Reactive refs
   const selectedNewsType = ref<Option[]>([]);
   const selectedNewsTag = ref<Option[]>([]);
   const tiptapContent = ref<JSONContent>({ type: 'doc', content: [] });
 
-  // Computed dropdown options
+  /* --- Dropdown options --- */
   const categoryOptions = computed<Option[]>(() =>
     categoriesStore.categories.map((c) => ({ label: c.name, value: c.id }))
   );
-
   const tagOptions = computed<Option[]>(() =>
     tagsStore.tags.map((t) => ({ label: t.name, value: t.id }))
   );
 
-  // Fetch categories and tags on mount
+  /* --- Loading state --- */
+  const loading = computed(() => newsStore.loading || draftsStore.loading);
+
+  /* --- Submit button label based on role --- */
+  const submitButtonLabel = computed(() => {
+    const isSuperAdmin = (window as any).currentUser?.role === 'super_admin';
+    return isSuperAdmin ? 'প্রকাশ করুন' : 'সাবমিট করুন';
+  });
+
+  /* --- Fetch categories and tags on mount --- */
   onMounted(async () => {
     if (!categoriesStore.categories.length)
       await categoriesStore.fetchCategories();
     if (!tagsStore.tags.length) await tagsStore.fetchTags();
   });
 
-  // --- Build payload safely ---
-  function buildPayload() {
+  /* --- Helper: Build type-safe payload --- */
+  function buildPayloadForNewsOrDraft() {
     const nodes = tiptapContent.value.content ?? [];
     const firstNode = nodes[0] ?? null;
 
@@ -104,9 +116,7 @@
     }
 
     if (!title)
-      throw new Error(
-        'অনুগ্রহ করে Tiptap এডিটরের শুরুতে সংবাদটির শিরোনাম লিখুন।'
-      );
+      throw new Error('অনুগ্রহ করে এডিটরের শুরুতে সংবাদটির শিরোনাম লিখুন।');
     if (!selectedNewsType.value.length)
       throw new Error('দয়া করে অন্তত একটি ক্যাটেগরি নির্বাচন করুন।');
 
@@ -116,50 +126,52 @@
       nodes[0]?.type === 'paragraph' &&
       !nodes[0]?.content;
     if (isOnlyTitle || isEmptyPara)
-      throw new Error('News content cannot be empty.');
+      throw new Error('সংবাদটির বিষয়বস্তু খালি থাকতে পারবে না।');
+
+    const tiptapNode: TiptapNode = {
+      type: tiptapContent.value.type || 'doc',
+      content: tiptapContent.value.content as TiptapNode[] | undefined,
+      attrs: tiptapContent.value.attrs,
+    };
 
     return {
-      title,
-      subtitle: null,
       categories: selectedNewsType.value.map((c) => c.value),
       tags: selectedNewsTag.value.map((t) => t.value),
-      tiptap_json_for_editing: {
-        ...tiptapContent.value,
-        type: tiptapContent.value.type || 'doc',
-      },
+      tiptap_json_for_editing: tiptapNode,
     };
   }
 
-  // --- Actions ---
+  /* --- Save Draft --- */
   async function saveDraft() {
     try {
-      const payload = buildPayload();
-      await newsStore.createDraft(payload);
-      toast.success('সংবাদ সফলভাবে Draft এ সংরক্ষণ করা হয়েছে!');
+      const payload = buildPayloadForNewsOrDraft();
+      await draftsStore.createDraft(payload);
+      toast.success('সংবাদ সফলভাবে সংরক্ষণাগারে সংরক্ষণ করা হয়েছে!');
       router.push('/admin/drafts/');
     } catch (err: any) {
-      toast.error(err.message || 'সংরক্ষণ করতে ব্যর্থ হয়েছে!');
+      toast.error(
+        err.message || 'সংবাদ সংরক্ষণাগারে সংরক্ষণ করতে ব্যর্থ হয়েছে!'
+      );
     }
   }
 
+  /* --- Publish / Submit News --- */
   async function publishContent() {
     try {
-      const payload = buildPayload();
+      const payload = buildPayloadForNewsOrDraft();
       const isSuperAdmin = (window as any).currentUser?.role === 'super_admin';
 
       if (isSuperAdmin) {
-        // Super Admin → approved directly
-        await newsStore.createApprovedNews(payload);
+        await newsStore.createNews(payload);
         toast.success('সংবাদ সফলভাবে প্রকাশ করা হয়েছে!');
       } else {
-        // Admin / Reporter → pending
-        await newsStore.createPendingNews(payload);
-        toast.success('সংবাদ সফলভাবে Pending এ জমা দেওয়া হয়েছে!');
+        await newsStore.createNews(payload);
+        toast.success('সংবাদ সফলভাবে পর্যালোচনায় হয়েছে!');
       }
 
       router.push('/admin/news/');
     } catch (err: any) {
-      toast.error(err.message || 'প্রকাশ করতে ব্যর্থ হয়েছে!');
+      toast.error(err.message || 'সংবাদ প্রকাশ করতে ব্যর্থ হয়েছে!');
     }
   }
 </script>

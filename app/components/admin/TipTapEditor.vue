@@ -233,20 +233,23 @@
       v-model="imageModalVisible"
       :clickToClose="false"
       :escToClose="true"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
     >
-      <div class="p-4 bg-white dark:bg-gray-800 rounded-lg w-96">
+      <div
+        class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
+      >
         <h3 class="text-lg font-bold mb-2">Image Details</h3>
         <input
           type="text"
           v-model="imageForm.caption"
           placeholder="Caption"
-          class="w-full mb-2 p-1 border"
+          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
         />
         <input
           type="text"
           v-model="imageForm.source"
           placeholder="Source"
-          class="w-full mb-2 p-1 border"
+          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
         />
         <div class="flex justify-end gap-2">
           <button
@@ -270,32 +273,35 @@
       v-model="youtubeModalVisible"
       :clickToClose="false"
       :escToClose="true"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
     >
-      <div class="p-4 bg-white dark:bg-gray-800 rounded-lg w-96">
+      <div
+        class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
+      >
         <h3 class="text-lg font-bold mb-2">YouTube Video Details</h3>
         <input
           type="text"
           v-model="youtubeForm.url"
           placeholder="Video URL"
-          class="w-full mb-2 p-1 border"
+          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
         />
         <input
           type="text"
           v-model="youtubeForm.caption"
           placeholder="Caption"
-          class="w-full mb-2 p-1 border"
+          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
         />
         <input
           type="text"
           v-model="youtubeForm.source"
           placeholder="Source"
-          class="w-full mb-2 p-1 border"
+          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
         />
         <input
           type="text"
           v-model="youtubeForm.videoLength"
           placeholder="Video Length"
-          class="w-full mb-2 p-1 border"
+          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
         />
         <div class="flex justify-end gap-2">
           <button
@@ -453,7 +459,6 @@
         newValue?.type === 'doc' ? newValue : initialContent;
       const current = editor.value.getJSON();
 
-      // shallow comparison
       if (
         normalizedValue.content?.length &&
         JSON.stringify(normalizedValue.content) !==
