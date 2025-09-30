@@ -117,7 +117,7 @@
         (key) => (form[key as keyof RegisterForm] = '')
       );
 
-      setTimeout(() => router.push('/auth/login'), 1500);
+      router.push('/auth/login');
     } catch (err: any) {
       if (err?.data?.fields) {
         Object.assign(errors, err.data.fields);

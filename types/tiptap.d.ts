@@ -5,13 +5,11 @@ import type { SetYoutubeVideoOptions } from '@tiptap/extension-youtube';
 import type { DefineComponent } from 'vue';
 
 export interface CustomImageOptions extends SetImageOptions {
-  src: string;
   caption?: string | null;
   source?: string | null;
 }
 
 export interface CustomYoutubeOptions extends SetYoutubeVideoOptions {
-  src: string;
   caption?: string | null;
   source?: string | null;
   videoLength?: string | null;
@@ -19,13 +17,12 @@ export interface CustomYoutubeOptions extends SetYoutubeVideoOptions {
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
-    setImage: (options: CustomImageOptions) => ReturnType;
-    setYoutubeVideo: (options: CustomYoutubeOptions) => ReturnType;
-  }
-
-  interface NodeAttributes {
-    image: CustomImageOptions;
-    youtube: CustomYoutubeOptions;
+    image: {
+      setImage: (options: CustomImageOptions) => ReturnType;
+    };
+    youtube: {
+      setYoutubeVideo: (options: CustomYoutubeOptions) => ReturnType;
+    };
   }
 }
 

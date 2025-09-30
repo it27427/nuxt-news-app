@@ -1,48 +1,47 @@
 <template>
   <div class="editor-container scrollbar-none">
-    <ClientOnly>
-      <component
-        v-if="BubbleMenuComponent && editor"
-        :is="BubbleMenuComponent"
-        :editor="editor"
-        :tippy-options="{ duration: 100 }"
-        class="bubble-menu-style"
+    <!-- Bubble Menu -->
+    <BubbleMenu
+      v-if="editor"
+      :editor="editor"
+      :tippy-options="{ duration: 100 }"
+      class="bubble-menu-style"
+    >
+      <button
+        :class="{ 'is-active': editor.isActive('bold') }"
+        @click="editor?.chain().focus().toggleBold().run()"
       >
-        <button
-          :class="{ 'is-active': editor.isActive('bold') }"
-          @click="editor.chain().focus().toggleBold().run()"
-        >
-          <Icon icon="ic:round-format-bold" />
-        </button>
-        <button
-          :class="{ 'is-active': editor.isActive('italic') }"
-          @click="editor.chain().focus().toggleItalic().run()"
-        >
-          <Icon icon="ic:round-format-italic" />
-        </button>
-        <button
-          :class="{ 'is-active': editor.isActive('link') }"
-          @click="setLink"
-        >
-          <Icon icon="ic:round-link" />
-        </button>
-      </component>
-    </ClientOnly>
+        <Icon icon="ic:round-format-bold" />
+      </button>
+      <button
+        :class="{ 'is-active': editor.isActive('italic') }"
+        @click="editor?.chain().focus().toggleItalic().run()"
+      >
+        <Icon icon="ic:round-format-italic" />
+      </button>
+      <button
+        :class="{ 'is-active': editor.isActive('link') }"
+        @click="setLink"
+      >
+        <Icon icon="ic:round-link" />
+      </button>
+    </BubbleMenu>
+
+    <!-- Toolbar -->
     <div v-if="editor" class="toolbar">
       <div class="toolbar-group">
         <CustomSelects
           :model-value="
-            editor.getAttributes('textStyle').fontFamily || defaultFontFamily
+            editor?.getAttributes('textStyle').fontFamily || defaultFontFamily
           "
-          :options="fontOptions"
+          :options="fontOptions.map((f) => ({ label: f, value: f }))"
           @update:model-value="setFontFamily"
           class="w-auto"
         />
-
         <CustomSelects
           :model-value="
-            editor.isActive('heading')
-              ? editor.getAttributes('heading').level.toString()
+            editor?.isActive('heading')
+              ? (editor.getAttributes('heading').level ?? 0).toString()
               : '0'
           "
           :options="
@@ -55,58 +54,61 @@
           class="w-auto"
         />
       </div>
+
       <div class="toolbar-group">
         <button
           :class="{ 'is-active': editor.isActive('bold') }"
-          @click="editor.chain().focus().toggleBold().run()"
+          @click="editor?.chain().focus().toggleBold().run()"
         >
           <Icon icon="ic:round-format-bold" />
         </button>
         <button
           :class="{ 'is-active': editor.isActive('italic') }"
-          @click="editor.chain().focus().toggleItalic().run()"
+          @click="editor?.chain().focus().toggleItalic().run()"
         >
           <Icon icon="ic:round-format-italic" />
         </button>
         <button
           :class="{ 'is-active': editor.isActive('underline') }"
-          @click="editor.chain().focus().toggleUnderline().run()"
+          @click="editor?.chain().focus().toggleUnderline().run()"
         >
           <Icon icon="ic:round-format-underlined" />
         </button>
         <button
           :class="{ 'is-active': editor.isActive('strike') }"
-          @click="editor.chain().focus().toggleStrike().run()"
+          @click="editor?.chain().focus().toggleStrike().run()"
         >
           <Icon icon="ic:round-format-strikethrough" />
         </button>
         <button
           :class="{ 'is-active': editor.isActive('highlight') }"
-          @click="editor.chain().focus().toggleHighlight().run()"
+          @click="editor?.chain().focus().toggleHighlight().run()"
         >
           <Icon icon="ic:round-highlight" />
         </button>
       </div>
+
       <div class="toolbar-group">
         <button
           :class="{ 'is-active': editor.isActive('bulletList') }"
-          @click="editor.chain().focus().toggleBulletList().run()"
+          @click="editor?.chain().focus().toggleBulletList().run()"
         >
           <Icon icon="ic:round-list" />
         </button>
         <button
           :class="{ 'is-active': editor.isActive('orderedList') }"
-          @click="editor.chain().focus().toggleOrderedList().run()"
+          @click="editor?.chain().focus().toggleOrderedList().run()"
         >
           <Icon icon="ic:round-format-list-numbered" />
         </button>
         <button
           :class="{ 'is-active': editor.isActive('taskList') }"
-          @click="editor.chain().focus().toggleTaskList().run()"
+          @click="editor?.chain().focus().toggleTaskList().run()"
         >
           <Icon icon="ic:round-task" />
         </button>
       </div>
+
       <div class="toolbar-group">
         <button @click="openImageFileInput">
           <Icon icon="ic:round-image" />
@@ -120,308 +122,329 @@
         >
           <Icon icon="ic:round-link" />
         </button>
-        <button
-          @click="
-            editor
-              .chain()
-              .focus()
-              .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-              .run()
-          "
-        >
-          <Icon icon="ic:round-table-chart" />
-        </button>
       </div>
+
       <div class="toolbar-group">
-        <button @click="editor.chain().focus().undo().run()">
+        <button @click="editor?.chain().focus().undo().run()">
           <Icon icon="ic:round-undo" />
         </button>
-        <button @click="editor.chain().focus().redo().run()">
+        <button @click="editor?.chain().focus().redo().run()">
           <Icon icon="ic:round-redo" />
         </button>
       </div>
     </div>
+
+    <!-- Hidden File Input -->
     <input
       ref="fileInputRef"
       type="file"
       accept="image/*"
-      style="display: none"
+      class="hidden"
       @change="handleFileInputChange"
     />
+
+    <!-- Editor Content -->
     <EditorContent :editor="editor" class="editor-content-area" />
+
+    <!-- Character Count -->
     <div v-if="editor" class="char-count">
       {{ editor.storage.characterCount.characters() }}/{{ MAX_CHARACTERS }}
       Characters
     </div>
-    <div class="json-output">
-      <h3>JSON Data (For Database)</h3>
-      <pre>{{ jsonOutput }}</pre>
-    </div>
+
+    <!-- Image Modal -->
+    <VueFinalModal
+      v-model="imageModalVisible"
+      :clickToClose="false"
+      :escToClose="true"
+    >
+      <div class="p-4 bg-white dark:bg-gray-800 rounded-lg w-96">
+        <h3 class="text-lg font-bold mb-2">Image Details</h3>
+        <input
+          type="text"
+          v-model="imageForm.caption"
+          placeholder="Caption"
+          class="w-full mb-2 p-1 border"
+        />
+        <input
+          type="text"
+          v-model="imageForm.source"
+          placeholder="Source"
+          class="w-full mb-2 p-1 border"
+        />
+        <div class="flex justify-end gap-2">
+          <button
+            @click="imageModalVisible = false"
+            class="px-3 py-1 border rounded"
+          >
+            Cancel
+          </button>
+          <button
+            @click="submitImageModal"
+            class="px-3 py-1 bg-green-600 text-white rounded"
+          >
+            Insert
+          </button>
+        </div>
+      </div>
+    </VueFinalModal>
+
+    <!-- YouTube Modal -->
+    <VueFinalModal
+      v-model="youtubeModalVisible"
+      :clickToClose="false"
+      :escToClose="true"
+    >
+      <div class="p-4 bg-white dark:bg-gray-800 rounded-lg w-96">
+        <h3 class="text-lg font-bold mb-2">YouTube Video Details</h3>
+        <input
+          type="text"
+          v-model="youtubeForm.url"
+          placeholder="Video URL"
+          class="w-full mb-2 p-1 border"
+        />
+        <input
+          type="text"
+          v-model="youtubeForm.caption"
+          placeholder="Caption"
+          class="w-full mb-2 p-1 border"
+        />
+        <input
+          type="text"
+          v-model="youtubeForm.source"
+          placeholder="Source"
+          class="w-full mb-2 p-1 border"
+        />
+        <input
+          type="text"
+          v-model="youtubeForm.videoLength"
+          placeholder="Video Length"
+          class="w-full mb-2 p-1 border"
+        />
+        <div class="flex justify-end gap-2">
+          <button
+            @click="youtubeModalVisible = false"
+            class="px-3 py-1 border rounded"
+          >
+            Cancel
+          </button>
+          <button
+            @click="submitYoutubeModal"
+            class="px-3 py-1 bg-green-600 text-white rounded"
+          >
+            Insert
+          </button>
+        </div>
+      </div>
+    </VueFinalModal>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { Icon } from '@iconify/vue';
-  import StarterKit from '@tiptap/starter-kit';
-  import {
-    EditorContent,
-    useEditor,
-    type Editor,
-    type JSONContent,
-  } from '@tiptap/vue-3';
-
+  import { BulletList } from '@tiptap/extension-bullet-list';
   import { CharacterCount } from '@tiptap/extension-character-count';
-  import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight';
-  import { Color } from '@tiptap/extension-color';
   import { FontFamily } from '@tiptap/extension-font-family';
   import { Heading, type Level } from '@tiptap/extension-heading';
   import { Highlight } from '@tiptap/extension-highlight';
-  import { Image } from '@tiptap/extension-image';
+  import { Image, type SetImageOptions } from '@tiptap/extension-image';
   import { Link } from '@tiptap/extension-link';
-  import { TaskList } from '@tiptap/extension-list';
+  import { OrderedList } from '@tiptap/extension-ordered-list';
+  import { Paragraph } from '@tiptap/extension-paragraph';
   import { Placeholder } from '@tiptap/extension-placeholder';
-  import { Subscript } from '@tiptap/extension-subscript';
-  import { Superscript } from '@tiptap/extension-superscript';
-  import { Table } from '@tiptap/extension-table';
-  import { TableCell } from '@tiptap/extension-table-cell';
-  import { TableHeader } from '@tiptap/extension-table-header';
-  import { TableRow } from '@tiptap/extension-table-row';
   import { TaskItem } from '@tiptap/extension-task-item';
+  import { TaskList } from '@tiptap/extension-task-list';
   import { TextStyle } from '@tiptap/extension-text-style';
-  import { Typography } from '@tiptap/extension-typography';
-  import { Underline } from '@tiptap/extension-underline';
-  import { Youtube } from '@tiptap/extension-youtube';
+  import Youtube from '@tiptap/extension-youtube';
+  import StarterKit from '@tiptap/starter-kit';
+  import {
+    Editor,
+    EditorContent,
+    useEditor,
+    type JSONContent,
+  } from '@tiptap/vue-3';
+  import { BubbleMenu } from '@tiptap/vue-3/menus';
+  import { onBeforeUnmount, ref, watch, type Ref } from 'vue';
+  import { VueFinalModal } from 'vue-final-modal';
 
-  import { createLowlight } from 'lowlight';
-  const lowlight = createLowlight();
+  const initialContent: JSONContent = {
+    type: 'doc',
+    content: [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }],
+  };
 
-  import { onBeforeUnmount, ref, type Ref } from 'vue';
-
-  import type {
-    CustomImageOptions,
-    CustomYoutubeOptions,
-  } from '~~/types/tiptap';
+  interface Props {
+    modelValue: JSONContent;
+  }
+  const props = defineProps<Props>();
+  const emit = defineEmits<{
+    (e: 'update:modelValue', content: JSONContent): void;
+  }>();
 
   const MAX_CHARACTERS = 100000;
-
   const defaultFontFamily = ref('Noto Serif Bengali');
+  const fontOptions = ref([
+    'Noto Serif Bengali',
+    'Tiro Bangla',
+    'Hind Siliguri',
+    'Baloo Da 2',
+  ]);
+  const headingOptions = ref([
+    { label: 'Normal Text', level: 0 },
+    { label: 'Heading 1', level: 1 },
+    { label: 'Heading 2', level: 2 },
+    { label: 'Heading 3', level: 3 },
+    { label: 'Heading 4', level: 4 },
+    { label: 'Heading 5', level: 5 },
+    { label: 'Heading 6', level: 6 },
+  ]);
 
-  const content: JSONContent = {
-    type: 'doc',
-    content: [
-      {
-        type: 'heading',
-        attrs: { level: 2 },
-        content: [{ type: 'text', text: 'Tiptap Editor with Bengali Fonts' }],
-      },
-      {
-        type: 'paragraph',
-        content: [
-          {
-            type: 'text',
-            text: 'এখানে আপনি আপনার বাংলা ফন্টগুলি নির্বাচন করতে পারবেন।',
-          },
-        ],
-      },
-    ],
-  };
+  const fileInputRef = ref<HTMLInputElement | null>(null);
+  const imageModalVisible = ref(false);
+  const youtubeModalVisible = ref(false);
 
-  const fontOptions = [
-    { label: 'Noto Serif Bengali', value: 'Noto Serif Bengali' },
-    { label: 'Tiro Bangla', value: 'Tiro Bangla' },
-    { label: 'Hind Siliguri', value: 'Hind Siliguri' },
-    { label: 'Baloo Da 2', value: 'Baloo Da 2' },
-    { label: 'Serif', value: 'serif' },
-    { label: 'Monospace', value: 'monospace' },
-    { label: 'Comic Sans MS', value: 'Comic Sans MS, Comic Sans' },
-  ];
+  const imageForm = ref<{ caption: string; source: string; file: File | null }>(
+    { caption: '', source: '', file: null }
+  );
+  const youtubeForm = ref<{
+    url: string;
+    caption: string;
+    source: string;
+    videoLength: string;
+  }>({ url: '', caption: '', source: '', videoLength: '' });
 
-  // Options for the heading level dropdown
-  const headingOptions = [
-    { label: 'Paragraph', level: 0, icon: 'ic:round-notes' },
-    { label: 'Heading 1', level: 1, icon: 'ic:round-title' },
-    { label: 'Heading 2', level: 2, icon: 'ic:round-title' },
-    { label: 'Heading 3', level: 3, icon: 'ic:round-title' },
-    { label: 'Heading 4', level: 4, icon: 'ic:round-title' },
-    { label: 'Heading 5', level: 5, icon: 'ic:round-title' },
-    { label: 'Heading 6', level: 6, icon: 'ic:round-title' },
-  ];
-
-  const jsonOutput = ref<JSONContent>(content);
-  const fileInputRef: Ref<HTMLInputElement | null> = ref(null);
-  const levels = [1, 2, 3, 4, 5, 6] as Level[];
-
-  const BubbleMenuComponent = ref<any>(null);
-
-  if (import.meta.client) {
-    import('@tiptap/vue-3')
-      .then((mod) => {
-        BubbleMenuComponent.value =
-          (mod as any).BubbleMenu || (mod as any).default?.BubbleMenu;
-      })
-      .catch((err) => {
-        console.warn(
-          'Could not load BubbleMenu from @tiptap/vue-3 dynamically:',
-          err
-        );
-      });
+  interface CustomImageOptions extends SetImageOptions {
+    caption?: string;
+    source?: string;
+  }
+  interface CustomYoutubeOptions {
+    src: string;
+    caption?: string;
+    source?: string;
+    videoLength?: string;
+    width?: number;
+    height?: number;
   }
 
-  const CustomImage = Image.extend({
-    addAttributes() {
-      return {
-        ...this.parent?.(),
-        caption: { default: null },
-        source: { default: null },
-      };
-    },
-  });
-
-  const CustomYoutube = Youtube.extend({
-    addAttributes() {
-      return {
-        ...this.parent?.(),
-        caption: { default: null },
-        source: { default: null },
-        videoLength: { default: null },
-      };
-    },
-  });
-
   const editor: Ref<Editor | undefined> = useEditor({
-    content: content,
-    editorProps: {
-      attributes: {
-        style: `font-family: ${defaultFontFamily.value};`,
-      },
-    },
     extensions: [
-      StarterKit.configure({
-        heading: false, // Disable default heading as we configure it below
-        link: false,
-        codeBlock: false,
-        underline: false,
-      }),
-      Heading.configure({ levels: [1, 2, 3, 4, 5, 6] as Level[] }),
+      StarterKit,
+      Heading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
       Link.configure({ openOnClick: false }),
-      CustomImage.configure({ inline: true, allowBase64: true }),
-      CustomYoutube.configure({ allowFullscreen: true, modestBranding: true }),
-      Underline,
-      Subscript,
-      Superscript,
+      Paragraph,
+      Image,
+      Youtube,
       TextStyle,
       FontFamily.configure({ types: ['textStyle'] }),
-      Color,
-      Highlight.configure({ multicolor: true }),
-      Table.configure({ resizable: true }),
-      TableRow,
-      TableHeader,
-      // Removed duplicate TableCell configuration to fix the warning
-      TableCell,
+      Highlight,
+      BulletList,
+      OrderedList,
       TaskList,
-      TaskItem.configure({ nested: true }),
-      CodeBlockLowlight.configure({ lowlight }),
-      Placeholder.configure({ placeholder: 'Write something amazing...' }),
+      TaskItem,
+      Placeholder.configure({ placeholder: 'Start writing content...' }),
       CharacterCount.configure({ limit: MAX_CHARACTERS }),
-      Typography,
     ],
-    onUpdate: ({ editor }) => {
-      jsonOutput.value = editor.getJSON();
+    content:
+      props.modelValue?.type === 'doc' ? props.modelValue : initialContent,
+    onUpdate: ({ editor }) => emit('update:modelValue', editor.getJSON()),
+  });
+
+  watch(
+    () => props.modelValue,
+    (newValue) => {
+      if (!editor.value) return;
+      const normalizedValue =
+        newValue?.type === 'doc' ? newValue : initialContent;
+      if (
+        JSON.stringify(normalizedValue) !==
+        JSON.stringify(editor.value.getJSON())
+      ) {
+        editor.value.commands.setContent(normalizedValue, {
+          emitUpdate: false,
+        });
+      }
     },
-  });
+    { deep: true }
+  );
 
-  onBeforeUnmount(() => {
-    editor.value?.destroy();
-  });
-
-  /**
-   * Toggles the heading level or sets it to paragraph based on the selected value.
-   * @param value The selected heading level as a string ('1' to '6') or '0' for Paragraph.
-   */
-  const toggleHeadingLevel = (value: string) => {
-    if (!editor.value) return;
-
-    // TypeScript Fix: Compare 'value' as a string to '0'.
-    if (value === '0') {
-      // If 'Paragraph' is selected, set to paragraph
-      editor.value.chain().focus().setParagraph().run();
-    } else {
-      // Toggle heading for the selected level. Convert the string '1'-'6' to Level type.
-      const level = parseInt(value) as Level;
-      editor.value.chain().focus().toggleHeading({ level }).run();
-    }
+  // Image
+  const openImageFileInput = () => fileInputRef.value?.click();
+  const handleFileInputChange = (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    imageForm.value = { caption: '', source: '', file };
+    imageModalVisible.value = true;
+    if (fileInputRef.value) fileInputRef.value.value = '';
+  };
+  const submitImageModal = () => {
+    if (!editor.value || !imageForm.value.file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target?.result as string;
+      const options: CustomImageOptions = {
+        src: base64,
+        caption: imageForm.value.caption,
+        source: imageForm.value.source,
+      };
+      editor.value?.chain().focus().setImage(options).run();
+      imageModalVisible.value = false;
+    };
+    reader.readAsDataURL(imageForm.value.file);
   };
 
+  // YouTube
+  const addYoutubeVideo = () => {
+    youtubeForm.value = { url: '', caption: '', source: '', videoLength: '' };
+    youtubeModalVisible.value = true;
+  };
+  const submitYoutubeModal = () => {
+    if (!editor.value || !youtubeForm.value.url) return;
+    const options: CustomYoutubeOptions = {
+      src: youtubeForm.value.url,
+      caption: youtubeForm.value.caption,
+      source: youtubeForm.value.source,
+      videoLength: youtubeForm.value.videoLength,
+    };
+    editor.value?.chain().focus().deleteSelection().run();
+    (editor.value?.commands as any).setYoutube(options);
+    youtubeModalVisible.value = false;
+  };
+
+  // Font & Heading
+  const setFontFamily = (font: string) =>
+    editor.value?.chain().focus().setFontFamily(font).run();
+  const toggleHeadingLevel = (levelStr: string) => {
+    if (!editor.value) return;
+    const level = parseInt(levelStr, 10) as Level | 0;
+    if (level === 0) editor.value.chain().focus().setParagraph().run();
+    else editor.value.chain().focus().toggleHeading({ level }).run();
+  };
+
+  // Link
   const setLink = () => {
     if (!editor.value) return;
     const previousUrl = editor.value.getAttributes('link').href;
-    const url = window.prompt('URL', previousUrl);
+    const url = window.prompt('Enter URL:', previousUrl ?? '');
     if (url === null) return;
     if (url === '') {
-      editor.value.chain().focus().extendMarkRange('link').unsetLink().run();
+      editor.value.chain().focus().unsetLink().run();
       return;
     }
-    editor.value
-      .chain()
-      .focus()
-      .extendMarkRange('link')
-      .setLink({ href: url })
-      .run();
+    const formattedUrl =
+      /^https?:\/\//i.test(url) || /^mailto:/i.test(url) || /^tel:/i.test(url)
+        ? url
+        : `http://${url}`;
+    editor.value.chain().focus().setLink({ href: formattedUrl }).run();
   };
 
-  const setFontFamily = (value: string) => {
-    if (!editor.value) return;
-    editor.value.chain().focus().setFontFamily(value).run();
-  };
-
-  const openImageFileInput = () => {
-    if (fileInputRef.value) {
-      fileInputRef.value.click();
-    }
-  };
-
-  const handleFileInputChange = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const file = target.files?.[0];
-    if (!file || !editor.value) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const src = reader.result as string;
-      const caption = window.prompt('Caption (Optional)');
-      const source = window.prompt('Source (Optional)');
-      editor.value?.commands.setImage({
-        src,
-        caption,
-        source,
-      } as CustomImageOptions);
-      target.value = '';
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const addYoutubeVideo = () => {
-    if (!editor.value) return;
-    const url = window.prompt('YouTube URL');
-    const caption = window.prompt('Caption (Optional)');
-    const source = window.prompt('Source (Optional)');
-    const length = window.prompt('Video Length (e.g., 5:30) (Optional)');
-    if (url) {
-      editor.value.commands.setYoutubeVideo({
-        src: url,
-        caption,
-        source,
-        videoLength: length,
-      } as CustomYoutubeOptions);
-    }
-  };
+  onBeforeUnmount(() => editor.value?.destroy());
 </script>
 
 <style lang="scss" scoped>
   .editor-content-area {
-    @apply max-h-[40rem];
+    @apply min-h-[40rem] max-h-[50rem];
 
     :deep(.ProseMirror) {
-      @apply min-h-[300px] p-4 focus:outline-none;
+      @apply min-h-[40rem] max-h-[50rem] focus:outline-none border border-green-500 dark:border-slate-700 p-6;
 
       [style*='font-family: Noto Serif Bengali'] {
         font-family: 'Noto Serif Bengali', serif !important;
@@ -505,13 +528,5 @@
 
   .char-count {
     @apply p-3 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700;
-  }
-
-  .json-output {
-    @apply mt-5 p-4 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-inner;
-
-    pre {
-      @apply whitespace-pre-wrap break-words max-h-52 overflow-y-auto text-sm text-gray-800 dark:text-gray-200;
-    }
   }
 </style>

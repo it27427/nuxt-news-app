@@ -80,9 +80,7 @@
     try {
       await login(form);
       toast.success('Login successful!');
-      setTimeout(() => {
-        router.push('/admin/dashboard');
-      }, 1000);
+      router.push('/admin/dashboard');
     } catch (err: any) {
       toast.error(err.message || 'An unexpected error occurred.');
     }

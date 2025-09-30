@@ -1,15 +1,11 @@
 // server/api/tags/index.get.ts
 
-import { desc } from 'drizzle-orm'; // Import desc for ordering
-import { createError } from 'h3'; // Import createError for consistent error handling
+import { desc } from 'drizzle-orm';
+import { createError } from 'h3';
 import { db } from '~~/server/db/db';
 import { tags } from '~~/server/db/schema';
-import { ensureSuperAdmin } from '~~/server/utils/auth';
 
 export default defineEventHandler(async (event) => {
-  // CRITICAL: Ensure only Admins or Super Admins can view tags
-  ensureSuperAdmin(event);
-
   try {
     // Fetch all tags ordered by creation date (newest first)
     const allTags = await db.select().from(tags).orderBy(desc(tags.created_at));
