@@ -1,5 +1,6 @@
 // store/drafts.store.ts
 
+import type { JSONContent } from '@tiptap/vue-3';
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -17,19 +18,14 @@ export const useDraftsStore = defineStore('draftsStore', () => {
     return { Authorization: `Bearer ${token}` };
   };
 
-  /**
-   * Fetch drafts (list)
-   */
+  /** Fetch drafts (list) */
   const fetchDrafts = async (limit = 20, offset = 0) => {
     loading.value = true;
     error.value = null;
     try {
       const { data } = await axios.get<{ success: boolean; data: Draft[] }>(
         '/api/admin/drafts',
-        {
-          params: { limit, offset },
-          headers: getAuthHeader(),
-        }
+        { params: { limit, offset }, headers: getAuthHeader() }
       );
       drafts.value = data.data;
       return data.data;
@@ -43,9 +39,7 @@ export const useDraftsStore = defineStore('draftsStore', () => {
     }
   };
 
-  /**
-   * Fetch single draft by ID
-   */
+  /** Fetch single draft by ID */
   const fetchDraftById = async (id: string) => {
     loading.value = true;
     error.value = null;
@@ -65,10 +59,10 @@ export const useDraftsStore = defineStore('draftsStore', () => {
     }
   };
 
-  /**
-   * Create new draft
-   */
-  const createDraft = async (payload: Partial<Draft>) => {
+  /** Create new draft */
+  const createDraft = async (
+    payload: Partial<Draft> & { tiptap_json_for_editing: JSONContent }
+  ) => {
     loading.value = true;
     error.value = null;
     try {
@@ -90,10 +84,11 @@ export const useDraftsStore = defineStore('draftsStore', () => {
     }
   };
 
-  /**
-   * Update existing draft
-   */
-  const updateDraft = async (id: string, payload: Partial<Draft>) => {
+  /** Update existing draft */
+  const updateDraft = async (
+    id: string,
+    payload: Partial<Draft> & { tiptap_json_for_editing?: JSONContent }
+  ) => {
     loading.value = true;
     error.value = null;
     try {
@@ -103,14 +98,14 @@ export const useDraftsStore = defineStore('draftsStore', () => {
         { headers: getAuthHeader() }
       );
 
+      // Update local list
       const idx = drafts.value.findIndex((d) => d.id === id);
-      if (idx !== -1) {
+      if (idx !== -1)
         drafts.value[idx] = { ...drafts.value[idx], ...payload } as Draft;
-      }
 
-      if (currentDraft.value?.id === id) {
+      // Update currentDraft if editing
+      if (currentDraft.value?.id === id)
         currentDraft.value = { ...currentDraft.value, ...payload } as Draft;
-      }
 
       return data;
     } catch (err: any) {
@@ -123,9 +118,7 @@ export const useDraftsStore = defineStore('draftsStore', () => {
     }
   };
 
-  /**
-   * Delete draft
-   */
+  /** Delete draft */
   const deleteDraft = async (id: string) => {
     loading.value = true;
     error.value = null;
