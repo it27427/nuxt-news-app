@@ -2,20 +2,27 @@
 
 import { eq } from 'drizzle-orm';
 import { H3Event, createError, getRouterParam, readBody } from 'h3';
+import {
+  determineStatus,
+  validateAndParseTiptap,
+} from '~~/server/api/admin/news/utils';
 import { db } from '~~/server/db/db';
 import { InsertNews } from '~~/server/db/models';
 import { news } from '~~/server/db/schema';
 import { TiptapNode } from '~~/types/newstypes';
-import { determineStatus, validateAndParseTiptap } from '../utils';
 
 interface AuthUser {
   id: string;
   role: 'admin' | 'super_admin' | 'reporter';
 }
+
 export interface UpdateNewsBody {
   categories?: string[];
   tags?: string[];
-  tiptap_json_for_editing?: TiptapNode;
+  tiptap_json_for_editing?: {
+    type: 'doc';
+    content: TiptapNode[];
+  };
 }
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -30,11 +37,14 @@ export default defineEventHandler(async (event: H3Event) => {
   const body: UpdateNewsBody = await readBody(event);
   const { id: userId, role: userRole } = authUser;
 
+  // Fetch existing article
   const existingArticle = (
     await db.select().from(news).where(eq(news.id, articleId)).limit(1)
   )[0];
   if (!existingArticle)
     throw createError({ statusCode: 404, statusMessage: 'Article not found' });
+
+  // Permission check
   if (userRole !== 'super_admin' && existingArticle.user_id !== userId) {
     throw createError({
       statusCode: 403,
@@ -42,21 +52,23 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
-  const updatePayload: Partial<InsertNews> = { updated_at: new Date() as any };
-  if (body.categories) updatePayload.categories = body.categories as any;
-  if (body.tags) updatePayload.tags = body.tags as any;
+  // Prepare update payload
+  const updatePayload: Partial<InsertNews> = { updated_at: new Date() };
+
+  if (body.categories) updatePayload.categories = body.categories;
+  if (body.tags) updatePayload.tags = body.tags;
 
   if (body.tiptap_json_for_editing) {
     const parsedContent = validateAndParseTiptap(body.tiptap_json_for_editing);
     const { status, approval_status } = determineStatus(userRole);
 
-    updatePayload.homepage_excerpt = parsedContent.homepage_excerpt as any;
-    updatePayload.full_content = parsedContent.full_content as any;
-    updatePayload.images = parsedContent.images as any;
-    updatePayload.videos = parsedContent.videos as any;
-    updatePayload.tiptap_json_for_editing = body.tiptap_json_for_editing as any;
-    updatePayload.status = status as any;
-    updatePayload.approval_status = approval_status as any;
+    updatePayload.homepage_excerpt = parsedContent.homepage_excerpt;
+    updatePayload.full_content = parsedContent.full_content;
+    updatePayload.images = parsedContent.images;
+    updatePayload.videos = parsedContent.videos;
+    updatePayload.tiptap_json_for_editing = body.tiptap_json_for_editing;
+    updatePayload.status = status;
+    updatePayload.approval_status = approval_status;
   }
 
   try {
@@ -67,6 +79,7 @@ export default defineEventHandler(async (event: H3Event) => {
         .where(eq(news.id, articleId))
         .returning()
     )[0];
+
     return { message: 'News updated successfully', data: updated };
   } catch (err) {
     console.error(err);

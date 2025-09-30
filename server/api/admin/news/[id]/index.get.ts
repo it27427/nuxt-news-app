@@ -1,17 +1,45 @@
 // server/api/admin/news/[id]/index.get.ts
 
 import { eq } from 'drizzle-orm';
-import { H3Event, getRouterParam } from 'h3';
+import { H3Event, createError, getRouterParam } from 'h3';
 import { db } from '~~/server/db/db';
-import { SelectNews } from '~~/server/db/models';
 import { news } from '~~/server/db/schema';
+import { TiptapNode } from '~~/types/newstypes';
 
-// --- API Handler ---
+interface AuthUser {
+  id: string;
+  role: 'reporter' | 'admin' | 'super_admin';
+}
+
+// Define SelectNews type with strict Tiptap typing
+export interface SelectNews {
+  id: string;
+  user_id: string;
+  username: string;
+  status: string;
+  approval_status: string;
+  categories: string[];
+  tags: string[];
+  tiptap_json_for_editing: {
+    type: 'doc';
+    content: TiptapNode[];
+  };
+  homepage_excerpt: TiptapNode[];
+  full_content: TiptapNode[];
+  images?: Array<{ img_src: string; caption: string; credit: string }>;
+  videos?: Array<{
+    url: string;
+    caption: string;
+    credit: string;
+    length: string;
+  }>;
+  created_at: Date;
+  updated_at: Date;
+}
 
 export default defineEventHandler(async (event: H3Event) => {
   // 1. Get Article ID from URL
   const articleId = getRouterParam(event, 'id');
-
   if (!articleId) {
     throw createError({
       statusCode: 400,
@@ -19,8 +47,9 @@ export default defineEventHandler(async (event: H3Event) => {
     });
   }
 
-  // 2. Mock Authentication (MUST BE REPLACED BY REAL AUTH LOGIC)
-  if (!event.context.user) {
+  // 2. Auth Check
+  const authUser = event.context.user as AuthUser | undefined;
+  if (!authUser) {
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized: Authentication data is missing.',
@@ -29,12 +58,28 @@ export default defineEventHandler(async (event: H3Event) => {
 
   try {
     // 3. Fetch the Article
-    const existingArticles: SelectNews[] = await db
-      .select()
+    const existingArticles = await db
+      .select({
+        id: news.id,
+        user_id: news.user_id,
+        username: news.username,
+        status: news.status,
+        approval_status: news.approval_status,
+        categories: news.categories,
+        tags: news.tags,
+        tiptap_json_for_editing: news.tiptap_json_for_editing,
+        homepage_excerpt: news.homepage_excerpt,
+        full_content: news.full_content,
+        images: news.images,
+        videos: news.videos,
+        created_at: news.created_at,
+        updated_at: news.updated_at,
+      })
       .from(news)
       .where(eq(news.id, articleId))
       .limit(1);
-    const existingArticle = existingArticles[0];
+
+    const existingArticle = existingArticles[0] as SelectNews | undefined;
 
     if (!existingArticle) {
       throw createError({
@@ -49,11 +94,6 @@ export default defineEventHandler(async (event: H3Event) => {
       data: existingArticle,
     };
   } catch (error) {
-    // Re-throw H3 errors
-    const h3Error = error as any;
-    if (h3Error.statusCode) {
-      throw error;
-    }
     console.error('Database Fetch Error:', error);
     throw createError({
       statusCode: 500,

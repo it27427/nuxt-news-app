@@ -1,106 +1,69 @@
 // server/api/admin/news/[id]/index.delete.ts
 
 import { eq } from 'drizzle-orm';
-import { H3Event, getRouterParam } from 'h3';
+import { H3Event, createError, getRouterParam } from 'h3';
 import { db } from '~~/server/db/db';
 import { approvals, news } from '~~/server/db/schema';
 
 // --- Auth Context Type ---
-
 interface AuthUser {
   id: string;
   role: 'admin' | 'super_admin' | 'reporter';
 }
 
 // --- API Handler ---
-
 export default defineEventHandler(async (event: H3Event) => {
   // 1. Get Article ID from URL
   const articleId = getRouterParam(event, 'id');
-
   if (!articleId) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request: Article ID is missing.',
-    });
+    throw createError({ statusCode: 400, statusMessage: 'Article ID missing' });
   }
 
-  // 2. Mock Authentication (MUST BE REPLACED BY REAL AUTH LOGIC)
+  // 2. Auth Check
   const authUser = event.context.user as AuthUser | undefined;
-
   if (!authUser) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized: Authentication data is missing.',
-    });
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
   }
-
   const { id: userId, role: userRole } = authUser;
 
-  // Check for administrative access
-  if (
-    userRole !== 'admin' &&
-    userRole !== 'super_admin' &&
-    userRole !== 'reporter'
-  ) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden: Access restricted to content creators.',
-    });
-  }
-
   try {
-    // 3. Fetch the current article to verify ownership and existence
-    const existingArticles = await db
-      .select({
-        user_id: news.user_id,
-      })
-      .from(news)
-      .where(eq(news.id, articleId))
-      .limit(1);
-    const existingArticle = existingArticles[0];
+    // 3. Fetch article to check existence and ownership
+    const existingArticle = (
+      await db
+        .select({ user_id: news.user_id })
+        .from(news)
+        .where(eq(news.id, articleId))
+        .limit(1)
+    )[0];
 
     if (!existingArticle) {
       throw createError({
         statusCode: 404,
-        statusMessage: `Not Found: Article with ID ${articleId} not found.`,
+        statusMessage: 'Article not found',
       });
     }
 
-    // Authorization Check: Admins/Reporters can only delete their own articles.
+    // 4. Ownership Check (Admins/Reporters can delete only their own)
     if (userRole !== 'super_admin' && existingArticle.user_id !== userId) {
       throw createError({
         statusCode: 403,
-        statusMessage:
-          'Forbidden: You can only delete articles you have created.',
+        statusMessage: 'You can only delete your own articles.',
       });
     }
 
-    // 4. Database Transaction for Deletion
+    // 5. Transaction: Delete approvals first, then news
     await db.transaction(async (tx) => {
-      // A. Delete associated approval logs first
       await tx.delete(approvals).where(eq(approvals.news_id, articleId));
-
-      // B. Delete the main news article
       await tx.delete(news).where(eq(news.id, articleId));
     });
 
-    // 5. Success Response
-    return {
-      message: 'News article deleted successfully.',
-      articleId: articleId,
-    };
+    // 6. Success Response
+    return { message: 'News article deleted successfully.', articleId };
   } catch (error) {
-    // Re-throw H3 errors
-    const h3Error = error as any;
-    if (h3Error.statusCode) {
-      throw error;
-    }
     console.error('Database Deletion Error:', error);
     throw createError({
       statusCode: 500,
-      statusMessage:
-        'Internal Server Error: Failed to delete the news article.',
+      statusMessage: 'Failed to delete the news article.',
     });
   }
 });
