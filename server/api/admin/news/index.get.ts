@@ -20,30 +20,46 @@ export default defineEventHandler(async (event: H3Event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
 
   try {
+    // --- Map news items with badges and edit/delete permission ---
+    const mapNews = (item: any) => {
+      let showEditDelete = false;
+
+      // Determine edit/delete permission
+      switch (item.approval_status) {
+        case 'reviewing':
+        case 'approved':
+        case 'pending':
+          showEditDelete = true;
+          break;
+        case 'rejected':
+          showEditDelete = true; // delete only
+          break;
+      }
+
+      // Upper badge: original status
+      const upperBadge =
+        item.status === 'published' ? 'Published' : item.status;
+
+      // Lower badge: 'Edited' if updated_at differs from created_at
+      const lowerBadge =
+        item.updated_at && item.updated_at !== item.created_at
+          ? 'Edited'
+          : null;
+
+      return {
+        ...item,
+        showEditDelete,
+        badge: {
+          upper: upperBadge,
+          lower: lowerBadge,
+        },
+      };
+    };
+
     if (authUser.role === 'super_admin') {
       // --- Super Admin Workflow ---
 
-      // Function to map showEditDelete according to rules
-      const mapNews = (item: any) => {
-        let showEditDelete = false;
-        switch (item.approval_status) {
-          case 'reviewing':
-          case 'approved':
-          case 'pending':
-            showEditDelete = true; // Super Admin can edit/delete
-            break;
-          case 'rejected':
-            showEditDelete = true; // Super Admin can delete only
-            break;
-        }
-        return {
-          ...item,
-          showEditDelete,
-          badge: item.status === 'published' ? 'Published' : item.status,
-        };
-      };
-
-      // --- Fetch Super Admin's own news ---
+      // Fetch Super Admin's own news
       const superAdminNews = await db
         .select({
           id: news.id,
@@ -69,7 +85,7 @@ export default defineEventHandler(async (event: H3Event) => {
         .where(eq(news.user_id, authUser.id));
       const superAdminTotal = superAdminCountResult[0]?.count || 0;
 
-      // --- Fetch Admin & Reporter news with join to get role ---
+      // Fetch Admin & Reporter news with join to get role
       const fetchRoleNews = async (role: 'admin' | 'reporter') => {
         const items = await db
           .select({
@@ -140,16 +156,16 @@ export default defineEventHandler(async (event: H3Event) => {
 
       const reviewing = allNews
         .filter((n) => n.approval_status === 'reviewing')
-        .map((n) => ({ ...n, showEditDelete: true }));
+        .map((n) => mapNews({ ...n }));
       const approved = allNews
         .filter((n) => n.approval_status === 'approved')
-        .map((n) => ({ ...n, showEditDelete: true }));
+        .map((n) => mapNews({ ...n }));
       const pending = allNews
         .filter((n) => n.approval_status === 'pending')
-        .map((n) => ({ ...n, showEditDelete: false })); // No action
+        .map((n) => mapNews({ ...n }));
       const rejected = allNews
         .filter((n) => n.approval_status === 'rejected')
-        .map((n) => ({ ...n, showEditDelete: false })); // No action
+        .map((n) => mapNews({ ...n }));
 
       return {
         message: 'News fetched for Reporter/Admin',
