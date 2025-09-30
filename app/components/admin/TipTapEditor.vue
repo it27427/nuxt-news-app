@@ -45,36 +45,42 @@
         >
           H1
         </button>
+
         <button
           @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
         >
           H2
         </button>
+
         <button
           @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
         >
           H3
         </button>
+
         <button
           @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
         >
           H4
         </button>
+
         <button
           @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
         >
           H5
         </button>
+
         <button
           @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
           :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
         >
           H6
         </button>
+
         <button
           @click="editor.chain().focus().setParagraph().run()"
           :class="{ 'is-active': editor.isActive('paragraph') }"
@@ -85,9 +91,9 @@
 
       <div class="toolbar-group">
         <button
-          v-tooltip="'বোল্ড'"
+          v-tooltip="'বোল্ড'"
           :class="{ 'is-active': editor.isActive('bold') }"
-          @click="editor?.chain().focus().toggleBold().run()"
+          @click="editor.chain().focus().toggleBold().run()"
         >
           <Icon icon="ic:round-format-bold" />
         </button>
@@ -95,7 +101,7 @@
         <button
           v-tooltip="'ইটালিক'"
           :class="{ 'is-active': editor.isActive('italic') }"
-          @click="editor?.chain().focus().toggleItalic().run()"
+          @click="editor.chain().focus().toggleItalic().run()"
         >
           <Icon icon="ic:round-format-italic" />
         </button>
@@ -103,7 +109,7 @@
         <button
           v-tooltip="'আন্ডারলাইন'"
           :class="{ 'is-active': editor.isActive('underline') }"
-          @click="editor?.chain().focus().toggleUnderline().run()"
+          @click="editor.chain().focus().toggleUnderline().run()"
         >
           <Icon icon="ic:round-format-underlined" />
         </button>
@@ -111,7 +117,7 @@
         <button
           v-tooltip="'স্ট্রাইক'"
           :class="{ 'is-active': editor.isActive('strike') }"
-          @click="editor?.chain().focus().toggleStrike().run()"
+          @click="editor.chain().focus().toggleStrike().run()"
         >
           <Icon icon="ic:round-format-strikethrough" />
         </button>
@@ -119,7 +125,7 @@
         <button
           v-tooltip="'হাইলাইট'"
           :class="{ 'is-active': editor.isActive('highlight') }"
-          @click="editor?.chain().focus().toggleHighlight().run()"
+          @click="editor.chain().focus().toggleHighlight().run()"
         >
           <Icon icon="ic:round-highlight" />
         </button>
@@ -127,7 +133,7 @@
         <button
           v-tooltip="'ব্লককোট'"
           :class="{ 'is-active': editor.isActive('blockquote') }"
-          @click="editor?.chain().focus().toggleBlockquote().run()"
+          @click="editor.chain().focus().toggleBlockquote().run()"
         >
           <Icon icon="ic:round-format-quote" />
         </button>
@@ -153,7 +159,7 @@
         <button
           v-tooltip="'বুলেট লিস্ট'"
           :class="{ 'is-active': editor.isActive('bulletList') }"
-          @click="editor?.chain().focus().toggleBulletList().run()"
+          @click="editor.chain().focus().toggleBulletList().run()"
         >
           <Icon icon="ic:round-list" />
         </button>
@@ -161,7 +167,7 @@
         <button
           v-tooltip="'অর্ডার্ড লিস্ট'"
           :class="{ 'is-active': editor.isActive('orderedList') }"
-          @click="editor?.chain().focus().toggleOrderedList().run()"
+          @click="editor.chain().focus().toggleOrderedList().run()"
         >
           <Icon icon="ic:round-format-list-numbered" />
         </button>
@@ -169,7 +175,7 @@
         <button
           v-tooltip="'টাস্ক লিস্ট'"
           :class="{ 'is-active': editor.isActive('taskList') }"
-          @click="editor?.chain().focus().toggleTaskList().run()"
+          @click="editor.chain().focus().toggleTaskList().run()"
         >
           <Icon icon="ic:round-task" />
         </button>
@@ -327,7 +333,7 @@
   import { CharacterCount } from '@tiptap/extension-character-count';
   import { FontFamily } from '@tiptap/extension-font-family';
   import { Highlight } from '@tiptap/extension-highlight';
-  import { Image, type SetImageOptions } from '@tiptap/extension-image';
+  import { Image } from '@tiptap/extension-image';
   import { Link } from '@tiptap/extension-link';
   import { Placeholder } from '@tiptap/extension-placeholder';
   import { TaskItem } from '@tiptap/extension-task-item';
@@ -342,35 +348,16 @@
     type JSONContent,
   } from '@tiptap/vue-3';
   import { BubbleMenu } from '@tiptap/vue-3/menus';
-  import { onBeforeUnmount, ref, watch, type Ref } from 'vue';
+  import { onBeforeUnmount, ref, watch } from 'vue';
   import { VueFinalModal } from 'vue-final-modal';
+
+  import { useDraftsStore } from '~~/store/drafts.store';
 
   type PlaceholderContent = (options: {
     node: any;
     editor: Editor;
     pos: number;
   }) => string | false | null | undefined;
-
-  const initialContent: JSONContent = {
-    type: 'doc',
-    content: [
-      {
-        type: 'heading',
-        attrs: {
-          level: 1,
-        },
-        content: [{ type: 'text', text: '\u200B' }],
-      },
-    ],
-  };
-
-  interface Props {
-    modelValue: JSONContent;
-  }
-  const props = defineProps<Props>();
-  const emit = defineEmits<{
-    (e: 'update:modelValue', content: JSONContent): void;
-  }>();
 
   const MAX_CHARACTERS = 100000;
   const defaultFontFamily = ref('Noto Serif Bengali');
@@ -395,24 +382,30 @@
     videoLength: string;
   }>({ url: '', caption: '', source: '', videoLength: '' });
 
-  interface CustomImageOptions extends SetImageOptions {
-    caption?: string;
-    source?: string;
-  }
-  interface CustomYoutubeOptions {
-    src: string;
-    caption?: string;
-    source?: string;
-    videoLength?: string;
-    width?: number;
-    height?: number;
-  }
+  const draftsStore = useDraftsStore();
 
-  const editor: Ref<Editor | undefined> = useEditor({
+  const initialContent: JSONContent = {
+    type: 'doc',
+    content: [
+      {
+        type: 'heading',
+        attrs: { level: 1 },
+        content: [{ type: 'text', text: '\u200B' }],
+      },
+    ],
+  };
+
+  interface Props {
+    modelValue: JSONContent;
+  }
+  const props = defineProps<Props>();
+  const emit = defineEmits<{
+    (e: 'update:modelValue', content: JSONContent): void;
+  }>();
+
+  const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        link: false,
-      }),
+      StarterKit.configure({ link: false }),
       Link.configure({ openOnClick: false }),
       Image,
       Youtube,
@@ -423,29 +416,22 @@
       Highlight,
       Placeholder.configure({
         placeholder: ({ node, editor }: Parameters<PlaceholderContent>[0]) => {
-          if (editor.isEmpty) {
-            return 'সংবাদ লিখা শুরু করুন...';
-          }
-
+          if (editor.isEmpty) return 'সংবাদ লিখা শুরু করুন...';
           const isH1 = node.type.name === 'heading' && node.attrs.level === 1;
           const isEmpty =
             node.content?.size === 0 || node.textContent === '\u200B';
-
-          if (isH1 && isEmpty) {
-            return 'সংবাদ লিখা শুরু করুন...';
-          }
-
+          if (isH1 && isEmpty) return 'সংবাদ লিখা শুরু করুন...';
           return '';
         },
       } as any),
       CharacterCount.configure({ limit: MAX_CHARACTERS }),
     ],
-
     content:
       props.modelValue?.type === 'doc' ? props.modelValue : initialContent,
-
-    onUpdate: ({ editor }) => emit('update:modelValue', editor.getJSON()),
-
+    onUpdate: ({ editor }) => {
+      emit('update:modelValue', editor.getJSON());
+      draftsStore.updateCurrentDraftContent(editor.getJSON());
+    },
     onCreate: ({ editor }) => {
       editor.chain().focus().setHeading({ level: 1 }).run();
     },
@@ -453,17 +439,11 @@
 
   watch(
     () => props.modelValue,
-    (newValue) => {
+    (newVal) => {
       if (!editor.value) return;
-      const normalizedValue =
-        newValue?.type === 'doc' ? newValue : initialContent;
+      const normalizedValue = newVal?.type === 'doc' ? newVal : initialContent;
       const current = editor.value.getJSON();
-
-      if (
-        normalizedValue.content?.length &&
-        JSON.stringify(normalizedValue.content) !==
-          JSON.stringify(current.content)
-      ) {
+      if (JSON.stringify(normalizedValue) !== JSON.stringify(current)) {
         editor.value.commands.setContent(normalizedValue, {
           emitUpdate: false,
         });
@@ -472,7 +452,7 @@
     { deep: true }
   );
 
-  // Image
+  // Image handlers
   const openImageFileInput = () => fileInputRef.value?.click();
   const handleFileInputChange = (e: Event) => {
     const file = (e.target as HTMLInputElement).files?.[0];
@@ -486,40 +466,35 @@
     const reader = new FileReader();
     reader.onload = (e) => {
       const base64 = e.target?.result as string;
-      const options: CustomImageOptions = {
-        src: base64,
-        caption: imageForm.value.caption,
-        source: imageForm.value.source,
-      };
-      editor.value?.chain().focus().setImage(options).run();
+      editor.value
+        ?.chain()
+        .focus()
+        .setImage({ src: base64, ...imageForm.value })
+        .run();
       imageModalVisible.value = false;
     };
     reader.readAsDataURL(imageForm.value.file);
   };
 
-  // YouTube
+  // YouTube handlers
   const addYoutubeVideo = () => {
     youtubeForm.value = { url: '', caption: '', source: '', videoLength: '' };
     youtubeModalVisible.value = true;
   };
   const submitYoutubeModal = () => {
     if (!editor.value || !youtubeForm.value.url) return;
-    const options: CustomYoutubeOptions = {
+    (editor.value?.commands as any).setYoutube({
       src: youtubeForm.value.url,
       caption: youtubeForm.value.caption,
       source: youtubeForm.value.source,
       videoLength: youtubeForm.value.videoLength,
-    };
-    editor.value?.chain().focus().deleteSelection().run();
-    (editor.value?.commands as any).setYoutube(options);
+    });
     youtubeModalVisible.value = false;
   };
 
-  // Font & Heading
+  // Font & link
   const setFontFamily = (font: string) =>
     editor.value?.chain().focus().setFontFamily(font).run();
-
-  // Link
   const setLink = () => {
     if (!editor.value) return;
     const previousUrl = editor.value.getAttributes('link').href;
@@ -539,99 +514,43 @@
   onBeforeUnmount(() => editor.value?.destroy());
 </script>
 
-<style lang="scss" scoped>
-  .editor-content-area {
-    @apply min-h-[40rem] max-h-[50rem];
-
-    :deep(.ProseMirror) {
-      .is-editor-empty:first-child::before {
-        content: attr(data-placeholder);
-        float: left;
-        @apply text-gray-400 pointer-events-none h-0;
-      }
-
-      @apply min-h-[40rem] max-h-[50rem] focus:outline-none border border-green-500 dark:border-slate-700 p-6;
-
-      [style*='font-family: Noto Serif Bengali'] {
-        font-family: 'Noto Serif Bengali', serif !important;
-      }
-      [style*='font-family: Tiro Bangla'] {
-        font-family: 'Tiro Bangla', sans-serif !important;
-      }
-      [style*='font-family: Hind Siliguri'] {
-        font-family: 'Hind Siliguri', sans-serif !important;
-      }
-      [style*='font-family: Baloo Da 2'] {
-        font-family: 'Baloo Da 2', sans-serif !important;
-      }
-
-      p.is-editor-empty:first-child::before {
-        content: attr(data-placeholder);
-        float: left;
-        @apply text-gray-400 pointer-events-none h-0;
-      }
-
-      img {
-        @apply max-w-full h-auto block my-3 rounded-md shadow;
-      }
-
-      .youtube-container {
-        @apply relative w-full overflow-hidden my-4 rounded-lg shadow-lg;
-        padding-bottom: 56.25%;
-        height: 0;
-      }
-
-      .youtube-container iframe {
-        @apply absolute top-0 left-0 w-full h-full;
-      }
-    }
-  }
-
+<style scoped lang="scss">
   .editor-container {
     @apply border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg relative max-h-[40rem] overflow-auto;
   }
-
+  .editor-content-area {
+    @apply min-h-[40rem] max-h-[50rem] p-6 border border-green-500 dark:border-slate-700 focus:outline-none;
+  }
   .toolbar {
-    @apply sticky top-0 z-10 w-full flex flex-wrap gap-2 sm:gap-3 p-2 border-b border-b-gray-300 dark:border-b-gray-700 bg-white dark:bg-gray-800 shadow-md;
+    @apply sticky top-0 z-10 flex flex-wrap gap-2 p-2 border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md;
   }
-
   .toolbar-group {
-    @apply flex gap-1 sm:gap-2 pr-3 border-r border-gray-300 dark:border-gray-700;
+    @apply flex gap-1 pr-3 border-r border-gray-300 dark:border-gray-700;
   }
-
   .toolbar-group:last-child {
     border-right: none;
   }
-
   .toolbar button {
-    @apply bg-transparent border border-transparent px-2 sm:px-3 py-1 sm:py-2 cursor-pointer rounded-lg transition-all duration-200 flex items-center justify-center text-sm text-gray-700 dark:text-gray-200;
+    @apply bg-transparent border border-transparent px-2 py-1 cursor-pointer rounded-lg text-sm text-gray-700 dark:text-gray-200 flex items-center justify-center transition-all duration-200;
   }
-
   .toolbar button:hover {
     @apply bg-gray-100 dark:bg-gray-700;
   }
-
   .toolbar button.is-active {
     @apply bg-green-600 text-white border-green-600 hover:bg-green-700 hover:border-green-700;
   }
-
-  .bubble-menu-style,
-  .floating-menu-style {
+  .bubble-menu-style {
     @apply flex bg-gray-800 dark:bg-gray-900 p-2 rounded-xl gap-2 shadow-2xl z-50;
-
-    button {
-      @apply p-2 rounded-lg text-white transition-colors duration-200;
-    }
-
-    button:hover {
-      @apply bg-gray-600 dark:bg-gray-700;
-    }
-
-    button.is-active {
-      @apply bg-green-500 hover:bg-green-500;
-    }
   }
-
+  .bubble-menu-style button {
+    @apply p-2 rounded-lg text-white;
+  }
+  .bubble-menu-style button:hover {
+    @apply bg-gray-600 dark:bg-gray-700;
+  }
+  .bubble-menu-style button.is-active {
+    @apply bg-green-500 hover:bg-green-500;
+  }
   .char-count {
     @apply p-3 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700;
   }

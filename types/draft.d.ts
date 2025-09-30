@@ -11,6 +11,12 @@ export interface Author {
 export type DraftStatus = 'draft' | 'published';
 export type ApprovalStatus = 'draft' | 'pending' | 'approved';
 
+export type TiptapNode = {
+  type: string;
+  content?: TiptapNode[];
+  attrs?: Record<string, any>;
+};
+
 export interface Draft {
   id: string;
   user_id: string;
