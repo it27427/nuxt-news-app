@@ -21,6 +21,7 @@ export interface Draft {
   id: string;
   user_id: string;
   username: string | null;
+  author?: { name: string } | null;
   status: DraftStatus;
   approval_status: ApprovalStatus;
   categories: string[];

@@ -68,9 +68,7 @@
   import { onMounted, ref } from 'vue';
   import { useNewsStore } from '~~/store/news.store';
 
-  definePageMeta({
-    layout: 'admin',
-  });
+  definePageMeta({ layout: 'admin' });
 
   const newsStore = useNewsStore();
   const newsList = ref<any[]>([]);
