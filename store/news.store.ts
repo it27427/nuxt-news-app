@@ -32,6 +32,26 @@ export const useNewsStore = defineStore('newsStore', () => {
     return { Authorization: `Bearer ${token}` };
   };
 
+  const fetchNewsList = async () => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const { data } = await axios.get('/api/admin/news', {
+        headers: getAuthHeader(),
+      });
+      // Assume API returns an array of news
+      newsList.value = data.data?.allNews || [];
+    } catch (err: any) {
+      error.value =
+        err?.response?.data?.statusMessage ||
+        err.message ||
+        'Failed to fetch news';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const createNews = async (payload: {
     categories: string[];
     tags: string[];
@@ -112,5 +132,6 @@ export const useNewsStore = defineStore('newsStore', () => {
     tagOptions,
     createNews,
     updateNews,
+    fetchNewsList,
   };
 });

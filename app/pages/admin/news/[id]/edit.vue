@@ -3,8 +3,8 @@
     <h1>{{ title }}</h1>
 
     <form @submit.prevent="updateNewsContent" class="space-y-5">
+      <!-- Category & Tag Selects -->
       <div class="flex flex-col md:flex-row items-center gap-4">
-        <!-- Category Select -->
         <div class="w-full md:w-1/2">
           <CustomSelect
             v-model="selectedNewsType"
@@ -13,8 +13,6 @@
             multiple
           />
         </div>
-
-        <!-- Tag Select -->
         <div class="w-full md:w-1/2">
           <CustomSelect
             v-model="selectedNewsTag"
@@ -25,7 +23,7 @@
         </div>
       </div>
 
-      <!-- Tiptap Editor -->
+      <!-- TipTap Editor -->
       <ClientOnly>
         <TipTapEditor v-model="tiptapContent" />
       </ClientOnly>
@@ -43,8 +41,6 @@
 </template>
 
 <script lang="ts" setup>
-  definePageMeta({ layout: 'admin' });
-
   import type { JSONContent } from '@tiptap/vue-3';
   import { computed, onMounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
@@ -58,6 +54,8 @@
     label: string;
     value: string;
   }
+
+  definePageMeta({ layout: 'admin' });
 
   const title = ref('সংবাদ আপডেট করুন');
   const toast = useToast();
@@ -81,7 +79,7 @@
     tagsStore.tags.map((t) => ({ label: t.name, value: t.id }))
   );
 
-  // Fetch categories, tags, and news on mount
+  // Fetch categories, tags, and news
   onMounted(async () => {
     if (!categoriesStore.categories.length)
       await categoriesStore.fetchCategories();
@@ -94,9 +92,11 @@
   // --- Fetch Single News ---
   async function fetchNews(id: string) {
     try {
-      await newsStore.fetchSingleNews(id);
-      const news = newsStore.singleNews;
+      await newsStore.fetchNewsList(); // make sure newsList is loaded
+      const news = newsStore.newsList.find((n) => n.id === id);
       if (!news) return;
+
+      newsStore.singleNews = news;
 
       // Populate selects
       selectedNewsType.value = news.categories.map((c) => ({
@@ -105,17 +105,16 @@
       }));
       selectedNewsTag.value = news.tags.map((t) => ({ label: t, value: t }));
 
-      // Populate Tiptap
-      if (news.tiptap_json_for_editing) {
+      // Populate TipTap editor
+      if (news.tiptap_json_for_editing)
         tiptapContent.value = news.tiptap_json_for_editing;
-      }
     } catch (err) {
       console.error('Failed to fetch news:', err);
       toast.error('সংবাদ লোড করতে ব্যর্থ হয়েছে!');
     }
   }
 
-  // --- Build payload ---
+  // --- Build Payload ---
   function buildPayload() {
     const nodes = tiptapContent.value.content ?? [];
     const firstNode = nodes[0] ?? null;
@@ -129,9 +128,7 @@
     }
 
     if (!titleText)
-      throw new Error(
-        'অনুগ্রহ করে Tiptap এডিটরের শুরুতে সংবাদটির শিরোনাম লিখুন।'
-      );
+      throw new Error('অনুগ্রহ করে এডিটরের শুরুতে সংবাদটির শিরোনাম লিখুন।');
     if (!selectedNewsType.value.length)
       throw new Error('দয়া করে অন্তত একটি ক্যাটেগরি নির্বাচন করুন।');
 
