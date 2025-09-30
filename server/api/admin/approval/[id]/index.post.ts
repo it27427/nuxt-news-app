@@ -1,4 +1,5 @@
 // server/api/admin/approval/[id]/index.post.ts
+
 import { eq } from 'drizzle-orm';
 import { H3Event, createError, readBody } from 'h3';
 import { db } from '~~/server/db/db';
@@ -35,7 +36,7 @@ export default defineEventHandler(async (event: H3Event) => {
   switch (body.newApprovalStatus) {
     case 'pending':
       finalStatus = 'pending';
-      notificationMessage = `⏳ "${originalNews.username}" ⏱️আপনার নিউজ অনিষ্পাদিত অবস্থায় আছে।`;
+      notificationMessage = `⏳ "${originalNews.username}"⏱️আপনার নিউজ অনিষ্পাদিত অবস্থায় আছে।`;
       break;
     case 'approved':
       finalStatus = 'published';

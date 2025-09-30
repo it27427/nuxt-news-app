@@ -2,9 +2,9 @@
 import axios from 'axios';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { ArticleCreationPayload, NewsArticle } from '../types/article';
-import type { Draft } from '../types/draft';
-import type { TiptapNode } from '../types/newstypes';
+import type { ArticleCreationPayload, NewsArticle } from '~~/types/article';
+import type { Draft } from '~~/types/draft';
+import type { TiptapNode } from '~~/types/newstypes';
 import { useCategoriesStore } from './categories.store';
 import { useTagsStore } from './tags.store';
 

@@ -11,66 +11,82 @@ export const useApprovalStore = defineStore('approvalStore', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  // Axios instance with SSR safe token from cookie
+  // --- Axios instance with SSR safe token ---
   const getAxios = () => {
-    // NOTE: This assumes 'auth_token' is available via client-side cookies
-    const token = useCookie('auth_token').value;
+    const token =
+      useCookie('auth_token')?.value || localStorage.getItem('auth_token');
     return axios.create({
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
   };
 
   /**
-   * Fetches news articles requiring approval based on a given status.
-   * @param status - Filter by approval_status or main status ('pending' | 'approved' | 'rejected' | 'published').
+   * Fetch all news requiring approval, categorized by status
    */
-  async function fetchApprovalList(
-    status: 'pending' | 'approved' | 'rejected' | 'published'
-  ) {
+  const fetchApprovalList = async () => {
     loading.value = true;
     error.value = null;
     try {
       const res = await getAxios().get<{
         success: boolean;
-        data: ApprovalNews[];
-      }>('/api/admin/approval', { params: { status } });
-      approvalList.value = res.data.data;
+        data: {
+          reviewing: ApprovalNews[];
+          pending: ApprovalNews[];
+          approved: ApprovalNews[];
+          rejected: ApprovalNews[];
+        };
+      }>('/api/admin/approval/list');
+
+      // Merge all categories into a single array if needed, or keep separate
+      approvalList.value = [
+        ...res.data.data.reviewing,
+        ...res.data.data.pending,
+        ...res.data.data.approved,
+        ...res.data.data.rejected,
+      ];
+      return res.data.data;
     } catch (err: any) {
-      console.error('Approval list fetch error:', err);
+      console.error('Failed to fetch approval list:', err);
       error.value =
         err?.response?.data?.statusMessage || 'Failed to fetch approval list.';
-      throw err; // Re-throw for component handling
+      throw err;
     } finally {
       loading.value = false;
     }
-  }
+  };
 
   /**
-   * Sends an approval or rejection action for a specific news article.
-   * @param newsId - The ID of the article to act upon.
-   * @param newApprovalStatus - 'approved' or 'rejected'.
-   * @param comment - Optional comment from the Super Admin.
+   * Take an approval action (approve, reject, pending) on a specific news article
+   * @param newsId - The ID of the news
+   * @param newApprovalStatus - 'pending' | 'approved' | 'rejected'
+   * @param comment - Optional comment from super admin
    */
-  async function takeAction(
+  const takeAction = async (
     newsId: string,
-    newApprovalStatus: 'approved' | 'rejected',
+    newApprovalStatus: 'pending' | 'approved' | 'rejected',
     comment?: string
-  ) {
+  ) => {
+    loading.value = true;
+    error.value = null;
     try {
       const res = await getAxios().post(`/api/admin/approval/${newsId}`, {
         newApprovalStatus,
         comment,
       });
-      // Optionally update the local list upon success
+
+      // Remove the news from local approvalList after action
       approvalList.value = approvalList.value.filter((a) => a.id !== newsId);
+
       return res.data;
     } catch (err: any) {
-      console.error('Approval action error:', err);
-      throw new Error(
-        err?.response?.data?.statusMessage || 'Approval action failed.'
-      );
+      console.error('Approval action failed:', err);
+      error.value =
+        err?.response?.data?.statusMessage || 'Approval action failed.';
+      throw err;
+    } finally {
+      loading.value = false;
     }
-  }
+  };
 
   return {
     approvalList,
