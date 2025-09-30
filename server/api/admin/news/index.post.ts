@@ -1,14 +1,13 @@
 // server/api/admin/news/index.post.ts
-
 import { eq } from 'drizzle-orm';
 import { H3Event, createError, getHeader, readBody } from 'h3';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '~~/server/db/db';
 import { InsertApproval, InsertNews } from '~~/server/db/models';
-import { approvals, news, users } from '~~/server/db/schema';
-import { TiptapNode } from '~~/types/newstypes';
-import { determineStatus, validateAndParseTiptap } from './utils';
+import { approvals, news, notifications, users } from '~~/server/db/schema';
+import { parseTiptapJson } from '~~/server/utils/parseTiptapJson';
+import { ParsedContent, TiptapNode } from '~~/types/newstypes';
 
 export interface CreateNewsBody {
   categories: string[];
@@ -17,40 +16,81 @@ export interface CreateNewsBody {
 }
 
 export default defineEventHandler(async (event: H3Event) => {
+  // --- JWT Validation ---
   const authHeader = getHeader(event, 'authorization') || '';
-  if (!authHeader.startsWith('Bearer '))
-    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
+  if (!authHeader.startsWith('Bearer ')) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized: Missing token',
+    });
+  }
+
   const token = authHeader.split(' ')[1];
   let decoded: any;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
   } catch {
-    throw createError({ statusCode: 401, statusMessage: 'Invalid token' });
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized: Invalid token',
+    });
   }
 
-  const { id: userId, email, role: userRole } = decoded;
+  const { id: userId, email } = decoded;
   if (!userId || !email)
-    throw createError({ statusCode: 401, statusMessage: 'Invalid user data' });
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized: Invalid user data',
+    });
 
+  // --- Read Body ---
   const body: CreateNewsBody = await readBody(event);
   const { categories, tags, tiptap_json_for_editing } = body;
 
+  if (
+    !tiptap_json_for_editing?.content?.length ||
+    tiptap_json_for_editing.type !== 'doc'
+  ) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Tiptap content is required',
+    });
+  }
+
+  const parsedContent: ParsedContent = parseTiptapJson(tiptap_json_for_editing);
+
+  if (!parsedContent.title)
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Article title is required',
+    });
+
+  // --- Fetch User ---
   const userRecord = await db.select().from(users).where(eq(users.id, userId));
   const user = userRecord[0];
   if (!user)
     throw createError({ statusCode: 401, statusMessage: 'User not found' });
 
-  const parsedContent = validateAndParseTiptap(tiptap_json_for_editing);
-  const { status, approval_status, action } = determineStatus(userRole);
+  const username: string = user.name;
+  const userRole: 'admin' | 'super_admin' | 'reporter' = user.role as any;
 
   const newArticleId = uuidv4();
+
+  // --- Determine status for reporter/admin submission ---
+  let status: 'submitted' | 'published' = 'submitted';
+  let approvalStatus: 'reviewing' | 'approved' = 'reviewing';
+
+  if (userRole === 'super_admin') {
+    status = 'published';
+    approvalStatus = 'approved';
+  }
 
   const newsPayload: InsertNews = {
     id: newArticleId,
     user_id: userId,
-    username: user.name,
+    username,
     status,
-    approval_status,
+    approval_status: approvalStatus,
     categories,
     tags,
     homepage_excerpt: parsedContent.homepage_excerpt,
@@ -58,36 +98,51 @@ export default defineEventHandler(async (event: H3Event) => {
     images: parsedContent.images,
     videos: parsedContent.videos,
     tiptap_json_for_editing: tiptap_json_for_editing as any,
-    created_at: new Date(),
-    updated_at: new Date(),
   };
 
   const approvalPayload: InsertApproval = {
     news_id: newArticleId,
     acted_by: userId,
-    action,
+    action: userRole === 'super_admin' ? 'published_direct' : 'sent_for_review',
     comment:
-      userRole === 'super_admin' ? 'Published directly' : 'Sent for review',
-    created_at: new Date(),
+      userRole === 'super_admin'
+        ? 'Published directly by Super Admin.'
+        : 'Article sent for review.',
   };
 
   try {
     await db.transaction(async (tx) => {
       await tx.insert(news).values(newsPayload);
       await tx.insert(approvals).values(approvalPayload);
+
+      // Notify Super Admin if reporter/admin submits
+      if (userRole !== 'super_admin') {
+        const superAdmins = await tx
+          .select()
+          .from(users)
+          .where(eq(users.role, 'super_admin'));
+        const notificationsPayload = superAdmins.map((admin) => ({
+          recipient_user_id: admin.id,
+          news_id: newArticleId,
+          message: `${username} নতুন নিউজ সাবমিট করেছে।`,
+          read: false,
+          created_at: new Date(),
+        }));
+        await tx.insert(notifications).values(notificationsPayload);
+      }
     });
 
     return {
-      message: 'News created successfully',
+      message: 'News submitted successfully.',
       articleId: newArticleId,
       status,
-      approval_status,
+      approvalStatus,
     };
   } catch (err) {
-    console.error(err);
+    console.error('Database Error:', err);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to create article',
+      statusMessage: 'Failed to save article',
     });
   }
 });

@@ -1,63 +1,49 @@
-// server/api/admin/approval/index.get.ts
+// server/api/admin/approval/list.get.ts
 
-import { desc, eq } from 'drizzle-orm';
-import { H3Event, createError, getQuery } from 'h3';
+import { desc } from 'drizzle-orm';
+import { H3Event, createError } from 'h3';
 import { db } from '~~/server/db/db';
 import { news } from '~~/server/db/schema';
 import { ensureSuperAdmin } from '~~/server/utils/auth';
 
-/**
- * Fetches news articles based on their approval_status for the Super Admin panel.
- * Query Parameter: status (pending, approved, rejected, published)
- */
 export default defineEventHandler(async (event: H3Event) => {
-  // ⚠️ CRITICAL: Ensure only Super Admins can access the approval panel lists
   ensureSuperAdmin(event);
 
   try {
-    const query = getQuery(event);
-    const requestedStatus = query.status as string;
-
-    if (
-      !['pending', 'approved', 'rejected', 'published'].includes(
-        requestedStatus
-      )
-    ) {
-      throw createError({
-        statusCode: 400,
-        statusMessage:
-          'Invalid status requested. Must be pending, approved, rejected, or published.',
-      });
-    }
-
-    let condition;
-
-    // 'published' status is filtered by the main 'status' field.
-    if (requestedStatus === 'published') {
-      condition = eq(news.status, 'published');
-    } else {
-      // Filter by the approval workflow status for pending, approved, or rejected
-      condition = eq(news.approval_status, requestedStatus);
-    }
-
-    // 💡 The .select() without arguments fetches ALL columns, including tiptap_json_for_editing.
-    const newsList = await db
-      .select()
+    const allNews = await db
+      .select({
+        id: news.id,
+        tiptap_json_for_editing: news.tiptap_json_for_editing,
+        username: news.username,
+        user_id: news.user_id,
+        categories: news.categories,
+        tags: news.tags,
+        status: news.status,
+        approval_status: news.approval_status,
+        created_at: news.created_at,
+      })
       .from(news)
-      .where(condition)
       .orderBy(desc(news.created_at));
+
+    const reviewing = allNews.filter((n) => n.approval_status === 'reviewing');
+    const pending = allNews.filter((n) => n.approval_status === 'pending');
+    const approved = allNews.filter((n) => n.approval_status === 'approved');
+    const rejected = allNews.filter((n) => n.approval_status === 'rejected');
 
     return {
       success: true,
-      data: newsList,
+      data: {
+        reviewing,
+        pending,
+        approved,
+        rejected,
+      },
     };
-  } catch (error: any) {
-    console.error('Error fetching approval news list:', error);
-    // Pass through H3 errors or return generic 500
-    if (error.statusMessage) throw error;
+  } catch (err) {
+    console.error(err);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to fetch news list for approval panel.',
+      statusMessage: 'Failed to fetch approval list',
     });
   }
 });

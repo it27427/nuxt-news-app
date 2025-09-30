@@ -1,72 +1,114 @@
 // server/api/admin/news/index.get.ts
-
-import { desc, sql } from 'drizzle-orm';
-import { H3Event, getQuery } from 'h3';
+import { desc, eq, sql } from 'drizzle-orm';
+import { H3Event, createError, getQuery } from 'h3';
 import { db } from '~~/server/db/db';
-import { SelectNews } from '~~/server/db/models';
 import { news } from '~~/server/db/schema';
 
-// --- API Handler ---
+interface AuthUser {
+  id: string;
+  role: 'reporter' | 'admin' | 'super_admin';
+}
+
 export default defineEventHandler(async (event: H3Event) => {
-  // 1. Get query parameters
   const query = getQuery(event);
   const limit = parseInt(query.limit as string) || 20;
   const offset = parseInt(query.offset as string) || 0;
 
-  // 2. Authentication Check
-  if (!event.context.user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized: Authentication data is missing.',
-    });
-  }
+  const authUser = event.context.user as AuthUser | undefined;
+  if (!authUser)
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
 
   try {
-    // 3. Fetch News List
-    const allNews: SelectNews[] = await db
-      .select({
-        id: news.id,
-        user_id: news.user_id,
-        username: news.username,
-        status: news.status,
-        approval_status: news.approval_status,
-        categories: news.categories,
-        tags: news.tags,
-        homepage_excerpt: news.homepage_excerpt,
-        full_content: news.full_content,
+    // --- Role-based filtering: Super Admin sees all, others see only their news ---
+    let allNews;
+    let totalCountResult;
 
-        // Images & Videos
-        images: news.images,
-        videos: news.videos,
+    if (authUser.role === 'super_admin') {
+      allNews = await db
+        .select({
+          id: news.id,
+          user_id: news.user_id,
+          username: news.username,
+          status: news.status,
+          approval_status: news.approval_status,
+          categories: news.categories,
+          tags: news.tags,
+          tiptap_json_for_editing: news.tiptap_json_for_editing,
+          created_at: news.created_at,
+          updated_at: news.updated_at,
+        })
+        .from(news)
+        .orderBy(desc(news.created_at))
+        .limit(limit)
+        .offset(offset);
 
-        // Tiptap JSON
-        tiptap_json_for_editing: news.tiptap_json_for_editing,
+      totalCountResult = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(news);
+    } else {
+      allNews = await db
+        .select({
+          id: news.id,
+          user_id: news.user_id,
+          username: news.username,
+          status: news.status,
+          approval_status: news.approval_status,
+          categories: news.categories,
+          tags: news.tags,
+          tiptap_json_for_editing: news.tiptap_json_for_editing,
+          created_at: news.created_at,
+          updated_at: news.updated_at,
+        })
+        .from(news)
+        .where(eq(news.user_id, authUser.id))
+        .orderBy(desc(news.created_at))
+        .limit(limit)
+        .offset(offset);
 
-        created_at: news.created_at,
-        updated_at: news.updated_at,
-      })
-      .from(news)
-      .orderBy(desc(news.created_at))
-      .limit(limit)
-      .offset(offset);
+      totalCountResult = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(news)
+        .where(eq(news.user_id, authUser.id));
+    }
 
-    // 4. Fetch Total Count
-    const totalCountResult = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(news);
     const totalCount = totalCountResult[0]?.count || 0;
 
-    // 5. Success Response
-    return {
-      message: 'News list fetched successfully.',
-      data: allNews,
-      totalCount: totalCount,
-    };
-  } catch (error) {
-    console.error('Database Fetch Error:', error);
+    // --- Role-based structure for frontend ---
+    if (authUser.role === 'super_admin') {
+      return {
+        message: 'News fetched for Super Admin',
+        data: allNews.map((n) => ({
+          ...n,
+          showEditDelete: true,
+          badge: n.status === 'published' ? 'Published' : n.status,
+        })),
+        totalCount,
+      };
+    } else {
+      const reviewing = allNews
+        .filter((n) => n.approval_status === 'reviewing')
+        .map((n) => ({ ...n, showEditDelete: true }));
+      const approved = allNews
+        .filter((n) => n.approval_status === 'approved')
+        .map((n) => ({ ...n, showEditDelete: true }));
+      const pending = allNews
+        .filter((n) => n.approval_status === 'pending')
+        .map((n) => ({ ...n, showEditDelete: false }));
+      const rejected = allNews
+        .filter((n) => n.approval_status === 'rejected')
+        .map((n) => ({ ...n, showEditDelete: false }));
+
+      return {
+        message: 'News fetched for Reporter/Admin',
+        data: { reviewing, pending, approved, rejected },
+        totalCount,
+      };
+    }
+  } catch (err) {
+    console.error(err);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error: Failed to fetch the news list.',
+      statusMessage: 'Failed to fetch news',
     });
   }
 });
