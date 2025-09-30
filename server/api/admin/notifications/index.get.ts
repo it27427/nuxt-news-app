@@ -1,6 +1,6 @@
 // server/api/admin/notifications/index.get.ts
 
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, inArray } from 'drizzle-orm';
 import { H3Event, createError, getQuery } from 'h3';
 import { db } from '~~/server/db/db';
 import { notifications } from '~~/server/db/schema';
@@ -27,10 +27,21 @@ export default defineEventHandler(async (event: H3Event) => {
   const readFilter = query.read as string | undefined; // 'true' or 'false'
 
   try {
-    const conditions = [eq(notifications.recipient_user_id, userId)];
+    const conditions: any[] = [eq(notifications.recipient_user_id, userId)];
 
     if (readFilter === 'false') {
       conditions.push(eq(notifications.read, false));
+    }
+
+    // Role-based notification filtering
+    if (authUser.role === 'super_admin') {
+      // Super Admin sees only 'general' notifications
+      conditions.push(eq(notifications.type, 'general'));
+    } else {
+      // Admin / Reporter see only status-based notifications
+      conditions.push(
+        inArray(notifications.type, ['pending', 'approved', 'rejected'])
+      );
     }
 
     const results = await db
@@ -41,7 +52,11 @@ export default defineEventHandler(async (event: H3Event) => {
       .offset(offset)
       .orderBy(desc(notifications.created_at));
 
-    return { success: true, data: results };
+    return {
+      success: true,
+      message: 'Notifications fetched successfully',
+      data: results,
+    };
   } catch (err) {
     console.error('Notifications DB error:', err);
     throw createError({

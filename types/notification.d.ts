@@ -5,6 +5,7 @@ export interface Notification {
   recipient_user_id: string;
   news_id: string | null;
   message: string;
+  type: 'general' | 'pending' | 'approved' | 'rejected';
   read: boolean;
   created_at: string;
 }

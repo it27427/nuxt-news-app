@@ -109,6 +109,7 @@ export const notifications = pgTable('notifications', {
     .references(() => users.id, { onDelete: 'cascade' }),
   news_id: uuid('news_id').references(() => news.id, { onDelete: 'set null' }),
   message: varchar('message', { length: 512 }).notNull(),
+  type: varchar('type', { length: 50 }).notNull().default('general'),
   read: boolean('read').notNull().default(false),
   created_at: timestamp('created_at').defaultNow().notNull(),
 });
