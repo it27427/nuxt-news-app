@@ -9,7 +9,7 @@
           class="h-8 w-48 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
         ></div>
       </template>
-      <template v-else>সংরক্ষিত সংবাদ তালিকা</template>
+      <template v-else>{{ title }}</template>
     </h2>
 
     <!-- Table -->
@@ -110,6 +110,8 @@
   import { useNewsStore } from '~~/store/news.store';
 
   definePageMeta({ layout: 'admin' });
+
+  const title = ref('সংরক্ষিত সংবাদ তালিকা');
 
   const newsStore = useNewsStore();
   const newsList = ref<any[]>([]);

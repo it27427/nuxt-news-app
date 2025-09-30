@@ -28,6 +28,7 @@ export interface Draft {
   tags: string[];
 
   title: string;
+  content: string;
   subtitle: string | null;
 
   homepage_excerpt: TiptapNode[];

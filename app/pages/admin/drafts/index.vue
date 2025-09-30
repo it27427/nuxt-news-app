@@ -9,7 +9,7 @@
           class="h-8 w-48 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
         ></div>
       </template>
-      <template v-else>সংরক্ষিত সংবাদ তালিকা</template>
+      <template v-else>{{ title }}</template>
     </h2>
 
     <!-- Table -->
@@ -22,7 +22,7 @@
             #
           </th>
           <th class="px-4 py-2 border border-gray-300 dark:border-slate-700">
-            শিরোনাম
+            শিরোনাম ও কনটেন্ট
           </th>
           <th class="px-4 py-2 border border-gray-300 dark:border-slate-700">
             লেখক
@@ -48,7 +48,10 @@
           </td>
           <td class="px-4 py-3 border border-gray-300 dark:border-slate-700">
             <div
-              class="h-6 w-24 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
+              class="h-6 w-40 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
+            ></div>
+            <div
+              class="h-6 w-64 mt-2 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
             ></div>
           </td>
           <td class="px-4 py-3 border border-gray-300 dark:border-slate-700">
@@ -91,9 +94,18 @@
           <td class="px-4 py-2 border border-gray-300 dark:border-slate-700">
             {{ index + 1 }}
           </td>
-          <td class="px-4 py-2 border border-gray-300 dark:border-slate-700">
-            {{ draft.title }}
+
+          <!-- Title + Content Preview -->
+          <td
+            class="px-4 py-2 border border-gray-300 dark:border-slate-700 text-left"
+          >
+            <div class="font-bold mb-1">{{ draft.title }}</div>
+            <div
+              class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 prose prose-sm dark:prose-invert max-w-none"
+              v-html="draft.content"
+            ></div>
           </td>
+
           <td class="px-4 py-2 border border-gray-300 dark:border-slate-700">
             {{ draft.author?.name || draft.user_id || 'Unknown' }}
           </td>
@@ -179,6 +191,8 @@
   import { useDraftsStore } from '~~/store/drafts.store';
 
   definePageMeta({ layout: 'admin' });
+
+  const title = ref('সংরক্ষিত সংবাদ তালিকা');
 
   const draftsStore = useDraftsStore();
   const router = useRouter();
