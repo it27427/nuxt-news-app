@@ -8,14 +8,12 @@ export interface TiptapNode {
   marks?: Array<{ type: string; attrs?: Record<string, any> }>;
 }
 
-// Custom Image options for Tiptap extension
 export interface CustomImageOptions {
   src: string;
   caption?: string | null;
   source?: string | null;
 }
 
-// Custom Youtube options for Tiptap extension
 export interface CustomYoutubeOptions {
   src: string;
   caption?: string | null;
@@ -23,10 +21,9 @@ export interface CustomYoutubeOptions {
   videoLength?: string | null;
 }
 
-// Define the structure of the extracted output data
 export interface ParsedContent {
   title: string;
-  subtitle: string | null; // homepage_excerpt and full_content are now arrays of Tiptap Nodes
+  subtitle: string | null;
   homepage_excerpt: TiptapNode[];
   full_content: TiptapNode[];
   images: Array<{ img_src: string; caption: string; credit: string }>;
