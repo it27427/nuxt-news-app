@@ -1,0 +1,9 @@
+// app/plugins/tooltip.client.ts
+
+import { defineNuxtPlugin } from '#app';
+import FloatingVue from 'floating-vue';
+import 'floating-vue/dist/style.css';
+
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.use(FloatingVue);
+});

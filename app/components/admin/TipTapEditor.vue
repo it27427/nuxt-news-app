@@ -57,30 +57,35 @@
 
       <div class="toolbar-group">
         <button
+          v-tooltip="'বোল্ড'"
           :class="{ 'is-active': editor.isActive('bold') }"
           @click="editor?.chain().focus().toggleBold().run()"
         >
           <Icon icon="ic:round-format-bold" />
         </button>
         <button
+          v-tooltip="'ইটালিক'"
           :class="{ 'is-active': editor.isActive('italic') }"
           @click="editor?.chain().focus().toggleItalic().run()"
         >
           <Icon icon="ic:round-format-italic" />
         </button>
         <button
+          v-tooltip="'আন্ডারলাইন'"
           :class="{ 'is-active': editor.isActive('underline') }"
           @click="editor?.chain().focus().toggleUnderline().run()"
         >
           <Icon icon="ic:round-format-underlined" />
         </button>
         <button
+          v-tooltip="'স্ট্রাইক'"
           :class="{ 'is-active': editor.isActive('strike') }"
           @click="editor?.chain().focus().toggleStrike().run()"
         >
           <Icon icon="ic:round-format-strikethrough" />
         </button>
         <button
+          v-tooltip="'হাইলাইট'"
           :class="{ 'is-active': editor.isActive('highlight') }"
           @click="editor?.chain().focus().toggleHighlight().run()"
         >
@@ -90,18 +95,21 @@
 
       <div class="toolbar-group">
         <button
+          v-tooltip="'বুলেট লিস্ট'"
           :class="{ 'is-active': editor.isActive('bulletList') }"
           @click="editor?.chain().focus().toggleBulletList().run()"
         >
           <Icon icon="ic:round-list" />
         </button>
         <button
+          v-tooltip="'অর্ডার্ড লিস্ট'"
           :class="{ 'is-active': editor.isActive('orderedList') }"
           @click="editor?.chain().focus().toggleOrderedList().run()"
         >
           <Icon icon="ic:round-format-list-numbered" />
         </button>
         <button
+          v-tooltip="'টাস্ক লিস্ট'"
           :class="{ 'is-active': editor.isActive('taskList') }"
           @click="editor?.chain().focus().toggleTaskList().run()"
         >
@@ -110,13 +118,16 @@
       </div>
 
       <div class="toolbar-group">
-        <button @click="openImageFileInput">
+        <button @click="openImageFileInput" v-tooltip="'ইমেজ আপলোড'">
           <Icon icon="ic:round-image" />
         </button>
-        <button @click="addYoutubeVideo">
+
+        <button @click="addYoutubeVideo" v-tooltip="'ইউটিউব ভিডিও আপলোড'">
           <Icon icon="ic:round-ondemand-video" />
         </button>
+
         <button
+          v-tooltip="'লিংক সেট করুন'"
           :class="{ 'is-active': editor.isActive('link') }"
           @click="setLink"
         >
@@ -125,10 +136,17 @@
       </div>
 
       <div class="toolbar-group">
-        <button @click="editor?.chain().focus().undo().run()">
+        <button
+          @click="editor?.chain().focus().undo().run()"
+          v-tooltip="'পূর্বাবস্থায় ফিরে যান'"
+        >
           <Icon icon="ic:round-undo" />
         </button>
-        <button @click="editor?.chain().focus().redo().run()">
+
+        <button
+          @click="editor?.chain().focus().redo().run()"
+          v-tooltip="'পুনরায় ফিরে যান'"
+        >
           <Icon icon="ic:round-redo" />
         </button>
       </div>
@@ -242,6 +260,7 @@
 
 <script lang="ts" setup>
   import { Icon } from '@iconify/vue';
+  import Blockquote from '@tiptap/extension-blockquote';
   import { BulletList } from '@tiptap/extension-bullet-list';
   import { CharacterCount } from '@tiptap/extension-character-count';
   import { FontFamily } from '@tiptap/extension-font-family';
@@ -327,7 +346,15 @@
 
   const editor: Ref<Editor | undefined> = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: false,
+        link: false,
+        paragraph: false,
+        bulletList: false,
+        orderedList: false,
+        taskList: false,
+        taskItem: false,
+      }),
       Heading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
       Link.configure({ openOnClick: false }),
       Paragraph,
@@ -337,6 +364,7 @@
       FontFamily.configure({ types: ['textStyle'] }),
       Highlight,
       BulletList,
+      Blockquote,
       OrderedList,
       TaskList,
       TaskItem,
