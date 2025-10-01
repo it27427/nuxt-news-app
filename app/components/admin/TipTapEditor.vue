@@ -37,7 +37,7 @@
             "
             :options="fontOptions.map((f) => ({ label: f, value: f }))"
             @update:model-value="setFontFamily"
-            class="w-auto"
+            class="w-50"
           />
 
           <button
@@ -514,7 +514,7 @@
     @apply border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg relative max-h-[40rem] overflow-auto;
   }
   .editor-content-area {
-    @apply min-h-[40rem] max-h-[50rem] p-6 border border-green-500 dark:border-slate-700 focus:outline-none;
+    @apply min-h-[40rem] max-h-[50rem] border border-green-500 dark:border-slate-700 focus:outline-none;
   }
   .tiptap,
   .ProseMirror {

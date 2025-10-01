@@ -22,7 +22,7 @@ export const useApprovalStore = defineStore('approvalStore', () => {
           approved: ApprovalNews[];
           rejected: ApprovalNews[];
         };
-      }>('/api/admin/approval/list');
+      }>('/api/admin/approval/');
 
       approvalList.value = [
         ...res.data.data.reviewing,

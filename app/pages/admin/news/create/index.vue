@@ -55,6 +55,7 @@
   import type { JSONContent } from '@tiptap/vue-3';
   import { computed, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useAuthStore } from '~~/store/auth.store';
   import { useCategoriesStore } from '~~/store/categories.store';
   import { useDraftsStore } from '~~/store/drafts.store';
   import { useNewsStore } from '~~/store/news.store';
@@ -63,6 +64,7 @@
 
   const toast = useToast();
   const router = useRouter();
+  const authStore = useAuthStore();
 
   interface Option {
     label: string;
@@ -91,8 +93,8 @@
 
   /* --- Submit button label based on role --- */
   const submitButtonLabel = computed(() => {
-    const isSuperAdmin = (window as any).currentUser?.role === 'super_admin';
-    return isSuperAdmin ? 'প্রকাশ করুন' : 'সাবমিট করুন';
+    const role = authStore.user?.role;
+    return role === 'super_admin' ? 'প্রকাশ করুন' : 'সাবমিট করুন';
   });
 
   /* --- Fetch categories and tags on mount --- */
@@ -102,32 +104,8 @@
     if (!tagsStore.tags.length) await tagsStore.fetchTags();
   });
 
-  /* --- Helper: Build type-safe payload --- */
+  /* --- Build payload without validation --- */
   function buildPayloadForNewsOrDraft() {
-    const nodes = tiptapContent.value.content ?? [];
-    const firstNode = nodes[0] ?? null;
-
-    let title: string | null = null;
-    if (
-      firstNode?.type === 'heading' &&
-      firstNode.content?.[0]?.type === 'text'
-    ) {
-      title = firstNode.content[0].text?.trim() || null;
-    }
-
-    if (!title)
-      throw new Error('অনুগ্রহ করে এডিটরের শুরুতে সংবাদটির শিরোনাম লিখুন।');
-    if (!selectedNewsType.value.length)
-      throw new Error('দয়া করে অন্তত একটি ক্যাটেগরি নির্বাচন করুন।');
-
-    const isOnlyTitle = nodes.length === 1 && nodes[0]?.type === 'heading';
-    const isEmptyPara =
-      nodes.length === 1 &&
-      nodes[0]?.type === 'paragraph' &&
-      !nodes[0]?.content;
-    if (isOnlyTitle || isEmptyPara)
-      throw new Error('সংবাদটির বিষয়বস্তু খালি থাকতে পারবে না।');
-
     const tiptapNode: TiptapNode = {
       type: tiptapContent.value.type || 'doc',
       content: tiptapContent.value.content as TiptapNode[] | undefined,
@@ -159,13 +137,13 @@
   async function publishContent() {
     try {
       const payload = buildPayloadForNewsOrDraft();
-      const isSuperAdmin = (window as any).currentUser?.role === 'super_admin';
+      const role = authStore.user?.role;
 
-      if (isSuperAdmin) {
-        await newsStore.createNews(payload);
+      await newsStore.createNews(payload);
+
+      if (role === 'super_admin') {
         toast.success('সংবাদ সফলভাবে প্রকাশ করা হয়েছে!');
       } else {
-        await newsStore.createNews(payload);
         toast.success('সংবাদ সফলভাবে পর্যালোচনায় হয়েছে!');
       }
 

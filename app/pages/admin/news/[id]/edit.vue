@@ -41,6 +41,8 @@
 </template>
 
 <script lang="ts" setup>
+  definePageMeta({ layout: 'admin' });
+
   import type { JSONContent } from '@tiptap/vue-3';
   import { computed, onMounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
@@ -54,8 +56,6 @@
     label: string;
     value: string;
   }
-
-  definePageMeta({ layout: 'admin' });
 
   const title = ref('সংবাদ আপডেট করুন');
   const toast = useToast();
@@ -92,7 +92,7 @@
   // --- Fetch Single News ---
   async function fetchNews(id: string) {
     try {
-      await newsStore.fetchNewsList(); // make sure newsList is loaded
+      await newsStore.fetchNewsList();
       const news = newsStore.newsList.find((n) => n.id === id);
       if (!news) return;
 
@@ -114,36 +114,11 @@
     }
   }
 
-  // --- Build Payload ---
+  // --- Build Payload (no validation) ---
   function buildPayload() {
-    const nodes = tiptapContent.value.content ?? [];
-    const firstNode = nodes[0] ?? null;
-
-    let titleText: string | null = null;
-    if (
-      firstNode?.type === 'heading' &&
-      firstNode.content?.[0]?.type === 'text'
-    ) {
-      titleText = firstNode.content[0].text?.trim() || null;
-    }
-
-    if (!titleText)
-      throw new Error('অনুগ্রহ করে এডিটরের শুরুতে সংবাদটির শিরোনাম লিখুন।');
-    if (!selectedNewsType.value.length)
-      throw new Error('দয়া করে অন্তত একটি ক্যাটেগরি নির্বাচন করুন।');
-
-    const isOnlyTitle = nodes.length === 1 && nodes[0]?.type === 'heading';
-    const isEmptyPara =
-      nodes.length === 1 &&
-      nodes[0]?.type === 'paragraph' &&
-      !nodes[0]?.content;
-    if (isOnlyTitle || isEmptyPara)
-      throw new Error('News content cannot be empty.');
-
-    // --- Cast tiptap_content to TiptapNode ---
     const tiptapPayload: TiptapNode = {
       type: tiptapContent.value.type || 'doc',
-      content: nodes as TiptapNode[],
+      content: tiptapContent.value.content as TiptapNode[] | undefined,
       attrs: tiptapContent.value.attrs,
     };
 

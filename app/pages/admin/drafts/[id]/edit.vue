@@ -47,6 +47,7 @@
 
   import { computed, onMounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { useAuthStore } from '~~/store/auth.store';
   import { useCategoriesStore } from '~~/store/categories.store';
   import { useDraftsStore } from '~~/store/drafts.store';
   import { useNewsStore } from '~~/store/news.store';
@@ -57,6 +58,7 @@
   const newsStore = useNewsStore();
   const categoriesStore = useCategoriesStore();
   const tagsStore = useTagsStore();
+  const authStore = useAuthStore();
   const router = useRouter();
   const route = useRoute();
 
@@ -74,10 +76,9 @@
     tagsStore.tags.map((t) => ({ label: t.name, value: t.id }))
   );
 
+  // Use auth store for role instead of window.currentUser
   const submitButtonLabel = computed(() =>
-    (window as any).currentUser?.role === 'super_admin'
-      ? 'প্রকাশ করুন'
-      : 'সাবমিট করুন'
+    authStore.user?.role === 'super_admin' ? 'প্রকাশ করুন' : 'সাবমিট করুন'
   );
 
   // --- Load draft ---
@@ -95,8 +96,7 @@
       type: 'doc',
       content: [],
     };
-    if (!node.type) node.type = 'doc';
-    tiptapContent.value = node as TiptapNode;
+    tiptapContent.value = { ...node, type: node.type || 'doc' } as TiptapNode;
 
     selectedNewsType.value = draft.categories.map((c) => ({
       label: c,
@@ -109,10 +109,7 @@
   async function saveDraft() {
     try {
       await draftsStore.updateDraft(draftId, {
-        tiptap_json_for_editing: {
-          ...tiptapContent.value,
-          type: tiptapContent.value.type || 'doc',
-        },
+        tiptap_json_for_editing: tiptapContent.value,
         categories: selectedNewsType.value.map((c) => c.value),
         tags: selectedNewsTag.value.map((t) => t.value),
       });
@@ -126,10 +123,7 @@
   async function publishContent() {
     try {
       const payload = {
-        tiptap_json_for_editing: {
-          ...tiptapContent.value,
-          type: tiptapContent.value.type || 'doc',
-        },
+        tiptap_json_for_editing: tiptapContent.value,
         categories: selectedNewsType.value.map((c) => c.value),
         tags: selectedNewsTag.value.map((t) => t.value),
       };
