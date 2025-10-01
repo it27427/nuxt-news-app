@@ -390,9 +390,8 @@
     type: 'doc',
     content: [
       {
-        type: 'heading',
-        attrs: { level: 1 },
-        content: [{ type: 'text', text: '\u200B' }],
+        type: 'paragraph',
+        content: [{ type: 'text', text: '' }],
       },
     ],
   };
@@ -417,7 +416,12 @@
       TaskItem,
       Highlight,
       Placeholder.configure({
-        placeholder: 'সংবাদ লিখা শুরু করুন...',
+        placeholder: ({ node }) => {
+          if (node.type.name === 'heading') {
+            return 'সংবাদ লিখা শুরু করুন...';
+          }
+          return 'Write something...';
+        },
       }),
       CharacterCount.configure({ limit: MAX_CHARACTERS }),
     ],
@@ -426,9 +430,6 @@
     onUpdate: ({ editor }) => {
       emit('update:modelValue', editor.getJSON());
       draftsStore.updateCurrentDraftContent(editor.getJSON());
-    },
-    onCreate: ({ editor }) => {
-      editor.chain().focus().setHeading({ level: 1 }).run();
     },
   });
 
@@ -516,10 +517,6 @@
   .editor-content-area {
     @apply min-h-[40rem] max-h-[50rem] border border-green-500 dark:border-slate-700 focus:outline-none;
   }
-  .tiptap,
-  .ProseMirror {
-    @apply min-h-[40rem] max-h-[50rem] p-6 border border-green-500 dark:border-slate-700 focus:outline-none;
-  }
   .toolbar {
     @apply sticky top-0 z-10 flex flex-wrap gap-2 p-2 border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md;
   }
@@ -552,5 +549,18 @@
   }
   .char-count {
     @apply p-3 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700;
+  }
+
+  .tiptap,
+  .ProseMirror {
+    @apply min-h-[40rem] max-h-[50rem] p-6 border border-green-500 dark:border-slate-700 focus:outline-none;
+  }
+
+  .tiptap .is-empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    color: #adb5bd;
   }
 </style>

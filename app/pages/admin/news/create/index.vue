@@ -42,7 +42,9 @@
           :disabled="loading"
           class="py-2 px-5 bg-green-500 text-white hover:bg-green-600 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {{ submitButtonLabel }}
+          <client-only>
+            {{ submitButtonLabel }}
+          </client-only>
         </button>
       </div>
     </form>
@@ -94,6 +96,7 @@
   /* --- Submit button label based on role --- */
   const submitButtonLabel = computed(() => {
     const role = authStore.user?.role;
+    if (!role) return 'লোড হচ্ছে...';
     return role === 'super_admin' ? 'প্রকাশ করুন' : 'সাবমিট করুন';
   });
 

@@ -35,7 +35,9 @@
           type="submit"
           class="py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600"
         >
-          {{ submitButtonLabel }}
+          <client-only>
+            {{ submitButtonLabel }}
+          </client-only>
         </button>
       </div>
     </form>
@@ -77,9 +79,11 @@
   );
 
   // Use auth store for role instead of window.currentUser
-  const submitButtonLabel = computed(() =>
-    authStore.user?.role === 'super_admin' ? 'প্রকাশ করুন' : 'সাবমিট করুন'
-  );
+  const submitButtonLabel = computed(() => {
+    const role = authStore.user?.role;
+    if (!role) return 'লোড হচ্ছে...';
+    return role === 'super_admin' ? 'প্রকাশ করুন' : 'সাবমিট করুন';
+  });
 
   // --- Load draft ---
   onMounted(async () => {
