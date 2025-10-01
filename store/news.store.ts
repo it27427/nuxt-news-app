@@ -4,6 +4,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import type { SelectNews } from '~~/server/api/admin/news/[id]/index.get';
+import { useAuthStore } from '~~/store/auth.store';
 import { useCategoriesStore } from '~~/store/categories.store';
 import { useDraftsStore } from '~~/store/drafts.store';
 import { useTagsStore } from '~~/store/tags.store';
@@ -19,6 +20,8 @@ export const useNewsStore = defineStore('newsStore', () => {
   const tagsStore = useTagsStore();
   const draftsStore = useDraftsStore();
 
+  const authStore = useAuthStore();
+
   const categoryOptions = computed(() =>
     categoriesStore.categories.map((c) => ({ label: c.name, value: c.id }))
   );
@@ -27,8 +30,8 @@ export const useNewsStore = defineStore('newsStore', () => {
   );
 
   const getAuthHeader = () => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) throw new Error('No auth token found');
+    const token = authStore.token;
+    if (!token) throw new Error('Unauthorized: No token provided');
     return { Authorization: `Bearer ${token}` };
   };
 

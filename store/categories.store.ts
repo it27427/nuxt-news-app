@@ -1,18 +1,9 @@
 // store/categories.store.ts
 
-import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-// Assuming useAuthStore is available at this path
-import { useAuthStore } from '~~/store/auth.store';
-
-// Interface for Category structure to improve TypeScript safety
-interface Category {
-  id: string;
-  name: string;
-  created_at: string; // Typically returned as string/ISO date
-  updated_at: string;
-}
+import { axiosWithAuth } from '~~/shared/axiosWithAuth';
+import type { Category } from '~~/types/category';
 
 /**
  * Pinia Store for managing Category data and administrative actions.
@@ -20,61 +11,46 @@ interface Category {
 export const useCategoriesStore = defineStore('categoriesStore', () => {
   // State
   const categories = ref<Category[]>([]);
-  const category = ref<Category | null>(null); // Single category state
+  const category = ref<Category | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  // Get authorization headers from the Auth store
-  const authStore = useAuthStore();
-
   /**
-   * Helper function to retrieve authorization headers.
-   * @returns Auth header object.
-   * @throws Error if token is missing.
-   */
-  const getAuthHeaders = () => {
-    const token = authStore.token;
-    if (!token) throw new Error('Unauthorized: No token provided');
-    return { Authorization: `Bearer ${token}` };
-  };
-
-  /**
-   * Fetches all categories from the authenticated public endpoint.
+   * Fetch all categories
    */
   const fetchCategories = async () => {
     loading.value = true;
     error.value = null;
     try {
-      // This API is assumed to be publicly accessible (GET /api/categories)
-      const res = await axios.get('/api/admin/categories', {
-        headers: getAuthHeaders(),
-      });
-      // Assuming the API returns { success: true, data: Category[] }
+      const res = await axiosWithAuth().get<{
+        success: boolean;
+        data: Category[];
+      }>('/api/admin/categories');
       categories.value = res.data.data || [];
     } catch (err: any) {
       error.value =
         err.response?.data?.message ||
         err.message ||
         'Failed to load categories!';
+      throw err;
     } finally {
       loading.value = false;
     }
   };
 
   /**
-   * Fetches a single category by its ID (Admin access: GET /api/admin/categories/:id).
-   * @param id The category ID.
-   * @returns The fetched category object.
+   * Fetch single category by ID
    */
   const fetchCategory = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.get(`/api/admin/categories/${id}`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await axiosWithAuth().get<{
+        success: boolean;
+        category: Category;
+      }>(`/api/admin/categories/${id}`);
       category.value = res.data.category || null;
-      return res.data.category as Category;
+      return res.data.category;
     } catch (err: any) {
       error.value =
         err.response?.data?.message ||
@@ -87,27 +63,23 @@ export const useCategoriesStore = defineStore('categoriesStore', () => {
   };
 
   /**
-   * Creates a new category (Super Admin access: POST /api/admin/categories).
-   * @param payload The category data ({ name: string }).
-   * @returns The newly created category object.
+   * Create a new category
    */
   const createCategory = async (payload: { name: string }) => {
     loading.value = true;
     error.value = null;
     try {
-      // UPDATED: Using /api/admin/categories for consistent admin routing
-      const res = await axios.post('/api/admin/categories', payload, {
-        headers: getAuthHeaders(),
-      });
-
+      const res = await axiosWithAuth().post<{
+        success: boolean;
+        category: Category;
+        message?: string;
+      }>('/api/admin/categories', payload);
       if (res.data?.success) {
-        const newCategory = res.data.category as Category;
-        categories.value.unshift(newCategory);
-        return newCategory;
+        categories.value.unshift(res.data.category);
+        return res.data.category;
       }
       throw new Error(res.data?.message || 'Category creation failed.');
     } catch (err: any) {
-      // Extract validation error for specific field if available, otherwise use general message
       const validationError =
         err.response?.data?.data?.name || err.response?.data?.message;
       error.value =
@@ -119,31 +91,25 @@ export const useCategoriesStore = defineStore('categoriesStore', () => {
   };
 
   /**
-   * Updates an existing category (Super Admin access: PUT /api/admin/categories/:id).
-   * @param id The category ID.
-   * @param payload The category data ({ name: string }).
-   * @returns The updated category object.
+   * Update an existing category
    */
   const updateCategory = async (id: string, payload: { name: string }) => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.put(`/api/admin/categories/${id}`, payload, {
-        headers: getAuthHeaders(),
-      });
+      const res = await axiosWithAuth().put<{
+        success: boolean;
+        category: Category;
+      }>(`/api/admin/categories/${id}`, payload);
+      const updatedCategory = res.data.category;
 
-      const updatedCategory = res.data.category as Category;
-
-      // Update in categories array
       const index = categories.value.findIndex((c) => c.id === id);
       if (index !== -1) categories.value[index] = updatedCategory;
 
-      // Update single category if it matches the current view
       if (category.value?.id === id) category.value = updatedCategory;
 
       return updatedCategory;
     } catch (err: any) {
-      // Extract validation error for specific field if available
       const validationError =
         err.response?.data?.data?.name || err.response?.data?.message;
       error.value =
@@ -155,19 +121,14 @@ export const useCategoriesStore = defineStore('categoriesStore', () => {
   };
 
   /**
-   * Deletes a category by its ID (Super Admin access: DELETE /api/admin/categories/:id).
-   * @param id The category ID.
+   * Delete a category
    */
   const deleteCategory = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
-      await axios.delete(`/api/admin/categories/${id}`, {
-        headers: getAuthHeaders(),
-      });
-      // Remove from the list
+      await axiosWithAuth().delete(`/api/admin/categories/${id}`);
       categories.value = categories.value.filter((c) => c.id !== id);
-      // Clear single category state if it was the one deleted
       if (category.value?.id === id) category.value = null;
     } catch (err: any) {
       error.value =
@@ -180,7 +141,6 @@ export const useCategoriesStore = defineStore('categoriesStore', () => {
     }
   };
 
-  // Return all reactive state and actions
   return {
     categories,
     category,

@@ -1,49 +1,48 @@
 // store/tags.store.ts
 
-import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { useAuthStore } from '~~/store/auth.store';
+import { axiosWithAuth } from '~~/shared/axiosWithAuth';
+import type { Tag } from '~~/types/tag';
 
 export const useTagsStore = defineStore('tagsStore', () => {
-  const tags = ref<any[]>([]);
-  const tag = ref<any>(null); // single tag
+  const tags = ref<Tag[]>([]);
+  const tag = ref<Tag | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  const authStore = useAuthStore(); // Get authorization headers
-
-  const getAuthHeaders = () => {
-    const token = authStore.token;
-    if (!token) throw new Error('Unauthorized: No token provided');
-    return { Authorization: `Bearer ${token}` };
-  }; // Fetch all tags
-
+  /**
+   * Fetch all tags
+   */
   const fetchTags = async () => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.get('/api/admin/tags', {
-        headers: getAuthHeaders(),
-      });
+      const res = await axiosWithAuth().get<{ success: boolean; data: Tag[] }>(
+        '/api/admin/tags'
+      );
       tags.value = res.data.data || [];
     } catch (err: any) {
       error.value =
         err.response?.data?.message || err.message || 'Failed to load tags!';
+      throw err;
     } finally {
       loading.value = false;
     }
-  }; // Fetch single tag by id
+  };
 
+  /**
+   * Fetch single tag by ID
+   */
   const fetchTag = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.get(`/api/admin/tags/${id}`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await axiosWithAuth().get<{ success: boolean; tag: Tag }>(
+        `/api/admin/tags/${id}`
+      );
       tag.value = res.data.tag || null;
-      return res.data.tag; // Return the raw object for component use
+      return res.data.tag;
     } catch (err: any) {
       error.value =
         err.response?.data?.message || err.message || 'Failed to load tag!';
@@ -51,20 +50,25 @@ export const useTagsStore = defineStore('tagsStore', () => {
     } finally {
       loading.value = false;
     }
-  }; // Create a tag
+  };
 
+  /**
+   * Create a new tag
+   */
   const createTag = async (payload: { name: string }) => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.post('/api/admin/tags', payload, {
-        headers: getAuthHeaders(),
-      });
-      if (res.data?.success) {
-        // Add the new tag to the beginning of the list
+      const res = await axiosWithAuth().post<{
+        success: boolean;
+        tag: Tag;
+        message?: string;
+      }>('/api/admin/tags', payload);
+      if (res.data.success) {
         tags.value.unshift(res.data.tag);
         return res.data.tag;
       }
+      throw new Error(res.data.message || 'Tag creation failed.');
     } catch (err: any) {
       error.value =
         err.response?.data?.message || err.message || 'Failed to create tag!';
@@ -72,19 +76,28 @@ export const useTagsStore = defineStore('tagsStore', () => {
     } finally {
       loading.value = false;
     }
-  }; // Update a tag
+  };
 
+  /**
+   * Update a tag
+   */
   const updateTag = async (id: string, payload: { name: string }) => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.put(`/api/admin/tags/${id}`, payload, {
-        headers: getAuthHeaders(),
-      }); // Update in tags array
+      const res = await axiosWithAuth().put<{
+        success: boolean;
+        tag: Tag;
+        message?: string;
+      }>(`/api/admin/tags/${id}`, payload);
+      const updatedTag = res.data.tag;
+
       const index = tags.value.findIndex((t) => t.id === id);
-      if (index !== -1) tags.value[index] = res.data.tag; // Update single tag if it matches
-      if (tag.value?.id === id) tag.value = res.data.tag;
-      return res.data.tag;
+      if (index !== -1) tags.value[index] = updatedTag;
+
+      if (tag.value?.id === id) tag.value = updatedTag;
+
+      return updatedTag;
     } catch (err: any) {
       error.value =
         err.response?.data?.message || err.message || 'Failed to update tag!';
@@ -92,15 +105,16 @@ export const useTagsStore = defineStore('tagsStore', () => {
     } finally {
       loading.value = false;
     }
-  }; // Delete a tag
+  };
 
+  /**
+   * Delete a tag
+   */
   const deleteTag = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
-      await axios.delete(`/api/admin/tags/${id}`, {
-        headers: getAuthHeaders(),
-      });
+      await axiosWithAuth().delete(`/api/admin/tags/${id}`);
       tags.value = tags.value.filter((t) => t.id !== id);
       if (tag.value?.id === id) tag.value = null;
     } catch (err: any) {

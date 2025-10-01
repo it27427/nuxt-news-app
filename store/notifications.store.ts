@@ -1,9 +1,8 @@
 // store/notifications.store.ts
 
-import { useCookie } from '#imports';
-import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { axiosWithAuth } from '~~/shared/axiosWithAuth';
 import type { Notification } from '~~/types/notification';
 
 export const useNotificationsStore = defineStore('notificationsStore', () => {
@@ -11,26 +10,11 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  // --- Axios instance with auth token ---
-  const getAxios = () => {
-    const token =
-      useCookie('auth_token')?.value || localStorage.getItem('auth_token');
-    return axios.create({
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-  };
-
-  /**
-   * Fetch notifications
-   * @param limit number of notifications
-   * @param offset pagination offset
-   * @param read filter by read status: true, false, or undefined
-   */
   const fetchNotifications = async (limit = 20, offset = 0, read?: boolean) => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await getAxios().get<{
+      const res = await axiosWithAuth().get<{
         success: boolean;
         message: string;
         data: Notification[];
@@ -44,7 +28,6 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
       notifications.value = res.data.data || [];
       return notifications.value;
     } catch (err: any) {
-      console.error('Failed to fetch notifications:', err);
       error.value =
         err?.response?.data?.statusMessage || 'Failed to fetch notifications.';
       throw err;
@@ -53,22 +36,16 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     }
   };
 
-  /**
-   * Mark a notification as read
-   */
   const markAsRead = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
-      await getAxios().patch(`/api/admin/notifications/${id}`, { read: true });
-
-      // TS-safe update
+      await axiosWithAuth().patch(`/api/admin/notifications/${id}`, {
+        read: true,
+      });
       const idx = notifications.value.findIndex((n) => n.id === id);
-      if (idx !== -1) {
-        notifications.value[idx]!.read = true;
-      }
+      if (idx !== -1) notifications.value[idx]!.read = true;
     } catch (err: any) {
-      console.error('Failed to mark notification as read:', err);
       error.value =
         err?.response?.data?.statusMessage ||
         'Failed to mark notification as read.';
@@ -78,17 +55,13 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     }
   };
 
-  /**
-   * Delete a notification
-   */
   const deleteNotification = async (id: string) => {
     loading.value = true;
     error.value = null;
     try {
-      await getAxios().delete(`/api/admin/notifications/${id}`);
+      await axiosWithAuth().delete(`/api/admin/notifications/${id}`);
       notifications.value = notifications.value.filter((n) => n.id !== id);
     } catch (err: any) {
-      console.error('Failed to delete notification:', err);
       error.value =
         err?.response?.data?.statusMessage || 'Failed to delete notification.';
       throw err;

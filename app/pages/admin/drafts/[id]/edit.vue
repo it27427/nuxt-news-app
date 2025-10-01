@@ -18,9 +18,9 @@
       </div>
 
       <!-- Tiptap Editor -->
-      <ClientOnly>
+      <client-only>
         <TipTapEditor v-model="tiptapContent" />
-      </ClientOnly>
+      </client-only>
 
       <!-- Buttons -->
       <div class="flex justify-end gap-3">

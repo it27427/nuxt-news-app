@@ -22,9 +22,9 @@
       </div>
 
       <!-- Tiptap Editor -->
-      <ClientOnly>
+      <client-only>
         <TipTapEditor v-model="tiptapContent" />
-      </ClientOnly>
+      </client-only>
 
       <!-- Buttons -->
       <div class="flex items-center justify-end gap-3">

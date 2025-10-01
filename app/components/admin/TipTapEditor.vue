@@ -1,331 +1,333 @@
 <template>
-  <div class="editor-container scrollbar-none">
-    <!-- Bubble Menu -->
-    <BubbleMenu
-      v-if="editor"
-      :editor="editor"
-      :tippy-options="{ duration: 100 }"
-      class="bubble-menu-style"
-    >
-      <button
-        :class="{ 'is-active': editor.isActive('bold') }"
-        @click="editor.chain().focus().toggleBold().run()"
+  <client-only>
+    <div class="editor-container scrollbar-none">
+      <!-- Bubble Menu -->
+      <BubbleMenu
+        v-if="editor"
+        :editor="editor"
+        :tippy-options="{ duration: 100 }"
+        class="bubble-menu-style"
       >
-        <Icon icon="ic:round-format-bold" />
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('italic') }"
-        @click="editor.chain().focus().toggleItalic().run()"
-      >
-        <Icon icon="ic:round-format-italic" />
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('link') }"
-        @click="setLink"
-      >
-        <Icon icon="ic:round-link" />
-      </button>
-    </BubbleMenu>
-
-    <!-- Toolbar -->
-    <div v-if="editor" class="toolbar">
-      <div class="toolbar-group">
-        <CustomSelects
-          :model-value="
-            editor?.getAttributes('textStyle').fontFamily || defaultFontFamily
-          "
-          :options="fontOptions.map((f) => ({ label: f, value: f }))"
-          @update:model-value="setFontFamily"
-          class="w-auto"
-        />
-
         <button
-          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-          :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
-        >
-          H1
-        </button>
-
-        <button
-          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-          :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
-        >
-          H2
-        </button>
-
-        <button
-          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-          :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
-        >
-          H3
-        </button>
-
-        <button
-          @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
-          :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
-        >
-          H4
-        </button>
-
-        <button
-          @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
-          :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
-        >
-          H5
-        </button>
-
-        <button
-          @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
-          :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
-        >
-          H6
-        </button>
-
-        <button
-          @click="editor.chain().focus().setParagraph().run()"
-          :class="{ 'is-active': editor.isActive('paragraph') }"
-        >
-          Paragraph
-        </button>
-      </div>
-
-      <div class="toolbar-group">
-        <button
-          v-tooltip="'বোল্ড'"
           :class="{ 'is-active': editor.isActive('bold') }"
           @click="editor.chain().focus().toggleBold().run()"
         >
           <Icon icon="ic:round-format-bold" />
         </button>
-
         <button
-          v-tooltip="'ইটালিক'"
           :class="{ 'is-active': editor.isActive('italic') }"
           @click="editor.chain().focus().toggleItalic().run()"
         >
           <Icon icon="ic:round-format-italic" />
         </button>
-
         <button
-          v-tooltip="'আন্ডারলাইন'"
-          :class="{ 'is-active': editor.isActive('underline') }"
-          @click="editor.chain().focus().toggleUnderline().run()"
-        >
-          <Icon icon="ic:round-format-underlined" />
-        </button>
-
-        <button
-          v-tooltip="'স্ট্রাইক'"
-          :class="{ 'is-active': editor.isActive('strike') }"
-          @click="editor.chain().focus().toggleStrike().run()"
-        >
-          <Icon icon="ic:round-format-strikethrough" />
-        </button>
-
-        <button
-          v-tooltip="'হাইলাইট'"
-          :class="{ 'is-active': editor.isActive('highlight') }"
-          @click="editor.chain().focus().toggleHighlight().run()"
-        >
-          <Icon icon="ic:round-highlight" />
-        </button>
-
-        <button
-          v-tooltip="'ব্লককোট'"
-          :class="{ 'is-active': editor.isActive('blockquote') }"
-          @click="editor.chain().focus().toggleBlockquote().run()"
-        >
-          <Icon icon="ic:round-format-quote" />
-        </button>
-
-        <button
-          v-tooltip="'কোডব্লক'"
-          @click="editor.chain().focus().setCodeBlock().run()"
-          :class="{ 'is-active': editor.isActive('codeblock') }"
-        >
-          <Icon icon="fluent:code-block-48-regular" />
-        </button>
-
-        <button
-          v-tooltip="'হরাইজন্টাল রোলার'"
-          @click="editor.chain().focus().setHorizontalRule().run()"
-          :class="{ 'is-active': editor.isActive('horizontalrule') }"
-        >
-          <Icon icon="codicon:horizontal-rule" />
-        </button>
-      </div>
-
-      <div class="toolbar-group">
-        <button
-          v-tooltip="'বুলেট লিস্ট'"
-          :class="{ 'is-active': editor.isActive('bulletList') }"
-          @click="editor.chain().focus().toggleBulletList().run()"
-        >
-          <Icon icon="ic:round-list" />
-        </button>
-
-        <button
-          v-tooltip="'অর্ডার্ড লিস্ট'"
-          :class="{ 'is-active': editor.isActive('orderedList') }"
-          @click="editor.chain().focus().toggleOrderedList().run()"
-        >
-          <Icon icon="ic:round-format-list-numbered" />
-        </button>
-
-        <button
-          v-tooltip="'টাস্ক লিস্ট'"
-          :class="{ 'is-active': editor.isActive('taskList') }"
-          @click="editor.chain().focus().toggleTaskList().run()"
-        >
-          <Icon icon="ic:round-task" />
-        </button>
-      </div>
-
-      <div class="toolbar-group">
-        <button @click="openImageFileInput" v-tooltip="'ইমেজ আপলোড'">
-          <Icon icon="ic:round-image" />
-        </button>
-
-        <button @click="addYoutubeVideo" v-tooltip="'ইউটিউব ভিডিও আপলোড'">
-          <Icon icon="ic:round-ondemand-video" />
-        </button>
-
-        <button
-          v-tooltip="'লিংক সেট করুন'"
           :class="{ 'is-active': editor.isActive('link') }"
           @click="setLink"
         >
           <Icon icon="ic:round-link" />
         </button>
-      </div>
+      </BubbleMenu>
 
-      <div class="toolbar-group">
-        <button
-          @click="editor.chain().focus().undo().run()"
-          v-tooltip="'পূর্বাবস্থায় ফিরে যান'"
-        >
-          <Icon icon="ic:round-undo" />
-        </button>
+      <!-- Toolbar -->
+      <div v-if="editor" class="toolbar">
+        <div class="toolbar-group">
+          <CustomSelects
+            :model-value="
+              editor?.getAttributes('textStyle').fontFamily || defaultFontFamily
+            "
+            :options="fontOptions.map((f) => ({ label: f, value: f }))"
+            @update:model-value="setFontFamily"
+            class="w-auto"
+          />
 
-        <button
-          @click="editor.chain().focus().redo().run()"
-          v-tooltip="'পুনরায় ফিরে যান'"
-        >
-          <Icon icon="ic:round-redo" />
-        </button>
-      </div>
-    </div>
-
-    <!-- Hidden File Input -->
-    <input
-      ref="fileInputRef"
-      type="file"
-      accept="image/*"
-      class="hidden"
-      @change="handleFileInputChange"
-    />
-
-    <!-- Editor Content -->
-    <EditorContent :editor="editor" class="editor-content-area" />
-
-    <!-- Character Count -->
-    <div v-if="editor" class="char-count">
-      {{ editor.storage.characterCount.characters() }}/{{ MAX_CHARACTERS }}
-      Characters
-    </div>
-
-    <!-- Image Modal -->
-    <VueFinalModal
-      v-model="imageModalVisible"
-      :clickToClose="false"
-      :escToClose="true"
-      class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
-    >
-      <div
-        class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
-      >
-        <h3 class="text-lg font-bold mb-2">Image Details</h3>
-        <input
-          type="text"
-          v-model="imageForm.caption"
-          placeholder="Caption"
-          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
-        />
-        <input
-          type="text"
-          v-model="imageForm.source"
-          placeholder="Source"
-          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
-        />
-        <div class="flex justify-end gap-2">
           <button
-            @click="imageModalVisible = false"
-            class="px-3 py-1 border rounded"
+            @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+            :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
           >
-            Cancel
+            H1
           </button>
+
           <button
-            @click="submitImageModal"
-            class="px-3 py-1 bg-green-600 text-white rounded"
+            @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+            :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
           >
-            Insert
+            H2
+          </button>
+
+          <button
+            @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+            :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+          >
+            H3
+          </button>
+
+          <button
+            @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
+            :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
+          >
+            H4
+          </button>
+
+          <button
+            @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
+            :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
+          >
+            H5
+          </button>
+
+          <button
+            @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
+            :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
+          >
+            H6
+          </button>
+
+          <button
+            @click="editor.chain().focus().setParagraph().run()"
+            :class="{ 'is-active': editor.isActive('paragraph') }"
+          >
+            Paragraph
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <button
+            v-tooltip="'বোল্ড'"
+            :class="{ 'is-active': editor.isActive('bold') }"
+            @click="editor.chain().focus().toggleBold().run()"
+          >
+            <Icon icon="ic:round-format-bold" />
+          </button>
+
+          <button
+            v-tooltip="'ইটালিক'"
+            :class="{ 'is-active': editor.isActive('italic') }"
+            @click="editor.chain().focus().toggleItalic().run()"
+          >
+            <Icon icon="ic:round-format-italic" />
+          </button>
+
+          <button
+            v-tooltip="'আন্ডারলাইন'"
+            :class="{ 'is-active': editor.isActive('underline') }"
+            @click="editor.chain().focus().toggleUnderline().run()"
+          >
+            <Icon icon="ic:round-format-underlined" />
+          </button>
+
+          <button
+            v-tooltip="'স্ট্রাইক'"
+            :class="{ 'is-active': editor.isActive('strike') }"
+            @click="editor.chain().focus().toggleStrike().run()"
+          >
+            <Icon icon="ic:round-format-strikethrough" />
+          </button>
+
+          <button
+            v-tooltip="'হাইলাইট'"
+            :class="{ 'is-active': editor.isActive('highlight') }"
+            @click="editor.chain().focus().toggleHighlight().run()"
+          >
+            <Icon icon="ic:round-highlight" />
+          </button>
+
+          <button
+            v-tooltip="'ব্লককোট'"
+            :class="{ 'is-active': editor.isActive('blockquote') }"
+            @click="editor.chain().focus().toggleBlockquote().run()"
+          >
+            <Icon icon="ic:round-format-quote" />
+          </button>
+
+          <button
+            v-tooltip="'কোডব্লক'"
+            @click="editor.chain().focus().setCodeBlock().run()"
+            :class="{ 'is-active': editor.isActive('codeblock') }"
+          >
+            <Icon icon="fluent:code-block-48-regular" />
+          </button>
+
+          <button
+            v-tooltip="'হরাইজন্টাল রোলার'"
+            @click="editor.chain().focus().setHorizontalRule().run()"
+            :class="{ 'is-active': editor.isActive('horizontalrule') }"
+          >
+            <Icon icon="codicon:horizontal-rule" />
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <button
+            v-tooltip="'বুলেট লিস্ট'"
+            :class="{ 'is-active': editor.isActive('bulletList') }"
+            @click="editor.chain().focus().toggleBulletList().run()"
+          >
+            <Icon icon="ic:round-list" />
+          </button>
+
+          <button
+            v-tooltip="'অর্ডার্ড লিস্ট'"
+            :class="{ 'is-active': editor.isActive('orderedList') }"
+            @click="editor.chain().focus().toggleOrderedList().run()"
+          >
+            <Icon icon="ic:round-format-list-numbered" />
+          </button>
+
+          <button
+            v-tooltip="'টাস্ক লিস্ট'"
+            :class="{ 'is-active': editor.isActive('taskList') }"
+            @click="editor.chain().focus().toggleTaskList().run()"
+          >
+            <Icon icon="ic:round-task" />
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <button @click="openImageFileInput" v-tooltip="'ইমেজ আপলোড'">
+            <Icon icon="ic:round-image" />
+          </button>
+
+          <button @click="addYoutubeVideo" v-tooltip="'ইউটিউব ভিডিও আপলোড'">
+            <Icon icon="ic:round-ondemand-video" />
+          </button>
+
+          <button
+            v-tooltip="'লিংক সেট করুন'"
+            :class="{ 'is-active': editor.isActive('link') }"
+            @click="setLink"
+          >
+            <Icon icon="ic:round-link" />
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <button
+            @click="editor.chain().focus().undo().run()"
+            v-tooltip="'পূর্বাবস্থায় ফিরে যান'"
+          >
+            <Icon icon="ic:round-undo" />
+          </button>
+
+          <button
+            @click="editor.chain().focus().redo().run()"
+            v-tooltip="'পুনরায় ফিরে যান'"
+          >
+            <Icon icon="ic:round-redo" />
           </button>
         </div>
       </div>
-    </VueFinalModal>
 
-    <!-- YouTube Modal -->
-    <VueFinalModal
-      v-model="youtubeModalVisible"
-      :clickToClose="false"
-      :escToClose="true"
-      class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
-    >
-      <div
-        class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
-      >
-        <h3 class="text-lg font-bold mb-2">YouTube Video Details</h3>
-        <input
-          type="text"
-          v-model="youtubeForm.url"
-          placeholder="Video URL"
-          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
-        />
-        <input
-          type="text"
-          v-model="youtubeForm.caption"
-          placeholder="Caption"
-          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
-        />
-        <input
-          type="text"
-          v-model="youtubeForm.source"
-          placeholder="Source"
-          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
-        />
-        <input
-          type="text"
-          v-model="youtubeForm.videoLength"
-          placeholder="Video Length"
-          class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
-        />
-        <div class="flex justify-end gap-2">
-          <button
-            @click="youtubeModalVisible = false"
-            class="px-3 py-1 border rounded"
-          >
-            Cancel
-          </button>
-          <button
-            @click="submitYoutubeModal"
-            class="px-3 py-1 bg-green-600 text-white rounded"
-          >
-            Insert
-          </button>
-        </div>
+      <!-- Hidden File Input -->
+      <input
+        ref="fileInputRef"
+        type="file"
+        accept="image/*"
+        class="hidden"
+        @change="handleFileInputChange"
+      />
+
+      <!-- Editor Content -->
+      <EditorContent :editor="editor" class="editor-content-area" />
+
+      <!-- Character Count -->
+      <div v-if="editor" class="char-count">
+        {{ editor.storage.characterCount.characters() }}/{{ MAX_CHARACTERS }}
+        Characters
       </div>
-    </VueFinalModal>
-  </div>
+
+      <!-- Image Modal -->
+      <VueFinalModal
+        v-model="imageModalVisible"
+        :clickToClose="false"
+        :escToClose="true"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
+      >
+        <div
+          class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
+        >
+          <h3 class="text-lg font-bold mb-2">Image Details</h3>
+          <input
+            type="text"
+            v-model="imageForm.caption"
+            placeholder="Caption"
+            class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
+          />
+          <input
+            type="text"
+            v-model="imageForm.source"
+            placeholder="Source"
+            class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
+          />
+          <div class="flex justify-end gap-2">
+            <button
+              @click="imageModalVisible = false"
+              class="px-3 py-1 border rounded"
+            >
+              Cancel
+            </button>
+            <button
+              @click="submitImageModal"
+              class="px-3 py-1 bg-green-600 text-white rounded"
+            >
+              Insert
+            </button>
+          </div>
+        </div>
+      </VueFinalModal>
+
+      <!-- YouTube Modal -->
+      <VueFinalModal
+        v-model="youtubeModalVisible"
+        :clickToClose="false"
+        :escToClose="true"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
+      >
+        <div
+          class="p-8 bg-white dark:bg-dark-divider rounded-lg shadow-lg max-w-96 text-center"
+        >
+          <h3 class="text-lg font-bold mb-2">YouTube Video Details</h3>
+          <input
+            type="text"
+            v-model="youtubeForm.url"
+            placeholder="Video URL"
+            class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
+          />
+          <input
+            type="text"
+            v-model="youtubeForm.caption"
+            placeholder="Caption"
+            class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
+          />
+          <input
+            type="text"
+            v-model="youtubeForm.source"
+            placeholder="Source"
+            class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
+          />
+          <input
+            type="text"
+            v-model="youtubeForm.videoLength"
+            placeholder="Video Length"
+            class="w-full mb-2 p-1 border border-slate-500 bg-transparent focus:outline-none focus:border-green-500 transition-colors duration-400"
+          />
+          <div class="flex justify-end gap-2">
+            <button
+              @click="youtubeModalVisible = false"
+              class="px-3 py-1 border rounded"
+            >
+              Cancel
+            </button>
+            <button
+              @click="submitYoutubeModal"
+              class="px-3 py-1 bg-green-600 text-white rounded"
+            >
+              Insert
+            </button>
+          </div>
+        </div>
+      </VueFinalModal>
+    </div>
+  </client-only>
 </template>
 
 <script lang="ts" setup>
@@ -335,7 +337,7 @@
   import { Highlight } from '@tiptap/extension-highlight';
   import { Image } from '@tiptap/extension-image';
   import { Link } from '@tiptap/extension-link';
-  import { Placeholder } from '@tiptap/extension-placeholder';
+  import Placeholder from '@tiptap/extension-placeholder';
   import { TaskItem } from '@tiptap/extension-task-item';
   import { TaskList } from '@tiptap/extension-task-list';
   import { TextStyle } from '@tiptap/extension-text-style';
@@ -415,15 +417,8 @@
       TaskItem,
       Highlight,
       Placeholder.configure({
-        placeholder: ({ node, editor }: Parameters<PlaceholderContent>[0]) => {
-          if (editor.isEmpty) return 'সংবাদ লিখা শুরু করুন...';
-          const isH1 = node.type.name === 'heading' && node.attrs.level === 1;
-          const isEmpty =
-            node.content?.size === 0 || node.textContent === '\u200B';
-          if (isH1 && isEmpty) return 'সংবাদ লিখা শুরু করুন...';
-          return '';
-        },
-      } as any),
+        placeholder: 'সংবাদ লিখা শুরু করুন...',
+      }),
       CharacterCount.configure({ limit: MAX_CHARACTERS }),
     ],
     content:
@@ -519,6 +514,10 @@
     @apply border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg relative max-h-[40rem] overflow-auto;
   }
   .editor-content-area {
+    @apply min-h-[40rem] max-h-[50rem] p-6 border border-green-500 dark:border-slate-700 focus:outline-none;
+  }
+  .tiptap,
+  .ProseMirror {
     @apply min-h-[40rem] max-h-[50rem] p-6 border border-green-500 dark:border-slate-700 focus:outline-none;
   }
   .toolbar {
