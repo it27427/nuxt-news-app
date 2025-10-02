@@ -7,21 +7,24 @@ export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore();
 
   if (import.meta.client) {
-    const { isAuthenticated, user } = authStore;
     const isAuthPage = to.path.startsWith('/auth');
     const isProtected = !isAuthPage;
 
-    if (isProtected && !isAuthenticated) {
+    if (isProtected && !authStore.isAuthenticated) {
       return navigateTo('/auth/login');
     }
 
-    if (isAuthPage && isAuthenticated) {
+    if (isAuthPage && authStore.isAuthenticated) {
       return navigateTo('/admin/dashboard');
     }
 
-    // 🔒 Role-based check
     const allowedRoles = routePermissions[to.path];
-    if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+
+    if (
+      allowedRoles &&
+      authStore.user &&
+      !allowedRoles.includes(authStore.user.role)
+    ) {
       return navigateTo('/admin/dashboard');
     }
   }

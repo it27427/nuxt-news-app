@@ -10,6 +10,12 @@ import { useDraftsStore } from '~~/store/drafts.store';
 import { useTagsStore } from '~~/store/tags.store';
 import type { TiptapNode } from '~~/types/newstypes';
 
+interface CreateNewsPayload {
+  categories?: string[];
+  tags?: string[];
+  tiptap_json_for_editing?: TiptapNode;
+}
+
 export const useNewsStore = defineStore('newsStore', () => {
   const newsList = ref<SelectNews[]>([]);
   const singleNews = ref<SelectNews | null>(null);
@@ -55,20 +61,18 @@ export const useNewsStore = defineStore('newsStore', () => {
     }
   };
 
-  const createNews = async (payload: {
-    categories: string[];
-    tags: string[];
-    tiptap_json_for_editing: TiptapNode;
-  }) => {
+  const createNews = async (payload: CreateNewsPayload) => {
     loading.value = true;
     error.value = null;
-
     try {
       const { data } = await axios.post('/api/admin/news', payload, {
         headers: getAuthHeader(),
       });
 
-      // Sync draft
+      if (data?.data) {
+        newsList.value.unshift(data.data);
+      }
+
       if (draftsStore.currentDraft) {
         await draftsStore.updateDraft(draftsStore.currentDraft.id, {
           tiptap_json_for_editing: payload.tiptap_json_for_editing,

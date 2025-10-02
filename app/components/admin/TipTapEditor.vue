@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <div class="editor-container scrollbar-none">
+    <div class="editor-container">
       <!-- Bubble Menu -->
       <BubbleMenu
         v-if="editor"
@@ -37,7 +37,7 @@
             "
             :options="fontOptions.map((f) => ({ label: f, value: f }))"
             @update:model-value="setFontFamily"
-            class="w-50"
+            class="w-52"
           />
 
           <button
@@ -133,7 +133,7 @@
 
           <button
             v-tooltip="'ব্লককোট'"
-            :class="{ 'is-active': editor.isActive('blockquote') }"
+            :class="{ 'is-active': editor.isActive('blockQuote') }"
             @click="editor.chain().focus().toggleBlockquote().run()"
           >
             <Icon icon="ic:round-format-quote" />
@@ -142,7 +142,7 @@
           <button
             v-tooltip="'কোডব্লক'"
             @click="editor.chain().focus().setCodeBlock().run()"
-            :class="{ 'is-active': editor.isActive('codeblock') }"
+            :class="{ 'is-active': editor.isActive('codeBlock') }"
           >
             <Icon icon="fluent:code-block-48-regular" />
           </button>
@@ -150,7 +150,7 @@
           <button
             v-tooltip="'হরাইজন্টাল রোলার'"
             @click="editor.chain().focus().setHorizontalRule().run()"
-            :class="{ 'is-active': editor.isActive('horizontalrule') }"
+            :class="{ 'is-active': editor.isActive('horizontalRule') }"
           >
             <Icon icon="codicon:horizontal-rule" />
           </button>
@@ -227,7 +227,7 @@
       />
 
       <!-- Editor Content -->
-      <EditorContent :editor="editor" class="editor-content-area" />
+      <EditorContent :editor="editor" class="editor-content-area tiptap" />
 
       <!-- Character Count -->
       <div v-if="editor" class="char-count">
@@ -337,29 +337,18 @@
   import { Highlight } from '@tiptap/extension-highlight';
   import { Image } from '@tiptap/extension-image';
   import { Link } from '@tiptap/extension-link';
-  import Placeholder from '@tiptap/extension-placeholder';
+  import { Placeholder } from '@tiptap/extension-placeholder';
   import { TaskItem } from '@tiptap/extension-task-item';
   import { TaskList } from '@tiptap/extension-task-list';
   import { TextStyle } from '@tiptap/extension-text-style';
   import Youtube from '@tiptap/extension-youtube';
   import StarterKit from '@tiptap/starter-kit';
-  import {
-    Editor,
-    EditorContent,
-    useEditor,
-    type JSONContent,
-  } from '@tiptap/vue-3';
+  import { EditorContent, useEditor, type JSONContent } from '@tiptap/vue-3';
   import { BubbleMenu } from '@tiptap/vue-3/menus';
   import { onBeforeUnmount, ref, watch } from 'vue';
   import { VueFinalModal } from 'vue-final-modal';
 
   import { useDraftsStore } from '~~/store/drafts.store';
-
-  type PlaceholderContent = (options: {
-    node: any;
-    editor: Editor;
-    pos: number;
-  }) => string | false | null | undefined;
 
   const MAX_CHARACTERS = 100000;
   const defaultFontFamily = ref('Noto Serif Bengali');
@@ -388,12 +377,7 @@
 
   const initialContent: JSONContent = {
     type: 'doc',
-    content: [
-      {
-        type: 'paragraph',
-        content: [{ type: 'text', text: '' }],
-      },
-    ],
+    content: [],
   };
 
   interface Props {
@@ -407,6 +391,9 @@
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ link: false }),
+      Placeholder.configure({
+        placeholder: 'সংবাদ লিখা শুরু করুন...',
+      }),
       Link.configure({ openOnClick: false }),
       Image,
       Youtube,
@@ -415,18 +402,16 @@
       TaskList,
       TaskItem,
       Highlight,
-      Placeholder.configure({
-        placeholder: ({ node }) => {
-          if (node.type.name === 'heading') {
-            return 'সংবাদ লিখা শুরু করুন...';
-          }
-          return 'Write something...';
-        },
-      }),
       CharacterCount.configure({ limit: MAX_CHARACTERS }),
     ],
     content:
       props.modelValue?.type === 'doc' ? props.modelValue : initialContent,
+    autofocus: true,
+    editorProps: {
+      attributes: {
+        style: `font-family: ${defaultFontFamily.value};`,
+      },
+    },
     onUpdate: ({ editor }) => {
       emit('update:modelValue', editor.getJSON());
       draftsStore.updateCurrentDraftContent(editor.getJSON());
@@ -510,15 +495,15 @@
   onBeforeUnmount(() => editor.value?.destroy());
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   .editor-container {
-    @apply border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg relative max-h-[40rem] overflow-auto;
+    @apply min-h-[40rem] border border-gray-300 dark:border-gray-700 rounded-xl shadow-lg relative overflow-hidden;
   }
   .editor-content-area {
-    @apply min-h-[40rem] max-h-[50rem] border border-green-500 dark:border-slate-700 focus:outline-none;
+    @apply min-h-[40rem] border border-green-500 dark:border-slate-700 focus:outline-none;
   }
   .toolbar {
-    @apply sticky top-0 z-10 flex flex-wrap gap-2 p-2 border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md;
+    @apply flex flex-wrap gap-2 p-2 border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md;
   }
   .toolbar-group {
     @apply flex gap-1 pr-3 border-r border-gray-300 dark:border-gray-700;
@@ -551,16 +536,13 @@
     @apply p-3 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700;
   }
 
-  .tiptap,
   .ProseMirror {
-    @apply min-h-[40rem] max-h-[50rem] p-6 border border-green-500 dark:border-slate-700 focus:outline-none;
+    @apply min-h-[40rem] p-6 border border-green-500 text-dark dark:text-white dark:border-slate-700 outline-none focus:outline-none;
   }
 
-  .tiptap .is-empty::before {
+  .ProseMirror p.is-editor-empty::before {
     content: attr(data-placeholder);
-    float: left;
-    height: 0;
-    pointer-events: none;
     color: #adb5bd;
+    pointer-events: none;
   }
 </style>

@@ -1,5 +1,10 @@
 <template>
-  <div :class="['relative w-64', className]" ref="dropdownRef">
+  <div
+    class="relative"
+    v-bind="otherAttrs"
+    :class="finalClass"
+    ref="dropdownRef"
+  >
     <!-- Selected Value -->
     <button
       @click="toggleDropdown"
@@ -53,6 +58,23 @@
     options: Option[];
     className?: string;
   }>();
+
+  const attrs = useAttrs();
+  const finalClass = computed(() => {
+    const clsFromAttrs = (attrs as Record<string, any>).class;
+    if (clsFromAttrs) return clsFromAttrs as string;
+    if (props.className) return props.className;
+    return 'w-64';
+  });
+
+  const otherAttrs = computed(() => {
+    const copy: Record<string, any> = {};
+    for (const key in attrs) {
+      if (key === 'class' || key === 'style') continue;
+      copy[key] = (attrs as Record<string, any>)[key];
+    }
+    return copy;
+  });
 
   const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void;

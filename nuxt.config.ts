@@ -80,6 +80,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
+    // 'nuxt-tiptap-editor',
   ],
 
   css: ['~/assets/scss/main.scss'],
@@ -139,6 +140,9 @@ export default defineNuxtConfig({
         '~': resolve(__dirname, './app'),
         '~~': resolve(__dirname, '.'),
       },
+    },
+    ssr: {
+      noExternal: ['vuetify', 'vuetify-pro-tiptap'],
     },
   },
 });

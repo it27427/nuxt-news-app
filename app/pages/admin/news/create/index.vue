@@ -21,10 +21,7 @@
         </div>
       </div>
 
-      <!-- Tiptap Editor -->
-      <client-only>
-        <TipTapEditor v-model="tiptapContent" />
-      </client-only>
+      <TipTapEditor v-model="tiptapContent" />
 
       <!-- Buttons -->
       <div class="flex items-center justify-end gap-3">
@@ -55,14 +52,14 @@
   definePageMeta({ layout: 'admin' });
 
   import type { JSONContent } from '@tiptap/vue-3';
-  import { computed, onMounted, ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useAuthStore } from '~~/store/auth.store';
-  import { useCategoriesStore } from '~~/store/categories.store';
-  import { useDraftsStore } from '~~/store/drafts.store';
-  import { useNewsStore } from '~~/store/news.store';
-  import { useTagsStore } from '~~/store/tags.store';
-  import type { TiptapNode } from '~~/types/newstypes';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '~~/store/auth.store';
+import { useCategoriesStore } from '~~/store/categories.store';
+import { useDraftsStore } from '~~/store/drafts.store';
+import { useNewsStore } from '~~/store/news.store';
+import { useTagsStore } from '~~/store/tags.store';
+import type { TiptapNode } from '~~/types/newstypes';
 
   const toast = useToast();
   const router = useRouter();
@@ -140,14 +137,28 @@
   async function publishContent() {
     try {
       const payload = buildPayloadForNewsOrDraft();
-      const role = authStore.user?.role;
 
-      await newsStore.createNews(payload);
+      if (!payload.tiptap_json_for_editing?.content?.length) {
+        toast.error('অনুগ্রহ করে সংবাদ লিখুন!');
+        return;
+      }
+      if (!payload.categories.length) {
+        toast.error('অন্তত একটি ক্যাটেগরি নির্বাচন করুন!');
+        return;
+      }
+
+      const role = authStore.user?.role;
+      const response = await newsStore.createNews(payload);
+
+      if (!response?.data) {
+        toast.error('সংবাদ তৈরি করা যায়নি!');
+        return;
+      }
 
       if (role === 'super_admin') {
         toast.success('সংবাদ সফলভাবে প্রকাশ করা হয়েছে!');
       } else {
-        toast.success('সংবাদ সফলভাবে পর্যালোচনায় হয়েছে!');
+        toast.success('সংবাদ সফলভাবে পর্যালোচনায় পাঠানো হয়েছে!');
       }
 
       router.push('/admin/news/');
