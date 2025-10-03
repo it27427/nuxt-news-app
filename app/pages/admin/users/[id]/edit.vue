@@ -1,69 +1,72 @@
 <!-- /app/admin/users/[id]/edit.vue -->
 <template>
   <section class="p-6 max-w-lg mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Edit User</h1>
+    <template v-if="loading">
+      <CreateUserSkeleton/>
+    </template>
 
-    <form @submit.prevent="handleUpdate" class="space-y-4">
-      <BaseInput v-model="form.name" label="Name" :error="errors.name" />
+    <template v-else>
+      <h1 class="text-2xl font-bold mb-4">
+        {{ pageTitle }}
+      </h1>
 
-      <BaseInput
-        v-model="form.email"
-        label="Email"
-        type="email"
-        :error="errors.email"
-      />
+      <form @submit.prevent="handleUpdate" class="space-y-4">
+        <BaseInput v-model="form.name" label="Name" :error="errors.name" />
 
-      <BaseInput
-        v-model="form.password"
-        label="Password (Leave blank to keep unchanged)"
-        type="password"
-        :error="errors.password"
-      />
+        <BaseInput
+          v-model="form.email"
+          label="Email"
+          type="email"
+          :error="errors.email"
+        />
 
-      <div class="flex gap-4 items-center">
-        <label class="flex items-center gap-1">
-          <input
-            type="radio"
-            value="admin"
-            v-model="form.role"
-            :disabled="isDefaultSuperAdmin"
-          />
-          Admin
-        </label>
+        <BaseInput
+          v-model="form.password"
+          label="Password (Leave blank to keep unchanged)"
+          type="password"
+          :error="errors.password"
+        />
 
-        <label class="flex items-center gap-1">
-          <input
-            type="radio"
-            value="super_admin"
-            v-model="form.role"
-            :disabled="isDefaultSuperAdmin"
-          />
-          Super Admin
-        </label>
-      </div>
+        <CustomSelect
+          v-model="form.role"
+          :options="userTypeOptions"
+          :disabled="isDefaultSuperAdmin"
+          placeholder="ব্যবহারকারী নির্বাচন করুন"
+          class="w-full"
+          :class="{'border-red-500 bg-red-50': errors.role}"
+        />
 
-      <div v-if="errors.role" class="text-red-500 text-sm">
-        {{ errors.role }}
-      </div>
+        <div v-if="errors.role" class="text-red-500 text-sm">
+          {{ errors.role }}
+        </div>
 
-      <BaseButton :loading="loading" type="submit" label="Update User" />
-    </form>
+        <BaseButton :loading="loading" type="submit" label="ব্যবহারকারী হালনাগাদ" />
+      </form>
+    </template>    
   </section>
 </template>
 
 <script setup lang="ts">
-  import { onMounted, reactive, ref } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import { useUsersStore } from '~~/store/users.store';
-  import type { FormErrors, UserUpdateForm } from '~~/types/users';
+import { onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useUsersStore } from '~~/store/users.store';
+import type { FormErrors, UserUpdateForm } from '~~/types/users';
 
   definePageMeta({ layout: 'admin' });
+
+  const pageTitle = ref('ব্যবহারকারী তথ্য পরিবর্তন');
 
   const route = useRoute();
   const router = useRouter();
   const toast = useToast();
   const usersStore = useUsersStore();
+
+  const userTypeOptions = ref([
+    { label: 'সুপার এডমিন', value: 'super_admin' },
+    { label: 'এডমিন', value: 'admin' },
+    { label: 'রিপোর্টার', value: 'reporter' }
+  ]);
 
   const userId = route.params.id as string;
 
@@ -71,8 +74,8 @@
   const form = reactive<UserUpdateForm>({
     name: '',
     email: '',
-    password: '', // always string
-    role: 'admin',
+    password: '',
+    role: '',
   });
 
   // Errors: all strings
@@ -88,6 +91,11 @@
 
   onMounted(async () => {
     loading.value = true;
+
+    setTimeout(() => {
+      loading.value = false;
+    }, 2000);
+
     try {
       await usersStore.fetchUser(userId);
       const user = usersStore.selectedUser;
@@ -97,7 +105,7 @@
       form.name = String(user.name ?? '');
       form.email = String(user.email ?? '');
       form.role = String(user.role ?? 'admin');
-      form.password = ''; // optional field: start as empty string
+      form.password = '';
 
       if (user.email === process.env.SUPER_ADMIN_EMAIL) {
         isDefaultSuperAdmin.value = true;

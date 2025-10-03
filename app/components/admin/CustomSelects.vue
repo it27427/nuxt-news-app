@@ -22,6 +22,7 @@
           </button>
         </span>
       </template>
+
       <template v-else>
         <span class="text-gray-400">{{ placeholder }}</span>
       </template>
@@ -58,7 +59,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-interface Option { label: string; value: string }
+interface Option { label: string; value: string };
 
 const props = defineProps<{
   modelValue: Option[]

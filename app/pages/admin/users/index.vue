@@ -1,10 +1,15 @@
 <template>
   <section class="p-6 md:p-5 flex flex-col gap-6">
-    <h1 class="text-2xl font-bold text-dark-surface dark:text-white">
-      ব্যবহারকারীর তালিকা
-    </h1>
+    <client-only>
+      <div v-if="usersStore.loading" class="w-1/3 h-8 bg-gray-300 dark:bg-gray-700 animate-pulse rounded"></div>
+      <!-- Actual Title -->
+      <h1
+        v-else
+        class="text-2xl font-bold text-dark-surface dark:text-white"
+      >
+        {{ pageTitle }}
+      </h1>
 
-    <ClientOnly>
       <!-- Skeleton Wrapper -->
       <div v-if="usersStore.loading" class="flex flex-col gap-6 w-full">
         <!-- যদি ইউজার থাকে, টেবিল Skeleton -->
@@ -250,12 +255,12 @@
           </div>
         </div>
       </VueFinalModal>
-    </ClientOnly>
+    </client-only>
   </section>
 </template>
 
 <script setup lang="ts">
-  import { Icon } from '@iconify/vue';
+import { Icon } from '@iconify/vue';
 import { computed, onMounted, ref } from 'vue';
 import { VueFinalModal } from 'vue-final-modal';
 import { useRouter } from 'vue-router';
@@ -263,6 +268,8 @@ import { useUsersStore } from '~~/store/users.store';
 import type { User } from '~~/types/users';
 
   definePageMeta({ layout: 'admin' });
+
+  const pageTitle = ref('ব্যবহারকারীর তালিকা');
 
   const toast = useToast();
   const router = useRouter();

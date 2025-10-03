@@ -9,7 +9,7 @@
           class="h-8 w-48 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
         ></div>
       </template>
-      <template v-else>{{ title }}</template>
+      <template v-else>{{ pageTitle }}</template>
     </h2>
 
     <!-- Table -->
@@ -57,7 +57,14 @@
         <!-- Empty -->
         <tr v-else-if="!newsList.length">
           <td colspan="7" class="py-6 text-gray-400 text-center">
-            কোনো সংবাদ পাওয়া যায়নি।
+            <div class="flex flex-col items-center justify-center gap-3 w-full text-center">
+              <span class="text-6xl">📝</span>
+              <p class="text-xl">কোন খসড়া নেই!</p>
+
+              <BaseLink to="/admin/news/create" class="font-baloda text-md flex items-center justify-center gap-2 bg-green-500 text-white py-2 px-4 rounded">
+                <Icon icon="icon-park-outline:add-one" width="24" height="24" /> নতুন খসড়া তৈরি করুন
+              </BaseLink>
+            </div>
           </td>
         </tr>
 
@@ -106,12 +113,13 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
-  import { useNewsStore } from '~~/store/news.store';
+import { Icon } from '@iconify/vue';
+import { onMounted, ref } from 'vue';
+import { useNewsStore } from '~~/store/news.store';
 
   definePageMeta({ layout: 'admin' });
 
-  const title = ref('সংরক্ষিত সংবাদ তালিকা');
+  const pageTitle = ref('সংরক্ষিত সংবাদ তালিকা');
 
   const newsStore = useNewsStore();
   const newsList = ref<any[]>([]);

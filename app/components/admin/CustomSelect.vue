@@ -1,17 +1,11 @@
 <template>
-  <div
-    class="relative"
-    v-bind="otherAttrs"
-    :class="['w-full', classNameFromParent]"
-    ref="dropdownRef"
-  >
-    <!-- Selected Value -->
+  <div class="relative w-full" ref="dropdownRef">
     <button
       @click="toggleDropdown"
       type="button"
       :class="[
         'w-full h-12 rounded px-4 py-2 flex justify-between items-center shadow-sm outline-none transition-all duration-150',
-        error ? 'border-red-500 bg-red-50' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white focus:ring-1 focus:ring-green-500'
+        error ? 'border border-red-500 bg-red-900 text-red-500 ring-1 ring-red-500' : 'border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700'
       ]"
     >
       <span>{{ selectedLabel }}</span>
@@ -31,87 +25,70 @@
       </svg>
     </button>
 
-    <!-- Options Dropdown -->
     <ul
       v-show="open"
-      class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-80 overflow-auto scrollbar-none"
+      class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto scrollbar-none"
     >
       <li
         v-for="option in options"
         :key="option.value"
         @click="selectOption(option)"
-        class="cursor-pointer px-4 py-2 flex justify-between items-center hover:bg-green-500 hover:text-white dark:hover:bg-green-600 dark:hover:text-white"
+        class="cursor-pointer px-4 py-2 hover:bg-green-500 hover:text-white dark:hover:bg-green-600"
       >
         {{ option.label }}
       </li>
     </ul>
+
+    <!-- Error message -->
+    <p v-if="error" class="text-red-500 text-sm mt-2">
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useAttrs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-interface Option {
-  label: string
-  value: string
-}
+interface Option { label: string; value: string }
 
-// Props
 const props = defineProps<{
-  modelValue: string
-  options: Option[]
-  placeholder?: string
-  error?: boolean
-  className?: string
-}>()
+  modelValue: string;
+  options: Option[];
+  placeholder?: string;
+  error?: boolean;
+  errorMessage?: string;
+}>();
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-}>()
+const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>();
 
-// Refs & State
-const open = ref(false)
-const selected = ref(props.modelValue)
-const dropdownRef = ref<HTMLElement | null>(null)
+const open = ref(false);
+const selected = ref(props.modelValue);
+const dropdownRef = ref<HTMLElement | null>(null);
 
-// Computed
 const selectedLabel = computed(() => {
-  const found = props.options.find(o => o.value === selected.value)
-  return found ? found.label : props.placeholder || 'Select...'
-})
+  const found = props.options.find(o => o.value === selected.value);
+  return found ? found.label : props.placeholder || 'Select...';
+});
 
-const classNameFromParent = props.className || ''
-const error = props.error || false
+const error = computed(() => !!props.error);
+const errorMessage = computed(() => props.errorMessage || 'This field is required');
 
-// Handle external attributes
-const attrs = useAttrs()
-const otherAttrs = computed(() => {
-  const copy: Record<string, any> = {}
-  for (const key in attrs) {
-    if (key === 'class' || key === 'style') continue
-    copy[key] = (attrs as Record<string, any>)[key]
-  }
-  return copy
-})
-
-// Watch for modelValue changes
-watch(() => props.modelValue, val => {
-  selected.value = val
-})
-
-// Methods
-const toggleDropdown = () => { open.value = !open.value }
+const toggleDropdown = () => open.value = !open.value;
 const selectOption = (option: Option) => {
-  selected.value = option.value
-  emit('update:modelValue', option.value)
-  open.value = false
-}
+  selected.value = option.value;
+  emit('update:modelValue', option.value);
+  open.value = false;
+};
 
-// Click outside to close dropdown
+// Click outside closes dropdown
 const handleClickOutside = (e: MouseEvent) => {
-  if (dropdownRef.value && !dropdownRef.value.contains(e.target as Node)) open.value = false
-}
+  if (dropdownRef.value && !dropdownRef.value.contains(e.target as Node)) {
+    open.value = false;
+  }
+};
 
-onMounted(() => window.addEventListener('click', handleClickOutside))
-onBeforeUnmount(() => window.removeEventListener('click', handleClickOutside))
+onMounted(() => window.addEventListener('click', handleClickOutside));
+onBeforeUnmount(() => window.removeEventListener('click', handleClickOutside));
+
+watch(() => props.modelValue, val => { selected.value = val });
 </script>

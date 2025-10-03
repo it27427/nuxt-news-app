@@ -9,7 +9,7 @@
           class="h-8 w-48 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
         ></div>
       </template>
-      <template v-else>{{ title }}</template>
+      <template v-else>{{ pageTitle }}</template>
     </h2>
 
     <!-- Table -->
@@ -84,8 +84,14 @@
         <!-- Empty State -->
         <tr v-else-if="draftsStore.drafts.length === 0">
           <td colspan="6" class="py-6 text-gray-400">
-            <span class="text-6xl">📝</span>
-            <p class="text-xl">কোন ড্রাফট নেই! নতুন ড্রাফট তৈরি করুন।</p>
+            <div class="flex flex-col items-center justify-center gap-3 w-full text-center">
+              <span class="text-6xl">📝</span>
+              <p class="text-xl">কোন খসড়া নেই!</p>
+
+              <BaseLink to="/admin/news/create" class="font-baloda text-md flex items-center justify-center gap-2 bg-green-500 text-white py-2 px-4 rounded">
+                <Icon icon="icon-park-outline:add-one" width="24" height="24" /> নতুন খসড়া তৈরি করুন
+              </BaseLink>
+            </div>
           </td>
         </tr>
 
@@ -122,7 +128,7 @@
               <!-- View -->
               <button
                 class="text-green-500 hover:text-green-700 w-10 h-10 flex items-center justify-center transition-colors duration-300"
-                title="ড্রাফট দেখুন"
+                title="খসড়া দেখুন"
                 @click="viewDraft(draft.id)"
               >
                 <Icon icon="ic:round-visibility" width="24" height="24" />
@@ -131,7 +137,7 @@
               <!-- Edit -->
               <button
                 class="text-yellow-500 hover:text-yellow-700 w-10 h-10 flex items-center justify-center transition-colors duration-300"
-                title="ড্রাফট এডিট করুন"
+                title="খসড়া এডিট করুন"
                 @click="editDraft(draft.id)"
               >
                 <Icon icon="ic:round-edit" width="24" height="24" />
@@ -140,7 +146,7 @@
               <!-- Delete -->
               <button
                 class="text-red-500 hover:text-red-800 w-10 h-10 flex items-center justify-center transition-colors duration-300"
-                title="ড্রাফট মুছে ফেলুন"
+                title="খসড়া মুছে ফেলুন"
                 @click="openDeleteModal(draft)"
               >
                 <Icon icon="ic:round-delete" width="24" height="24" />
@@ -183,16 +189,16 @@
 </template>
 
 <script setup lang="ts">
-  import { Icon } from '@iconify/vue';
-  import { onMounted, ref } from 'vue';
-  import { VueFinalModal } from 'vue-final-modal';
-  import { useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import { useDraftsStore } from '~~/store/drafts.store';
+import { Icon } from '@iconify/vue';
+import { onMounted, ref } from 'vue';
+import { VueFinalModal } from 'vue-final-modal';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useDraftsStore } from '~~/store/drafts.store';
 
   definePageMeta({ layout: 'admin' });
 
-  const title = ref('সংরক্ষিত সংবাদ তালিকা');
+  const pageTitle = ref('সংরক্ষিত সংবাদ তালিকা');
 
   const draftsStore = useDraftsStore();
   const router = useRouter();
@@ -206,7 +212,7 @@
     try {
       await draftsStore.fetchDrafts();
     } catch (err: any) {
-      toast.error(err?.message || 'ড্রাফট লোড করতে ব্যর্থ হয়েছে!');
+      toast.error(err?.message || 'খসড়া লোড করতে ব্যর্থ হয়েছে!');
     }
   });
 
@@ -229,10 +235,10 @@
     try {
       await draftsStore.deleteDraft(selectedDraft.id);
       toast.success(
-        `ড্রাফট "${selectedDraft.title}" সফলভাবে মুছে ফেলা হয়েছে!`
+        `খসড়া "${selectedDraft.title}" সফলভাবে মুছে ফেলা হয়েছে!`
       );
     } catch (err: any) {
-      toast.error(err?.message || 'ড্রাফট মুছতে ব্যর্থ হয়েছে!');
+      toast.error(err?.message || 'খসড়া মুছতে ব্যর্থ হয়েছে!');
     } finally {
       selectedDraft = null;
       showModal.value = false;

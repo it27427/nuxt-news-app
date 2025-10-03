@@ -9,7 +9,7 @@
           class="h-8 w-48 bg-gray-200 dark:bg-slate-700 animate-pulse rounded mx-auto"
         ></div>
       </template>
-      <template v-else>ট্যাগ হালনাগাদ করুন</template>
+      <template v-else>{{ pageTitle }}</template>
     </h2>
 
     <!-- Form Skeleton / Actual Form -->
@@ -39,7 +39,7 @@
           <BaseButton
             :loading="tagsStore.loading"
             type="submit"
-            label="Update Tag"
+            label="সংশোধিত ট্যাগ"
           />
         </div>
       </form>
@@ -48,12 +48,14 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import { useTagsStore } from '~~/store/tags.store';
 
   definePageMeta({ layout: 'admin' });
+
+  const pageTitle = ref('ট্যাগ হালনাগাদ করুন');
 
   const toast = useToast();
   const router = useRouter();

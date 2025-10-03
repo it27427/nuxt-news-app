@@ -9,7 +9,7 @@
           class="h-8 w-48 mx-auto bg-gray-200 dark:bg-slate-700 animate-pulse rounded"
         ></div>
       </template>
-      <template v-else>ট্যাগ তালিকা</template>
+      <template v-else>{{ pageTitle }}</template>
     </h2>
 
     <!-- Table -->
@@ -147,6 +147,8 @@ import { toBanglaNumber } from '~/utils/number';
 import { useTagsStore } from '~~/store/tags.store';
 
   definePageMeta({ layout: 'admin' });
+
+  const pageTitle = ref('ট্যাগ তালিকা');
 
   const tagsStore = useTagsStore();
   const router = useRouter();
