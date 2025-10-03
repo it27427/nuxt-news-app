@@ -84,12 +84,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
-    // 'nuxt-tiptap-editor',
   ],
-
-  // build: {
-  //   transpile: ['ckeditor5', '~/plugins/CustomUploadAdapter.ts'],
-  // },
 
   css: ['~/assets/scss/main.scss'],
 
@@ -148,9 +143,6 @@ export default defineNuxtConfig({
         '~': resolve(__dirname, './app'),
         '~~': resolve(__dirname, '.'),
       },
-    },
-    ssr: {
-      noExternal: ['vuetify', 'vuetify-pro-tiptap'],
     },
   },
 });
