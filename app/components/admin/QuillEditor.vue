@@ -1,16 +1,20 @@
 <template>
-  <QuillEditor
-    v-model:content="localContent"
-    :options="options"
-    :contentType="saveContentType"
-  />
+  <div>
+    <client-only>
+      <QuillEditor
+        v-model:content="localContent"
+        :options="options"
+        :contentType="saveContentType"
+      />
+    </client-only>
+  </div>
 </template>
 
 <script lang="ts" setup>
   import { Quill, QuillEditor } from '@vueup/vue-quill';
-  import '@vueup/vue-quill/dist/vue-quill.snow.css';
-  import Delta from 'quill-delta';
-  import { computed, ref, watch } from 'vue';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import Delta from 'quill-delta';
+import { computed, ref, watch } from 'vue';
 
   // NOTE: Import EmbedBlot for custom image/video
   const Embed = Quill.import('blots/embed') as any;

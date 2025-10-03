@@ -11,6 +11,7 @@
             multiple
           />
         </div>
+
         <div class="w-full md:w-1/2">
           <CustomSelect
             v-model="selectedNewsTag"
@@ -21,8 +22,10 @@
         </div>
       </div>
 
-      <TipTapEditor v-model="tiptapContent" />
-
+      <client-only>
+        <NewsEditor />
+      </client-only>
+      
       <!-- Buttons -->
       <div class="flex items-center justify-end gap-3">
         <button

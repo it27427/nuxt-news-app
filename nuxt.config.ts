@@ -83,6 +83,10 @@ export default defineNuxtConfig({
     // 'nuxt-tiptap-editor',
   ],
 
+  // build: {
+  //   transpile: ['ckeditor5', '~/plugins/CustomUploadAdapter.ts'],
+  // },
+
   css: ['~/assets/scss/main.scss'],
 
   plugins: ['~/plugins/vue-toastification.ts'],
