@@ -4,13 +4,13 @@
     <button
       type="button"
       @click="toggleDropdown"
-      class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
+      class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
     >
       <template v-if="selected.length">
         <span
           v-for="(item, index) in selected"
           :key="index"
-          class="bg-green-500 text-white text-sm px-2 py-1 rounded flex items-center gap-1"
+          class="bg-green-500 ring-1 ring-green-500 text-white px-2 py-1 rounded flex items-center gap-1 text-xs"
         >
           <span class="inline-block mr-1">{{ item.label }}</span>
           <button

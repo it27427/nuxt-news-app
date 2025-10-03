@@ -1,5 +1,7 @@
 <template>
-  <section>
+  <section class="flex flex-col gap-5">
+    <h1 class="text-dark dark:text-primary text-center font-bold text-2xl md:text-3xl py-5">{{ pageTitle }}</h1>
+
     <client-only>
       <form @submit.prevent="publishContent" class="flex flex-col gap-5">
 
@@ -28,15 +30,15 @@
         <input
           v-model="title"
           type="text"
-          placeholder="শিরোনাম লিখুন"
-          class="border p-2 rounded"
+          placeholder="সংবাদ শিরোনাম লিখুন"
+          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
         />
 
         <!-- Home Card Text -->
         <textarea
           v-model="homeCardText"
           placeholder="হোম কার্ড টেক্সট লিখুন"
-          class="border p-2 rounded"
+          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none resize-none min-h-40"
         ></textarea>
 
         <!-- Featured Image -->
@@ -174,6 +176,8 @@ const newsStore = useNewsStore()
 const draftsStore = useDraftsStore()
 const categoriesStore = useCategoriesStore()
 const tagsStore = useTagsStore()
+
+const pageTitle = ref('সংবাদ তৈরি করুন');
 
 interface Option { label: string; value: string }
 
