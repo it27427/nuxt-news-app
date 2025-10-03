@@ -23,14 +23,14 @@
           class="text-gray-500 dark:text-gray-300 hover:text-primary dark:hover:text-primary-dark font-bold font-tino flex items-center gap-1 transition-colors duration-400"
         >
           <client-only>
-            <Icon name="mi:home" width="24" height="24" class="text-3xl" />
+            <Icon icon="mi:home" width="24" height="24" class="text-3xl" />
           </client-only>
         </BaseLink>
 
         <!-- Separator -->
         <client-only>
           <Icon
-            name="guidance:left-arrow"
+            icon="guidance:left-arrow"
             width="28"
             height="28"
             class="inline-block mt-1"
@@ -49,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
   import { adminMenus } from '~/menus/adminMenus';
 
   const props = defineProps<{

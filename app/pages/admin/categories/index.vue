@@ -81,7 +81,7 @@
                 @click="goToEdit(category.id)"
               >
                 <Icon
-                  name="carbon:tag-edit"
+                  icon="carbon:tag-edit"
                   width="24"
                   height="24"
                   class="text-2xl"
@@ -94,7 +94,7 @@
                 @click="openDeleteModal(category)"
               >
                 <Icon
-                  name="streamline-freehand:delete-bin-2"
+                  icon="streamline-freehand:delete-bin-2"
                   width="20"
                   height="20"
                   class="text-2xl"
@@ -138,6 +138,7 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
   import { computed, onMounted, ref } from 'vue';
   import { VueFinalModal } from 'vue-final-modal';
   import { useRouter } from 'vue-router';

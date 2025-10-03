@@ -11,7 +11,7 @@
           open ? 'rotate-180 text-size4Xl' : 'rotate-0 text-size3XXl',
           'transition-transform',
         ]"
-        name="guidance:left-arrow"
+        icon="guidance:left-arrow"
         width="28"
         height="28"
       />
@@ -20,6 +20,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Icon } from '@iconify/vue';
   const { open } = defineProps<{ open: boolean }>();
   const emit = defineEmits<{ (e: 'toggle'): void }>();
 

@@ -16,7 +16,7 @@
         class="bg-adGradient text-light border-0 cursor-pointer font-bold w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl focus:outline-none"
       >
         <client-only>
-          <Icon name="guidance:up-arrow" width="28" height="28" />
+          <Icon icon="guidance:up-arrow" width="28" height="28" />
         </client-only>
       </button>
     </div>
@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
   const props = defineProps<{
     customClass?: string;
   }>();

@@ -9,7 +9,7 @@
     <button
       @click="toggleDropdown"
       type="button"
-      class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-4 py-2 flex justify-between items-center shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
+      class="w-full h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded px-4 py-2 flex justify-between items-center shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
     >
       <span>{{ selectedLabel }}</span>
       <svg

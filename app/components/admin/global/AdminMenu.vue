@@ -8,7 +8,7 @@
           class="menu-link"
           :class="[open ? 'justify-start' : 'justify-center border-b-0']"
         >
-          <Icon :name="item.icon" width="32" height="32" class="text-sizeXXl" />
+          <Icon :icon="item.icon" width="32" height="32" class="text-sizeXXl" />
           <span v-if="open">{{ item.label }}</span>
         </button>
 
@@ -23,7 +23,7 @@
               : '',
           ]"
         >
-          <Icon :name="item.icon" width="32" height="32" class="text-sizeXXl" />
+          <Icon :icon="item.icon" width="32" height="32" class="text-sizeXXl" />
           <span v-if="open">{{ item.label }}</span>
         </NuxtLink>
       </li>
@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
   import { useAuth } from '~/composables/useAuth';

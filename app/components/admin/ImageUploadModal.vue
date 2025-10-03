@@ -9,7 +9,7 @@
       <div class="w-full flex items-center justify-between mb-6">
         <h3 class="text-lg font-tino font-medium">ছবি আপলোড করুন</h3>
       
-        <button @click="cancel" class="font-semibold text-sm px-3 py-1 border border-red-500 dark:border-red rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-red-500 bg-red-50 dark:bg-red-900 focus:ring-red-500 active:ring-red-500 focus:border-red-500 active:border-red-500 focus:bg-red-50 dark:focus:bg-red-900 transition-all duration-150">
+        <button @click="cancel" class="font-semibold text-sm px-3 py-1 text-red-500 bg-red-50 dark:text-red-500 border border-red-500 dark:border-red-500 rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-red-500 focus:ring-red-500 active:ring-red-500 focus:border-red-500 active:border-red-500 focus:bg-red-50 dark:focus:bg-red-900 transition-all duration-150">
           বাতিল করুন
         </button>
       </div>
@@ -43,7 +43,7 @@
         <!-- OR by URL -->
         <div class="relative mb-3">
           <input type="text" v-model="form.url" placeholder="ছবির ইউআরএল (ছবির ওয়েব ঠিকানা)"
-            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none" @input="updatePreviewFromUrl" />
+            class="w-full h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none" @input="updatePreviewFromUrl" />
           <button v-if="previewUrl" type="button" v-tooltip.left="'অপসারণ করুন'" @click="removeImage" class="absolute top-2 right-2 text-red-600">
             <Icon icon="solar:close-circle-linear" class="text-2xl" /> 
           </button>
@@ -51,15 +51,15 @@
 
         <!-- Caption -->
         <input type="text" v-model="form.caption" placeholder="ছবির শিরোনাম"
-          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none" />
+          class="w-full h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none" />
 
         <!-- Source -->
         <input type="text" v-model="form.source" placeholder="ছবির উৎস"
-          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none" />
+          class="w-full h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm focus:ring-2 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none" />
 
         <!-- Actions -->
         <div class="flex justify-end gap-2 mt-4">
-          <button @click="submit" class="font-semibold text-sm px-4 py-2 border border-green-500 dark:border-red rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-green-500 bg-red-50 dark:bg-green-900 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150">
+          <button @click="submit" class="w-full h-12 font-semibold text-sm px-4 py-2 text-green-500 border border-green-500 dark:border-red rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-green-500 bg-green-50 dark:bg-green-900 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150">
             সন্নিবেশিত করুন
           </button>
         </div>

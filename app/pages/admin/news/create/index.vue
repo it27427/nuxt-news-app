@@ -44,7 +44,7 @@
             v-model="title"
             type="text"
             placeholder="সংবাদ শিরোনাম লিখুন"
-            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
+            class="w-full h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
           />
         </div>
 
@@ -55,12 +55,12 @@
             <button
               type="button"
               @click="openImageModal('featured')"
-              class="relative inline-flex items-center justify-center p-[0.125rem] rounded-md overflow-hidden"
+              class="cursor-pointer relative inline-flex items-center justify-center p-[0.125rem] rounded-md overflow-hidden"
             >
               <span class="absolute inset-0 rounded-md p-[0.125rem] bg-[conic-gradient(from_0deg,#f97316,#f59e0b,#eab308,#84cc16,#22c55e,#10b981,#14b8a6,#06b6d4,#0ea5e9,#3b82f6,#6366f1,#8b5cf6,#a855f7,#d946ef,#ec4899,#f43f5e,#f97316)] animate-spin-slow"></span>
 
-              <span class="relative bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white rounded-md p-[0.125rem] w-full h-12 flex items-center justify-center">
-                ছবি আপলোড করুন
+              <span class="cursor-pointer relative bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:hover:bg-slate-700 dark:hover:border-slate-500 dark:text-white rounded-md p-[0.125rem] w-full h-12 flex items-center justify-center gap-2 transition-all">
+                <Icon icon="bytesize:upload" class="text-2xl text-gray-900 dark:text-white" /> ছবি আপলোড করুন
               </span>
             </button>
           </div>
@@ -72,7 +72,7 @@
               @click="removeFeaturedImage"
               class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 text-xs rounded"
             >
-              ✕ Remove
+              <Icon icon="solar:close-circle-linear" class="text-2xl" /> Remove
             </button>
             <p class="text-sm text-gray-600 mt-1">Caption: {{ featured.caption }}</p>
             <p class="text-sm text-gray-600 mt-1">Source: {{ featured.source }}</p>
@@ -120,7 +120,7 @@
               v-model="block.text"
               type="text"
               placeholder="সাবটাইটেল লিখুন"
-              class="w-full border p-2 rounded"
+              class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
             />
           </div>
 
@@ -129,10 +129,11 @@
             <button
               type="button"
               @click="openImageModal(index)"
-              class="font-semibold font-hind text-md md:text-lg px-4 py-2 border border-sky-500 dark:border-sky-400 rounded shadow-md focus:ring-1 hover:ring-1 hover:ring-sky-500 bg-sky-50 dark:bg-sky-700 focus:ring-sky-500 active:ring-sky-500 focus:border-sky-500 active:border-sky-500 focus:bg-sky-50 dark:focus:bg-sky-700 transition-all duration-150"
+              class="w-full h-12 flex items-center justify-center gap-2 font-hind text-md md:text-lg px-4 py-2 border border-sky-500 dark:border-sky-400 rounded shadow-md focus:ring-1 hover:ring-1 hover:ring-sky-500 bg-sky-50 dark:bg-sky-700 focus:ring-sky-500 active:ring-sky-500 focus:border-sky-500 active:border-sky-500 focus:bg-sky-50 dark:focus:bg-sky-700 transition-all duration-150"
             >
-              ছবি আপলোড করুন
+              <Icon icon="mingcute:upload-3-fill" class="text-2xl" /> ছবি আপলোড করুন
             </button>
+
             <div v-if="block.url" class="mt-2 relative">
               <img :src="block.url" class="w-full max-h-40 object-contain rounded" />
               <button
@@ -148,9 +149,9 @@
           </div>
         </div>
 
-        <div class="flex gap-2">
-          <button type="button" @click="addBlock" class="px-3 py-1 border rounded">
-            + ব্লক যোগ করুন
+        <div class="flex gap-2 mb-20">
+          <button type="button" @click="addBlock" class="font-baloda w-full flex items-center justify-center gap-2 h-12 text-md md:text-lg px-6 py-2 border border-indigo-500 dark:border-indigo-400 rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-indigo-500 bg-indigo-50 dark:bg-indigo-900 focus:ring-indigo-500 active:ring-indigo-500 focus:border-indigo-500 active:border-indigo-500 focus:bg-indigo-50 dark:focus:bg-indigo-900 transition-all duration-150">
+            <Icon icon="subway:add" class="text-xl" /> সংবাদ ব্লক যোগ করুন
           </button>
         </div>
 
@@ -160,17 +161,17 @@
             type="button"
             @click="saveDraft"
             :disabled="loading"
-            class="font-semibold font-hind text-md md:text-lg px-4 py-2 border border-cyan-500 dark:border-cyan-400 rounded shadow-md focus:ring-1 hover:ring-1 hover:ring-cyan-500 bg-gray-50 dark:bg-cyan-700 focus:ring-cyan-500 active:ring-cyan-500 focus:border-cyan-500 active:border-cyan-500 focus:bg-cyan-50 dark:focus:bg-cyan-700 transition-all duration-150"
+            class="font-hind flex items-center justify-center gap-2 h-12 text-md md:text-lg px-4 py-2 border border-cyan-500 dark:border-cyan-400 rounded shadow-md focus:ring-1 hover:ring-1 hover:ring-cyan-500 bg-gray-50 dark:bg-cyan-700 focus:ring-cyan-500 active:ring-cyan-500 focus:border-cyan-500 active:border-cyan-500 focus:bg-cyan-50 dark:focus:bg-cyan-700 transition-all duration-150"
           >
-            সংবাদ সংরক্ষণ করুন
+            <Icon icon="ic:baseline-save" class="text-2xl" /> সংবাদ সংরক্ষণ করুন
           </button>
 
           <button
             type="submit"
             :disabled="loading"
-            class="font-semibold text-md md:text-lg px-6 py-2 border border-green-500 dark:border-green-400 rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-green-500 bg-red-50 dark:bg-green-900 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150"
+            class="flex items-center justify-center gap-2 h-12 text-md md:text-lg px-6 py-2 border border-green-500 dark:border-green-400 rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-green-500 bg-green-50 dark:bg-green-900 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150"
           >
-            {{ submitButtonLabel }}
+            <Icon icon="lets-icons:done-ring-round-duotone-line" class="text-2xl" /> {{ submitButtonLabel }}
           </button>
         </div>
       </form>
@@ -188,13 +189,14 @@
 
 <script lang="ts" setup>
 definePageMeta({ layout: 'admin' })
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '~~/store/auth.store'
-import { useCategoriesStore } from '~~/store/categories.store'
-import { useDraftsStore } from '~~/store/drafts.store'
-import { useNewsStore } from '~~/store/news.store'
-import { useTagsStore } from '~~/store/tags.store'
+import { Icon } from '@iconify/vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '~~/store/auth.store';
+import { useCategoriesStore } from '~~/store/categories.store';
+import { useDraftsStore } from '~~/store/drafts.store';
+import { useNewsStore } from '~~/store/news.store';
+import { useTagsStore } from '~~/store/tags.store';
 
 const router = useRouter()
 const toast = useToast()

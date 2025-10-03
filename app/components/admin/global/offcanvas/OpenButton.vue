@@ -6,7 +6,7 @@
   >
     <client-only>
       <Icon
-        name="bitcoin-icons:menu-outline"
+        icon="bitcoin-icons:menu-outline"
         width="28"
         height="28"
         class="text-3xl"
@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Icon } from '@iconify/vue';
   defineEmits<{
     (e: 'open'): void;
   }>();

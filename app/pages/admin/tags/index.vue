@@ -81,7 +81,7 @@
                 @click="goToEdit(tag.id)"
               >
                 <Icon
-                  name="carbon:tag-edit"
+                  icon="carbon:tag-edit"
                   width="24"
                   height="24"
                   class="text-2xl"
@@ -94,7 +94,7 @@
                 @click="openDeleteModal(tag)"
               >
                 <Icon
-                  name="streamline-freehand:delete-bin-2"
+                  icon="streamline-freehand:delete-bin-2"
                   width="20"
                   height="20"
                   class="text-2xl"
@@ -144,6 +144,7 @@
   import { useToast } from 'vue-toastification';
   import { toBanglaNumber } from '~/utils/number';
   import { useTagsStore } from '~~/store/tags.store';
+import { Icon } from '@iconify/vue';
 
   definePageMeta({ layout: 'admin' });
 

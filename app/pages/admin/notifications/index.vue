@@ -71,7 +71,7 @@
             v-else
             class="text-green-600 text-sm font-medium flex items-center gap-1"
           >
-            <Icon name="mdi:check-circle" class="text-lg" />
+            <Icon icon="mdi:check-circle" class="text-lg" />
             Read
           </span>
 
@@ -81,7 +81,7 @@
             class="text-red-500 hover:text-red-700 transition"
             title="Delete notification"
           >
-            <Icon name="mdi:delete" class="text-xl" />
+            <Icon icon="mdi:delete" class="text-xl" />
           </button>
         </div>
       </div>
@@ -123,6 +123,7 @@
   import { VueFinalModal } from 'vue-final-modal';
   import { useToast } from 'vue-toastification';
   import { useNotificationsStore } from '~~/store/notifications.store';
+import { Icon } from '@iconify/vue';
 
   definePageMeta({ layout: 'admin' });
 

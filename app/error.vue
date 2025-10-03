@@ -27,7 +27,7 @@
               <client-only>
                 <Icon
                   v-if="status === 'authenticated'"
-                  name="hugeicons:dashboard-browsing"
+                  icon="hugeicons:dashboard-browsing"
                   width="24"
                   height="24"
                   class="text-4xl"
@@ -35,7 +35,7 @@
 
                 <Icon
                   v-else
-                  name="hugeicons:login-circle-02"
+                  icon="hugeicons:login-circle-02"
                   width="24"
                   height="24"
                   class="text-4xl"
@@ -75,7 +75,7 @@
               <client-only>
                 <Icon
                   v-if="status === 'authenticated'"
-                  name="hugeicons:dashboard-square-02"
+                  icon="hugeicons:dashboard-square-02"
                   width="24"
                   height="24"
                   class="text-4xl"
@@ -83,7 +83,7 @@
 
                 <Icon
                   v-else
-                  name="hugeicons:login-circle-02"
+                  icon="hugeicons:login-circle-02"
                   width="24"
                   height="24"
                   class="text-4xl"
@@ -131,7 +131,7 @@
             class="bg-primary text-white rounded-sm px-6 h-14 py-2 flex items-center justify-center transition-all hover:bg-primary-dark"
           >
             <client-only>
-              <Icon name="mi:home" width="24" height="24" class="text-4xl" />
+              <Icon icon="mi:home" width="24" height="24" class="text-4xl" />
             </client-only>
             <span class="font-hind font-bold inline-block text-xl mt-0.125">
               মূল পাতায় যান
@@ -144,8 +144,9 @@
 </template>
 
 <script setup lang="ts">
-  import type { NuxtError } from '#app';
-  import { toBanglaNumber } from '~/utils/number';
+import type { NuxtError } from '#app';
+import { Icon } from '@iconify/vue';
+import { toBanglaNumber } from '~/utils/number';
 
   declare const useErrorAuth: () => {
     status: 'authenticated' | 'unauthenticated';
