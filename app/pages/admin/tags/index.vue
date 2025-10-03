@@ -138,13 +138,13 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, onMounted, ref } from 'vue';
-  import { VueFinalModal } from 'vue-final-modal';
-  import { useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import { toBanglaNumber } from '~/utils/number';
-  import { useTagsStore } from '~~/store/tags.store';
 import { Icon } from '@iconify/vue';
+import { computed, onMounted, ref } from 'vue';
+import { VueFinalModal } from 'vue-final-modal';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { toBanglaNumber } from '~/utils/number';
+import { useTagsStore } from '~~/store/tags.store';
 
   definePageMeta({ layout: 'admin' });
 

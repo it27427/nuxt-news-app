@@ -49,25 +49,21 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import { useTagsStore } from '~~/store/tags.store';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useTagsStore } from '~~/store/tags.store';
 
-  definePageMeta({
-    layout: 'admin',
-  });
+  definePageMeta({ layout: 'admin' });
 
   const toast = useToast();
   const router = useRouter();
   const tagsStore = useTagsStore();
 
   // Local loading for skeleton
-  const localLoading = ref(true); // start as true
+  const localLoading = ref(true);
 
   // Reactive form state
-  const form = reactive({
-    name: '',
-  });
+  const form = reactive({ name: '' });
 
   // Validation errors
   const errors = reactive<{ name?: string }>({});
@@ -100,9 +96,8 @@
 
       form.name = '';
 
-      setTimeout(() => {
-        router.push('/admin/tags');
-      }, 1000);
+      // Redirect
+      router.push('/admin/tags');
     } catch (err: any) {
       toast.error(err?.message || 'Failed to create tag');
     } finally {

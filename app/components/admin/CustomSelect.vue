@@ -1,33 +1,22 @@
 <template>
-  <div ref="dropdownRef" class="relative w-full">
-    <!-- Dropdown Button -->
+  <div
+    class="relative"
+    v-bind="otherAttrs"
+    :class="['w-full', classNameFromParent]"
+    ref="dropdownRef"
+  >
+    <!-- Selected Value -->
     <button
-      type="button"
       @click="toggleDropdown"
-      class="w-full h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white rounded px-4 py-2 flex justify-between items-center gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
+      type="button"
+      :class="[
+        'w-full h-12 rounded px-4 py-2 flex justify-between items-center shadow-sm outline-none transition-all duration-150',
+        error ? 'border-red-500 bg-red-50' : 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white focus:ring-1 focus:ring-green-500'
+      ]"
     >
-      <template v-if="selected.length">
-        <span
-          v-for="(item, index) in selected"
-          :key="index"
-          class="bg-green-500 ring-1 ring-green-500 text-white px-2 py-1 rounded flex items-center gap-1 text-xs"
-        >
-          <span class="inline-block mr-1">{{ item.label }}</span>
-          <button
-            type="button"
-            @click.stop="removeOption(item)"
-            class="text-white hover:text-gray-200"
-          >
-            &times;
-          </button>
-        </span>
-      </template>
-      <template v-else>
-        <span class="text-gray-400">{{ placeholder }}</span>
-      </template>
-
+      <span>{{ selectedLabel }}</span>
       <svg
-        class="w-5 h-5 ml-auto transition-transform duration-200"
+        class="w-5 h-5 ml-2 transition-transform duration-200"
         :class="{ 'rotate-180': open }"
         fill="none"
         stroke="currentColor"
@@ -42,88 +31,87 @@
       </svg>
     </button>
 
-    <!-- Dropdown List -->
+    <!-- Options Dropdown -->
     <ul
-      v-if="open"
+      v-show="open"
       class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-80 overflow-auto scrollbar-none"
     >
       <li
-        v-for="(option, index) in props.options"
-        :key="index"
-        @click="toggleOption(option)"
+        v-for="option in options"
+        :key="option.value"
+        @click="selectOption(option)"
         class="cursor-pointer px-4 py-2 flex justify-between items-center hover:bg-green-500 hover:text-white dark:hover:bg-green-600 dark:hover:text-white"
       >
         {{ option.label }}
-        <span v-if="selected.some((s) => s.value === option.value)">✔</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, useAttrs, watch } from 'vue';
 
-  interface Option {
-    label: string;
-    value: string;
+interface Option {
+  label: string
+  value: string
+}
+
+// Props
+const props = defineProps<{
+  modelValue: string
+  options: Option[]
+  placeholder?: string
+  error?: boolean
+  className?: string
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void
+}>()
+
+// Refs & State
+const open = ref(false)
+const selected = ref(props.modelValue)
+const dropdownRef = ref<HTMLElement | null>(null)
+
+// Computed
+const selectedLabel = computed(() => {
+  const found = props.options.find(o => o.value === selected.value)
+  return found ? found.label : props.placeholder || 'Select...'
+})
+
+const classNameFromParent = props.className || ''
+const error = props.error || false
+
+// Handle external attributes
+const attrs = useAttrs()
+const otherAttrs = computed(() => {
+  const copy: Record<string, any> = {}
+  for (const key in attrs) {
+    if (key === 'class' || key === 'style') continue
+    copy[key] = (attrs as Record<string, any>)[key]
   }
+  return copy
+})
 
-  const props = defineProps<{
-    modelValue: Option[];
-    options: Option[];
-    placeholder?: string;
-  }>();
+// Watch for modelValue changes
+watch(() => props.modelValue, val => {
+  selected.value = val
+})
 
-  const emit = defineEmits<{
-    (e: 'update:modelValue', value: Option[]): void;
-  }>();
+// Methods
+const toggleDropdown = () => { open.value = !open.value }
+const selectOption = (option: Option) => {
+  selected.value = option.value
+  emit('update:modelValue', option.value)
+  open.value = false
+}
 
-  const open = ref(false);
-  const selected = ref<Option[]>([]);
-  const dropdownRef = ref<HTMLElement | null>(null);
-  const placeholder = props.placeholder || 'Select...';
+// Click outside to close dropdown
+const handleClickOutside = (e: MouseEvent) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(e.target as Node)) open.value = false
+}
 
-  const toggleDropdown = () => {
-    open.value = !open.value;
-  };
-
-  const toggleOption = (option: Option) => {
-    const exists = selected.value.find((s) => s.value === option.value);
-    if (exists) {
-      selected.value = selected.value.filter((s) => s.value !== option.value);
-    } else {
-      selected.value.push(option);
-    }
-    emit('update:modelValue', selected.value);
-  };
-
-  const removeOption = (option: Option) => {
-    selected.value = selected.value.filter((s) => s.value !== option.value);
-    emit('update:modelValue', selected.value);
-  };
-
-  watch(
-    () => props.modelValue,
-    (newVal) => {
-      selected.value = [...newVal];
-    },
-    { immediate: true }
-  );
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.value &&
-      !dropdownRef.value.contains(event.target as Node)
-    ) {
-      open.value = false;
-    }
-  };
-
-  onMounted(() => {
-    window.addEventListener('click', handleClickOutside);
-  });
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('click', handleClickOutside);
-  });
+onMounted(() => window.addEventListener('click', handleClickOutside))
+onBeforeUnmount(() => window.removeEventListener('click', handleClickOutside))
 </script>

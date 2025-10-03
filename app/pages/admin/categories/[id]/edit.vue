@@ -52,15 +52,13 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import { useCategoriesStore } from '~~/store/categories.store';
+import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useCategoriesStore } from '~~/store/categories.store';
 
-  definePageMeta({
-    layout: 'admin',
-  });
+  definePageMeta({ layout: 'admin' });
 
-  // Interface for Category data (assuming the store returns this shape)
+
   interface Category {
     id: string;
     name: string;
@@ -71,16 +69,10 @@
   const route = useRoute();
   const categoriesStore = useCategoriesStore();
 
-  // Get the category ID from the route parameters
+
   const categoryId = route.params.id as string;
-
-  // Local loading state for skeleton UI
   const localLoading = ref(true);
-
-  // Reactive form state
-  const form = reactive({
-    name: '',
-  });
+  const form = reactive({ name: '' });
 
   // Validation errors
   const errors = reactive<{ name?: string }>({});
@@ -88,30 +80,26 @@
   // Fetch category data on mount
   onMounted(async () => {
     try {
-      // Fetch the category data using the store action
+
       const categoryData = await categoriesStore.fetchCategory(categoryId);
 
-      // Check if data was successfully loaded before accessing its properties
+
       if (categoryData && categoryData.name) {
         form.name = categoryData.name;
       } else {
-        // This block handles cases where the category might not exist (e.g., 404 response)
         toast.error('Category not found or failed to load.');
-        router.push('/admin/categories'); // Redirect if load fails
+        router.push('/admin/categories');
       }
     } catch (err: any) {
       toast.error(err?.message || 'Failed to load category');
-      // In case of error, still ensure we redirect
       router.push('/admin/categories');
     } finally {
-      // Stop skeleton loading once fetching is complete, regardless of success/fail
       localLoading.value = false;
     }
   });
 
   // Handle category update
   async function handleCategoryUpdate() {
-    // Clear previous errors
     errors.name = undefined;
 
     if (!form.name.trim()) {
@@ -134,12 +122,9 @@
         }
       );
 
-      // Redirect after a short delay
-      setTimeout(() => {
-        router.push('/admin/categories');
-      }, 1000);
+      // Redirect
+      router.push('/admin/categories');
     } catch (err: any) {
-      // Handle server-side validation errors (e.g., duplicate name)
       const serverErrors = err.response?.data?.errors;
       if (serverErrors?.name) {
         errors.name = serverErrors.name;

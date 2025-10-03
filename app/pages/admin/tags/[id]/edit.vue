@@ -22,7 +22,6 @@
           ></div>
         </div>
         <div v-else>
-          <!-- Assuming BaseInput is correctly imported and available -->
           <BaseInput
             v-model="form.name"
             label="Tag Name"
@@ -37,7 +36,6 @@
           ></div>
         </div>
         <div v-else>
-          <!-- Assuming BaseButton is correctly imported and available -->
           <BaseButton
             :loading="tagsStore.loading"
             type="submit"
@@ -51,13 +49,11 @@
 
 <script setup lang="ts">
   import { onMounted, reactive, ref } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import { useTagsStore } from '~~/store/tags.store';
+import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useTagsStore } from '~~/store/tags.store';
 
-  definePageMeta({
-    layout: 'admin',
-  });
+  definePageMeta({ layout: 'admin' });
 
   const toast = useToast();
   const router = useRouter();
@@ -70,9 +66,7 @@
   const localLoading = ref(true);
 
   // Reactive form state
-  const form = reactive({
-    name: '',
-  });
+  const form = reactive({ name: '' });
 
   // Validation errors
   const errors = reactive<{ name?: string }>({});
@@ -81,35 +75,27 @@
   onMounted(async () => {
     try {
       const tagData = await tagsStore.fetchTag(tagId);
-
-      // CRITICAL: Check if tagData is valid before accessing .name
+      
       if (tagData && tagData.name) {
         form.name = tagData.name;
       } else {
-        // If tag not found (e.g., 404), show error and redirect
-        // The store is designed to throw an error on 404/failure,
-        // but this defensive check is good practice.
         if (localLoading.value) {
-          // Only show toast if loading has started successfully
           toast.error('Tag not found or failed to load. Redirecting...');
           router.push('/admin/tags');
         }
       }
     } catch (err: any) {
-      // Catch error thrown by store (e.g., 404 or network failure)
       const errorMessage =
         err?.response?.data?.message || err.message || 'Failed to load tag';
       toast.error(errorMessage);
-      router.push('/admin/tags'); // Redirect on network or severe error
+      router.push('/admin/tags');
     } finally {
-      // Ensure loading stops immediately after API call completes
       localLoading.value = false;
     }
   });
 
   // Handle tag update
   async function handleTagUpdate() {
-    // Clear previous errors
     errors.name = undefined;
 
     if (!form.name.trim()) {
@@ -127,11 +113,8 @@
         id: 'local-success',
       });
 
-      setTimeout(() => {
-        router.push('/admin/tags');
-      }, 1000);
+      router.push('/admin/tags');
     } catch (err: any) {
-      // Handle server-side validation errors
       const serverErrors = err.response?.data?.errors;
       if (serverErrors?.name) {
         errors.name = serverErrors.name;

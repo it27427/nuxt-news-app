@@ -12,7 +12,7 @@
           <div class="w-full md:w-1/2">
             <div class="flex flex-col gap-1">
               <label>সংবাদ ধরন</label>
-              <CustomSelect
+              <CustomSelects
                 v-model="selectedNewsType"
                 :options="categoryOptions"
                 placeholder="সংবাদ ধরন নির্বাচন করুন"
@@ -26,7 +26,7 @@
           <div class="w-full md:w-1/2">
             <div class="flex flex-col gap-1">
               <label>সংবাদ ট্যাগ</label>
-              <CustomSelect
+              <CustomSelects
                 v-model="selectedNewsTag"
                 :options="tagOptions"
                 placeholder="ট্যাগ নির্বাচন করুন"
@@ -98,7 +98,7 @@
         <!-- Dynamic Content Blocks -->
         <div v-for="(block, index) in contentBlocks" :key="index" class="relative flex flex-col gap-4">
           <!-- CustomSelects: শুধু তখনই দেখাবে যখন type না আছে -->
-          <CustomSelects
+          <CustomSelect
             v-if="!block.type"
             v-model="block.type"
             :options="typeOptions"
