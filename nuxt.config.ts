@@ -44,6 +44,10 @@ export default defineNuxtConfig({
         imports: ['VueFinalModal'],
       },
       {
+        from: 'floating-vue',
+        imports: ['FloatingVue'],
+      },
+      {
         from: 'axios',
         imports: ['default as axios'],
       },
