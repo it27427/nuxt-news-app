@@ -161,8 +161,13 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+
   .scrollbar-none::-webkit-scrollbar {
     display: none;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 5s linear infinite;
   }
 
   /* MAX-WIDTH */
@@ -733,6 +738,15 @@
     100% {
       transform: translateY(100%);
       opacity: 0;
+    }
+  }
+
+  @keyframes spin-slow {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }
