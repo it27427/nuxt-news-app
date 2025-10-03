@@ -1,200 +1,168 @@
 <template>
   <div class="w-full">
-    <div ref="editorRef" class="editor-container"></div>
-    <p class="license-note">
-      Running with GPL 2+ license configuration (Self-hosted, No premium features).
-    </p>
+    <Ckeditor
+      v-model="data"
+      :editor="ClassicEditor"
+      :config="editorConfig"
+      @ready="onEditorReady"
+    />
+    <pre class="w-full h-40 overflow-auto bg-gray-100 p-3 rounded-lg text-xs break-all whitespace-pre-wrap font-mono border border-gray-300">
+      {{ jsonOutput }}
+    </pre>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Editor } from '@ckeditor/ckeditor5-core';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import type { Editor, EditorConfig } from '@ckeditor/ckeditor5-core';
+import type { FileLoader } from '@ckeditor/ckeditor5-upload';
+import { Ckeditor } from '@ckeditor/ckeditor5-vue';
+import { ref, watch } from 'vue';
 
-import {
-	BlockQuote,
-	Bold,
-	ClassicEditor,
-	CodeBlock,
-	Essentials,
-	Font,
-	Heading,
-	Highlight,
-	HorizontalLine,
-	Image,
-	ImageCaption,
-	ImageInsert,
-	ImageResize,
-	ImageStyle,
-	ImageTextAlternative,
-	ImageToolbar,
-	ImageUpload,
-	Indent,
-	IndentBlock,
-	Italic,
-	Link,
-	List,
-	MediaEmbed,
-	Paragraph,
-	RemoveFormat,
-	SourceEditing,
-	Strikethrough,
-	Table,
-	Underline
-} from 'ckeditor5';
+// ===== CKEditor Free Plugins (Named Imports) =====
+import { Bold, Italic, Strikethrough, Underline } from '@ckeditor/ckeditor5-basic-styles';
+import { BlockQuote } from '@ckeditor/ckeditor5-block-quote';
+import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
+import { ClassicEditor as ClassicEditorBase } from '@ckeditor/ckeditor5-editor-classic';
+import { Essentials } from '@ckeditor/ckeditor5-essentials';
+import { Font } from '@ckeditor/ckeditor5-font';
+import { Heading } from '@ckeditor/ckeditor5-heading';
+import { Highlight } from '@ckeditor/ckeditor5-highlight';
+import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line';
+import { Image, ImageToolbar, ImageUpload } from '@ckeditor/ckeditor5-image';
+import { Link } from '@ckeditor/ckeditor5-link';
+import { List } from '@ckeditor/ckeditor5-list';
+import { MediaEmbed } from '@ckeditor/ckeditor5-media-embed';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
+import { RemoveFormat } from '@ckeditor/ckeditor5-remove-format';
+import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
+import { Table } from '@ckeditor/ckeditor5-table';
+import { FileRepository } from '@ckeditor/ckeditor5-upload';
 
-import CustomUploadAdapterPlugin from '~/utils/ckeditor/CustomUploadAdapter';
+// ===== Custom Classic Editor =====
+class ClassicEditor extends ClassicEditorBase {}
+// @ts-ignore
+ClassicEditor.builtinPlugins = [
+  Essentials,
+  Paragraph,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  RemoveFormat,
+  Heading,
+  BlockQuote,
+  CodeBlock,
+  HorizontalLine,
+  Link,
+  List,
+  Image,
+  ImageToolbar,
+  ImageUpload,
+  MediaEmbed,
+  Table,
+  Font,
+  Highlight,
+  SourceEditing,
+  FileRepository,
+];
 
-import 'ckeditor5/ckeditor5.css';
-
-const data = ref( '<p>Hello world!</p>' );
-const editorRef = ref<HTMLElement | null>(null);
-const ckeditorInstance = ref<Editor | null>(null);
-
-const config = computed( () => {
-  return {
-    licenseKey: 'GPL',
-    plugins: [ 
-      Essentials, 
-      Paragraph, 
-      Bold, 
-      Italic, 
-      Underline, 
-      Strikethrough, 
-      RemoveFormat, 
-      Heading, 
-      BlockQuote, 
-      CodeBlock, 
-      HorizontalLine, 
-      Link, 
-      SourceEditing, 
-      List, 
-      Indent, 
-      IndentBlock, 
-      
-      Image, 
-      ImageInsert, 
-      ImageUpload, 
-      ImageCaption, 
-      ImageToolbar, 
-      ImageStyle, 
-      ImageResize, 
-      ImageTextAlternative, 
-
-      MediaEmbed, 
-      Table,
-      Font, 
-      Highlight 
+// @ts-ignore
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      'underline',
+      'strikethrough',
+      '|',
+      'link',
+      'blockquote',
+      'codeBlock',
+      'horizontalLine',
+      '|',
+      'bulletedList',
+      'numberedList',
+      'imageUpload',
+      'mediaEmbed',
+      '|',
+      'undo',
+      'redo',
+      'sourceEditing',
     ],
-    toolbar: [ 
-      'heading', '|', 
-      'bold', 'italic', 'underline', 'strikethrough', '|',
-      'link', 
-      'blockquote', 'codeBlock', 'horizontalLine', '|',
-      'bulletedList', 'numberedList', 'outdent', 'indent', '|', 
-      'insertImage', 'mediaEmbed', 'insertTable', '|',
-      'undo', 'redo'
+  },
+  image: {
+    toolbar: [
+      'imageStyle:inline',
+      'imageStyle:block',
+      'imageStyle:side',
+      '|',
+      'toggleImageCaption',
+      'imageTextAlternative',
     ],
-    
-    image: {
-      toolbar: [
-        'imageTextAlternative',
-        'toggleImageCaption',
-        '|',
-        'imageStyle:inline', 
-        'imageStyle:block', 
-        'imageStyle:side',
-        '|',
-        'linkImage'
-      ],
-      resizeOptions: [
-        {
-          name: 'resizeImage:original',
-          label: 'Original',
-          value: null
-        },
-        {
-          name: 'resizeImage:25',
-          label: '25%',
-          value: '25'
-        },
-        {
-          name: 'resizeImage:50',
-          label: '50%',
-          value: '50'
-        },
-        {
-          name: 'resizeImage:75',
-          label: '75%',
-          value: '75'
-        }
-      ],
-      styles: [
-        { name: 'full', icon: 'full', title: 'Full size image' },
-        { name: 'side', icon: 'side', title: 'Side image' },
-        { name: 'alignLeft', icon: 'alignLeft', title: 'Align left' },
-        { name: 'alignRight', icon: 'alignRight', title: 'Align right' }
-      ]
-    },
+  },
+  licenseKey: 'GPL',
+};
 
-    extraPlugins: [ CustomUploadAdapterPlugin ]
-  } as any;
-});
+// ===== Custom Upload Adapter =====
+class CustomUploadAdapter {
+  loader: FileLoader;
+  editor: Editor;
 
-onMounted(async () => {
-  if (!editorRef.value) return;
+  constructor(loader: FileLoader, editor: Editor) {
+    this.loader = loader;
+    this.editor = editor;
+  }
 
-  try {
-    const CustomAdapterModule = await import('~/utils/ckeditor/CustomUploadAdapter');
-    const CustomUploadAdapterPlugin = CustomAdapterModule.default;
+  upload(): Promise<{ default: string }> {
+    return this.loader.file.then(
+      (file) =>
+        new Promise((resolve, reject) => {
+          if (!file) return reject('File is null');
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            if (e.target?.result)
+              resolve({ default: e.target.result as string });
+            else reject('Failed to read file');
+          };
+          reader.readAsDataURL(file);
+        })
+    );
+  }
 
-    // আপনার ImageSourcePlugin ব্যবহার করতে চাইলে নিচে যোগ করুন
-    // const ImageSourceModule = await import('~/utils/ckeditor/ImageSourcePlugin');
-    // const ImageSourcePluginClass = ImageSourceModule.default;
+  abort(): void {}
+}
 
-    const editorConfig = {
-      ...config.value,
-      extraPlugins: [ 
-        CustomUploadAdapterPlugin, 
-        // ImageSourcePluginClass // যদি প্রয়োজন হয় তবে এটি আনকমেন্ট করুন
-      ]
+function CustomUploadAdapterPlugin(editor: Editor) {
+  if (editor.plugins.has('FileRepository')) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+      return new CustomUploadAdapter(loader, editor);
     };
-
-    const editor = await ClassicEditor.create(editorRef.value, editorConfig);
-    
-    editor.model.document.on('change:data', () => {
-      data.value = editor.getData();
-    });
-
-    ckeditorInstance.value = editor;
-  } catch (error) {
-    console.error("CKEditor initialization failed:", error);
   }
-});
+}
 
-onBeforeUnmount(() => {
-  if (ckeditorInstance.value) {
-    ckeditorInstance.value.destroy();
-  }
-});
+// ===== Editor Data & JSON Output =====
+const data = ref('<h1>Hello CKEditor!</h1>');
+const jsonOutput = ref('');
+
+watch(
+  data,
+  (newHtml) => {
+    jsonOutput.value = JSON.stringify(
+      [{ articleId: 1001, contentHTML: newHtml, timestamp: new Date().toISOString() }],
+      null,
+      2
+    );
+  },
+  { immediate: true }
+);
+
+// ===== Editor Ready =====
+function onEditorReady(editor: Editor) {
+  CustomUploadAdapterPlugin(editor);
+}
+
+// ===== Editor Config =====
+const editorConfig: EditorConfig = ClassicEditor.defaultConfig;
 </script>
-
-<style lang="scss">
-.ck.ck-balloon-panel.ck-powered-by-balloon 
-  .ck.ck-powered-by,
-.ck.ck-balloon-panel.ck-balloon-panel_visible {
-  display: none;
-}
-
-.ck.ck-editor__editable.ck-focused {
-  .ck.ck-balloon-panel.ck-powered-by-balloon 
-  .ck.ck-powered-by,
-  .ck.ck-balloon-panel.ck-balloon-panel_visible {
-    display: none;
-  }
-}
-
-.editor-container .ck.ck-editor__main .ck-content {
-  min-height: 400px; 
-}
-</style>

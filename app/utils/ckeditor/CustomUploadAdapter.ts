@@ -1,9 +1,9 @@
 // app/utils/ckeditor/CustomUploadAdapter.ts
 
 import type { Editor } from '@ckeditor/ckeditor5-core';
-import type { FileLoader } from '@ckeditor/ckeditor5-upload/src/filerepository';
+import type { FileLoader } from '@ckeditor/ckeditor5-upload';
 
-class CustomUploadAdapter {
+export default class CustomUploadAdapter {
   loader: FileLoader;
   editor: Editor;
 
@@ -16,20 +16,12 @@ class CustomUploadAdapter {
     return this.loader.file.then(
       (file) =>
         new Promise((resolve, reject) => {
-          if (!file) {
-            reject('File is null, upload cannot proceed.');
-            return;
-          }
-
+          if (!file) return reject('File is null');
           const reader = new FileReader();
-
-          reader.onload = function (e) {
-            if (e.target && e.target.result) {
-              const uploadedUrl = e.target.result as string;
-              resolve({ default: uploadedUrl });
-            } else {
-              reject('Failed to read file data.');
-            }
+          reader.onload = (e) => {
+            if (e.target?.result)
+              resolve({ default: e.target.result as string });
+            else reject('Failed to read file');
           };
           reader.readAsDataURL(file);
         })
@@ -39,18 +31,8 @@ class CustomUploadAdapter {
   abort(): void {}
 }
 
-export default class CustomUploadAdapterPlugin {
-  editor: Editor;
-
-  constructor(editor: Editor) {
-    this.editor = editor;
-  }
-
-  init() {
-    this.editor.plugins.get('FileRepository').createUploadAdapter = (
-      loader
-    ) => {
-      return new CustomUploadAdapter(loader, this.editor);
-    };
-  }
+export function CustomUploadAdapterPlugin(editor: Editor) {
+  editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+    return new CustomUploadAdapter(loader, editor);
+  };
 }
