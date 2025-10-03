@@ -57,6 +57,7 @@
     modelValue: string;
     options: Option[];
     className?: string;
+    placeholder?: string;
   }>();
 
   const attrs = useAttrs();
@@ -93,7 +94,7 @@
 
   const selectedLabel = computed(() => {
     const found = props.options.find((opt) => opt.value === selected.value);
-    return found ? found.label : 'Select...';
+    return found ? found.label : (props.placeholder || 'Select...'); 
   });
 
   const toggleDropdown = () => {

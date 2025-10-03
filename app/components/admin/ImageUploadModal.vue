@@ -59,7 +59,7 @@
 
         <!-- Actions -->
         <div class="flex justify-end gap-2 mt-4">
-          <button @click="submit" class="font-semibold text-sm px-4 py-2 border border-green-500 dark:border-red rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-green-500 bg-red-50 dark:bg-green-900 focus:ring-green-500 active:ring-regreend-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150">
+          <button @click="submit" class="font-semibold text-sm px-4 py-2 border border-green-500 dark:border-red rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-green-500 bg-red-50 dark:bg-green-900 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150">
             সন্নিবেশিত করুন
           </button>
         </div>

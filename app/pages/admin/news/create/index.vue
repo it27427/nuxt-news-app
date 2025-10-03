@@ -8,51 +8,58 @@
         <!-- Categories & Tags -->
         <div class="flex flex-col md:flex-row gap-4">
           <div class="w-full md:w-1/2">
-            <CustomSelect
-              v-model="selectedNewsType"
-              :options="categoryOptions"
-              placeholder="সংবাদ ধরন নির্বাচন করুন"
-              multiple
-            />
+            <div class="flex flex-col gap-1">
+              <label for="tagsselect">সংবাদ ধরন</label>
+              <CustomSelect
+                v-model="selectedNewsType"
+                :options="categoryOptions"
+                placeholder="সংবাদ ধরন নির্বাচন করুন"
+                multiple
+              />
+            </div>
           </div>
 
           <div class="w-full md:w-1/2">
-            <CustomSelect
-              v-model="selectedNewsTag"
-              :options="tagOptions"
-              placeholder="ট্যাগ নির্বাচন করুন"
-              multiple
-            />
+            <div class="flex flex-col gap-1">
+              <label for="tagsselect">সংবাদ ট্যাগ</label>
+              <CustomSelect
+                id="tagsselect"
+                v-model="selectedNewsTag"
+                :options="tagOptions"
+                placeholder="ট্যাগ নির্বাচন করুন"
+                multiple
+              />
+            </div>
           </div>
         </div>
 
         <!-- Title -->
-        <input
-          v-model="title"
-          type="text"
-          placeholder="সংবাদ শিরোনাম লিখুন"
-          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
-        />
+        <div class="flex flex-col gap-1">
+          <label for="newstitle">সংবাদ শিরোনাম</label>
 
-        <!-- Home Card Text -->
-        <textarea
-          v-model="homeCardText"
-          placeholder="হোম কার্ড টেক্সট লিখুন"
-          class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none resize-none min-h-40"
-        ></textarea>
+          <input
+            id="newstitle"
+            v-model="title"
+            type="text"
+            placeholder="সংবাদ শিরোনাম লিখুন"
+            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none"
+          />
+        </div>
 
         <!-- Featured Image -->
-        <div class="border p-3 rounded">
-          <p class="font-semibold mb-2">Featured Image</p>
-          <button
-            type="button"
-            @click="openImageModal('featured')"
-            class="px-3 py-1 bg-blue-500 text-white rounded mb-2"
-          >
-            Upload / Select Image
-          </button>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1">
+            <label>প্রধান ছবি</label>
+            <button
+              type="button"
+              @click="openImageModal('featured')"
+              class="font-hind max-w-40 text-md px-4 py-2 border border-sky-500 dark:border-sky-400 rounded shadow-md focus:ring-1 hover:ring-1 hover:ring-sky-500 bg-sky-50 dark:bg-sky-700 focus:ring-sky-500 active:ring-sky-500 focus:border-sky-500 active:border-sky-500 focus:bg-sky-50 dark:focus:bg-sky-700 transition-all duration-150"
+            >
+              ছবি আপলোড করুন
+            </button>
+          </div>
 
-          <div v-if="featured.url" class="mt-2 relative">
+          <div v-if="featured.url" class="relative">
             <img :src="featured.url" class="w-full max-h-40 object-contain rounded" />
             <button
               type="button"
@@ -66,24 +73,37 @@
           </div>
         </div>
 
+        <!-- Home Card Text -->
+        <div class="flex flex-col gap-1">
+          <label for="homecard">হোম কার্ড টেক্সট</label>
+          <textarea
+            id="homecard"
+            v-model="homeCardText"
+            placeholder="হোম কার্ড টেক্সট লিখুন"
+            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none resize-none min-h-40"
+          ></textarea>
+        </div>
+
         <!-- Dynamic Content Blocks -->
         <div
           v-for="(block, index) in contentBlocks"
           :key="index"
-          class="border p-3 rounded relative"
+          class="relative flex flex-col gap-4"
         >
-          <select v-model="block.type" class="border p-2 mb-2">
-            <option value="text">Text</option>
-            <option value="subtitle">Subtitle</option>
-            <option value="image">Image</option>
-          </select>
+          <CustomSelects
+            v-model="block.type"
+            :options="typeOptions"
+            placeholder="ব্লক নির্বাচন করুন"
+          />
 
           <!-- Text -->
-          <div v-if="block.type === 'text'">
+          <div v-if="block.type === 'text'" class="flex flex-col gap-1">
+            <label for="posttexts">সংবাদ পোস্ট</label>
             <textarea
+              id="posttexts"
               v-model="block.text"
-              placeholder="পোস্ট টেক্সট লিখুন"
-              class="w-full border p-2 rounded"
+              placeholder="সংবাদ পোস্ট লিখুন"
+              class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 dark:text-white rounded px-4 py-2 gap-2 shadow-sm ring-1 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150 outline-none resize-none min-h-96"
             ></textarea>
           </div>
 
@@ -102,9 +122,9 @@
             <button
               type="button"
               @click="openImageModal(index)"
-              class="px-3 py-1 bg-blue-500 text-white rounded"
+              class="font-semibold font-hind text-md md:text-lg px-4 py-2 border border-sky-500 dark:border-sky-400 rounded shadow-md focus:ring-1 hover:ring-1 hover:ring-sky-500 bg-sky-50 dark:bg-sky-700 focus:ring-sky-500 active:ring-sky-500 focus:border-sky-500 active:border-sky-500 focus:bg-sky-50 dark:focus:bg-sky-700 transition-all duration-150"
             >
-              Upload / Select Image
+              ছবি আপলোড করুন
             </button>
             <div v-if="block.url" class="mt-2 relative">
               <img :src="block.url" class="w-full max-h-40 object-contain rounded" />
@@ -128,20 +148,20 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex items-center justify-end gap-3">
+        <div class="flex items-center justify-center gap-3">
           <button
             type="button"
             @click="saveDraft"
             :disabled="loading"
-            class="py-2 px-5 bg-slate-500 text-white hover:bg-slate-600 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            class="font-semibold font-hind text-md md:text-lg px-4 py-2 border border-cyan-500 dark:border-cyan-400 rounded shadow-md focus:ring-1 hover:ring-1 hover:ring-cyan-500 bg-gray-50 dark:bg-cyan-700 focus:ring-cyan-500 active:ring-cyan-500 focus:border-cyan-500 active:border-cyan-500 focus:bg-cyan-50 dark:focus:bg-cyan-700 transition-all duration-150"
           >
-            সংরক্ষণ করুন
+            সংবাদ সংরক্ষণ করুন
           </button>
 
           <button
             type="submit"
             :disabled="loading"
-            class="py-2 px-5 bg-green-500 text-white hover:bg-green-600 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            class="font-semibold text-md md:text-lg px-6 py-2 border border-green-500 dark:border-green-400 rounded shadow-sm focus:ring-1 hover:ring-1 hover:ring-green-500 bg-red-50 dark:bg-green-900 focus:ring-green-500 active:ring-green-500 focus:border-green-500 active:border-green-500 focus:bg-green-50 dark:focus:bg-green-900 transition-all duration-150"
           >
             {{ submitButtonLabel }}
           </button>
@@ -177,9 +197,15 @@ const draftsStore = useDraftsStore()
 const categoriesStore = useCategoriesStore()
 const tagsStore = useTagsStore()
 
+interface Option { label: string; value: string }
+
 const pageTitle = ref('সংবাদ তৈরি করুন');
 
-interface Option { label: string; value: string }
+const typeOptions = ref<Option[]>([
+  { label: 'টেক্সট ব্লক', value: 'টেক্সট ব্লক' },
+  { label: 'সাবটাইটেল', value: 'সাবটাইটেল' },
+  { label: 'ইমেজ', value: 'ইমেজ' }
+])
 
 const selectedNewsType = ref<Option[]>([])
 const selectedNewsTag = ref<Option[]>([])
@@ -193,7 +219,7 @@ const currentBlockIndex = ref<number | 'featured' | null>(null)
 const categoryOptions = computed(() => categoriesStore.categories.map((c: any) => ({ label: c.name, value: c.id })))
 const tagOptions = computed(() => tagsStore.tags.map((t: any) => ({ label: t.name, value: t.id })))
 const loading = computed(() => newsStore.loading || draftsStore.loading)
-const submitButtonLabel = computed(() => authStore.user?.role === 'super_admin' ? 'প্রকাশ করুন' : 'সাবমিট করুন')
+const submitButtonLabel = computed(() => authStore.user?.role === 'super_admin' ? 'সংবাদ প্রকাশ করুন' : 'সংবাদ সাবমিট করুন')
 
 onMounted(async () => {
   if (!categoriesStore.categories.length) await categoriesStore.fetchCategories()
