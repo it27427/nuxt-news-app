@@ -1,5 +1,7 @@
 <template>
-  <h1>About</h1>
+  <section>
+    <h1>About</h1>
+  </section>
 </template>
 
 <script lang="ts" setup>

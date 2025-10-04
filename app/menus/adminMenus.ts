@@ -82,6 +82,42 @@ export const adminMenus: AdminMenuType[] = [
     roles: ['super_admin'],
   },
   {
+    label: '',
+    to: '/admin/institutional/about',
+    icon: 'ix:about',
+    roles: ['super_admin'],
+  },
+  {
+    label: '',
+    to: '/admin/institutional/ads',
+    icon: 'icon-park-twotone:google-ads',
+    roles: ['super_admin'],
+  },
+  {
+    label: '',
+    to: '/admin/institutional/contact',
+    icon: 'streamline-flex:contact-phonebook-2-solid',
+    roles: ['super_admin'],
+  },
+  {
+    label: '',
+    to: '/admin/institutional/privacy-policy',
+    icon: 'wpf:privacy',
+    roles: ['super_admin'],
+  },
+  {
+    label: '',
+    to: '/admin/institutional/terms-of-use',
+    icon: 'tabler:user',
+    roles: ['super_admin'],
+  },
+  {
+    label: '',
+    to: '/admin/institutional/trust-and-transparency',
+    icon: 'codicon:workspace-trusted',
+    roles: ['super_admin'],
+  },
+  {
     label: 'লগ আউট',
     action: 'logout',
     icon: 'ri:logout-circle-r-line',
