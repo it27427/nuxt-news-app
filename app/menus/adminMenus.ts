@@ -7,19 +7,19 @@ export const adminMenus: AdminMenuType[] = [
     label: 'ড্যাশবোর্ড',
     to: '/admin/dashboard',
     icon: 'streamline-freehand:dashboard-browser-gauge',
-    roles: ['super_admin', 'admin'],
+    roles: ['super_admin', 'admin', 'reporter'],
   },
   {
     label: 'সংবাদ তৈরি করুন',
     to: '/admin/news/create',
     icon: 'basil:edit-outline',
-    roles: ['super_admin', 'admin'],
+    roles: ['super_admin', 'admin', 'reporter'],
   },
   {
     label: 'সংবাদ তালিকা',
     to: '/admin/news',
     icon: 'fluent-mdl2:product-list',
-    roles: ['super_admin', 'admin'],
+    roles: ['super_admin', 'admin', 'reporter'],
   },
   {
     label: 'ক্যাটেগরি তৈরি করুন',
@@ -82,7 +82,7 @@ export const adminMenus: AdminMenuType[] = [
     roles: ['super_admin'],
   },
   {
-    label: '',
+    label: 'আমাদের সম্পর্কে',
     to: '/admin/institutional/about',
     icon: 'ix:about',
     roles: ['super_admin'],
@@ -94,7 +94,7 @@ export const adminMenus: AdminMenuType[] = [
     roles: ['super_admin'],
   },
   {
-    label: 'আমাদের সম্পর্কে',
+    label: 'যোগাযোগ',
     to: '/admin/institutional/contact',
     icon: 'streamline-flex:contact-phonebook-2-solid',
     roles: ['super_admin'],
@@ -121,6 +121,6 @@ export const adminMenus: AdminMenuType[] = [
     label: 'লগ আউট',
     action: 'logout',
     icon: 'ri:logout-circle-r-line',
-    roles: ['super_admin', 'admin'],
+    roles: ['super_admin', 'admin', 'reporter'],
   },
 ];

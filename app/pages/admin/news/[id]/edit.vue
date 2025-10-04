@@ -1,6 +1,6 @@
 <template>
   <section class="flex flex-col gap-4">
-    <h1>{{ title }}</h1>
+    <h1>{{ pageTitle }}</h1>
 
     <form @submit.prevent="updateNewsContent" class="space-y-5">
       <!-- Category & Tag Selects -->
@@ -55,7 +55,7 @@ import type { TiptapNode } from '~~/types/newstypes';
     value: string;
   }
 
-  const title = ref('সংবাদ আপডেট করুন');
+  const pageTitle = ref('সংবাদ আপডেট করুন');
   const toast = useToast();
   const router = useRouter();
   const route = useRoute();
