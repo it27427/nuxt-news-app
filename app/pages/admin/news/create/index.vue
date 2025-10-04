@@ -11,11 +11,11 @@
         <div class="flex flex-col md:flex-row gap-4">
           <div class="w-full md:w-1/2">
             <div class="flex flex-col gap-1">
-              <label>সংবাদ ধরন</label>
+              <label>সংবাদ ক্যাটেগরি</label>
               <CustomSelects
                 v-model="selectedNewsType"
                 :options="categoryOptions"
-                placeholder="সংবাদ ধরন নির্বাচন করুন"
+                placeholder="ক্যাটেগরি নির্বাচন করুন"
                 multiple
                 :class="{'border-red-500 bg-red-50': errors.categories}"
               />

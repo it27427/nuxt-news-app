@@ -9,7 +9,7 @@
           class="h-8 w-48 bg-gray-200 dark:bg-slate-700 animate-pulse rounded mx-auto"
         ></div>
       </template>
-      <template v-else>সংবাদ ধরন তৈরি করুন</template>
+      <template v-else>{{ pageTitle }}</template>
     </h2>
 
     <!-- Form Skeleton / Actual Form -->
@@ -39,7 +39,7 @@
           <BaseButton
             :loading="categoriesStore.loading"
             type="submit"
-            label="Create Category"
+            label="ক্যাটেগরি তৈরি"
           />
         </div>
       </form>
@@ -55,6 +55,8 @@ import { useToast } from 'vue-toastification';
 import { useCategoriesStore } from '~~/store/categories.store';
 
   definePageMeta({ layout: 'admin' });
+
+  const pageTitle = ref('ক্যাটেগরি তৈরি করুন');
 
   const toast = useToast();
   const router = useRouter();

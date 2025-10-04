@@ -6,7 +6,7 @@
       <!-- Category & Tag Selects -->
       <div class="flex flex-col md:flex-row items-center gap-4">
         <div class="w-full md:w-1/2">
-          <CustomSelect
+          <CustomSelects
             v-model="selectedNewsType"
             :options="categoryOptions"
             placeholder="সংবাদ ধরন নির্বাচন করুন"
@@ -14,7 +14,7 @@
           />
         </div>
         <div class="w-full md:w-1/2">
-          <CustomSelect
+          <CustomSelects
             v-model="selectedNewsTag"
             :options="tagOptions"
             placeholder="ট্যাগ নির্বাচন করুন"
@@ -42,13 +42,13 @@
   definePageMeta({ layout: 'admin' });
 
   import type { JSONContent } from '@tiptap/vue-3';
-  import { computed, onMounted, ref } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import { useToast } from 'vue-toastification';
-  import { useCategoriesStore } from '~~/store/categories.store';
-  import { useNewsStore } from '~~/store/news.store';
-  import { useTagsStore } from '~~/store/tags.store';
-  import type { TiptapNode } from '~~/types/newstypes';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useCategoriesStore } from '~~/store/categories.store';
+import { useNewsStore } from '~~/store/news.store';
+import { useTagsStore } from '~~/store/tags.store';
+import type { TiptapNode } from '~~/types/newstypes';
 
   interface Option {
     label: string;

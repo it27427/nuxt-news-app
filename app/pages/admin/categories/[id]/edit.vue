@@ -10,7 +10,7 @@
         ></div>
       </template>
       <!-- Updated Title for clarity -->
-      <template v-else>সংবাদ ধরন হালনাগাদ করুন</template>
+      <template v-else>{{ pageTitle }}</template>
     </h2>
 
     <!-- Form Skeleton / Actual Form -->
@@ -42,7 +42,7 @@
           <BaseButton
             :loading="categoriesStore.loading"
             type="submit"
-            label="Update Category"
+            label="ক্যাটেগরি হালনাগাদ"
           />
         </div>
       </form>
@@ -58,6 +58,7 @@ import { useCategoriesStore } from '~~/store/categories.store';
 
   definePageMeta({ layout: 'admin' });
 
+  const pageTitle = ref('ক্যাটেগরি হালনাগাদ করুন');
 
   interface Category {
     id: string;
